@@ -1,0 +1,1581 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Coastal Sediment &amp; Facies</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: core-shed bench. A wide dip section across the top like a laid-out core box, the model rail beside it; process gauges (Shields, Galloway, channel) in a row below; the graphic log and the facies key under that; the parameter hand-off last. */
+:root{
+  --bg:#e9edec; --panel:#f7f8f7; --ink:#182226; --muted:#55656b; --line:#c9d3d4;
+  --accent:#1d5f73; --accent-ink:#f7f8f7; --sea:#8fb4c2; --sea-deep:#5f8fa3; --warn:#a3561b;
+  --l-gravel:#b08750; --l-sand:#e4c66e; --l-het:#cdbb8c; --l-mud:#97a3a8; --l-black:#3b4146; --l-peat:#4d3b2c;
+  --l-soil:#a87256; --l-lime:#bfd6d8; --l-reef:#e2a79c; --l-evap:#e7e2ef; --veg:#4f7a46;
+  --g-qtz:#efe7d2; --g-fsp:#dba892; --g-lith:#8d938f; --g-heavy:#2a2624; --g-pyr:#b8952c; --g-phos:#7a5a3f; --g-edge:rgba(30,30,30,.38);
+  --g-mic:#cbc1aa; --g-micD:#a2977f; --g-spar:#f6f4ee; --g-skel:#f1ead9; --g-skel2:#d6c9ac; --g-ooid:#e8d39b; --g-pel:#8b7a5e; --g-alg:#a6b287; --g-coral:#e2b6aa;
+  --f-display:"Alegreya", Georgia, "Times New Roman", serif;
+  --f-body:"Alegreya Sans", "Gill Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111719; --panel:#192124; --ink:#e3e9ea; --muted:#9aa9ae; --line:#2c393d;
+  --accent:#72b8cc; --accent-ink:#111719; --sea:#36596a; --sea-deep:#254252; --warn:#e0904f;
+  --l-gravel:#9c7646; --l-sand:#c6a64f; --l-het:#a6966c; --l-mud:#6f7c82; --l-black:#2b3035; --l-peat:#5c4836;
+  --l-soil:#8d5c43; --l-lime:#7d9ea3; --l-reef:#b97b72; --l-evap:#b5aec3; --veg:#7fae6f;
+  --g-qtz:#d9cfb5; --g-fsp:#c4927b; --g-lith:#7c8380; --g-heavy:#0e0d0c; --g-pyr:#d4b04a; --g-phos:#a07a58; --g-edge:rgba(0,0,0,.55);
+  --g-mic:#6f6857; --g-micD:#544e41; --g-spar:#39424a; --g-skel:#d8d0bb; --g-skel2:#b3a78c; --g-ooid:#cdb87c; --g-pel:#3f372a; --g-alg:#8a9670; --g-coral:#b4887e;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111719; --panel:#192124; --ink:#e3e9ea; --muted:#9aa9ae; --line:#2c393d;
+  --accent:#72b8cc; --accent-ink:#111719; --sea:#36596a; --sea-deep:#254252; --warn:#e0904f;
+  --l-gravel:#9c7646; --l-sand:#c6a64f; --l-het:#a6966c; --l-mud:#6f7c82; --l-black:#2b3035; --l-peat:#5c4836;
+  --l-soil:#8d5c43; --l-lime:#7d9ea3; --l-reef:#b97b72; --l-evap:#b5aec3; --veg:#7fae6f;
+  --g-qtz:#d9cfb5; --g-fsp:#c4927b; --g-lith:#7c8380; --g-heavy:#0e0d0c; --g-pyr:#d4b04a; --g-phos:#a07a58; --g-edge:rgba(0,0,0,.55);
+  --g-mic:#6f6857; --g-micD:#544e41; --g-spar:#39424a; --g-skel:#d8d0bb; --g-skel2:#b3a78c; --g-ooid:#cdb87c; --g-pel:#3f372a; --g-alg:#8a9670; --g-coral:#b4887e;
+  color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));display:grid;gap:20px}
+header{display:grid;gap:8px}
+.eyebrow{font:500 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(28px,4vw,42px)/1.08 var(--f-display);margin:0;text-wrap:balance}
+h2{font:700 19px/1.2 var(--f-display);margin:0;text-wrap:balance}
+h3{font:500 13px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.lede{color:var(--muted);max-width:70ch;margin:0}
+a{color:var(--accent)}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{font:500 14px/1.2 var(--f-body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:7px 10px;cursor:pointer}
+.presets button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.presetNote{font-size:14px;color:var(--muted);max-width:90ch;margin:0;min-height:1.5em}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
+@media (max-width:960px){.bench{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px;display:grid;gap:10px;min-width:0;align-content:start}
+.head{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;align-items:baseline}
+.scale{font:12px var(--f-mono);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px/1 var(--f-mono);padding:6px 8px;border-radius:2px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.chip b{font-weight:500;color:var(--accent)}
+.box{position:relative;width:100%;min-width:0}
+#secBox{height:420px}
+canvas{display:block;width:100%;height:100%}
+.tip{position:absolute;pointer-events:none;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:6px 8px;font:12px/1.4 var(--f-mono);box-shadow:0 2px 10px rgba(0,0,0,.14);max-width:280px;z-index:2}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:18px;height:12px;border-radius:1px;display:inline-block;border:1px solid var(--line);flex:none}
+.note{font-size:14px;color:var(--muted);margin:0;max-width:85ch}
+aside.rail{display:grid;gap:12px;min-width:0}
+fieldset{border:1px solid var(--line);border-radius:4px;background:var(--panel);margin:0;padding:10px 12px 12px;display:grid;gap:9px;min-width:0}
+legend{font:500 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 4px}
+label{font-size:14px;color:var(--muted);display:grid;gap:3px}
+label b{color:var(--ink);font:500 13px var(--f-mono)}
+.lab{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+select,button,textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px}
+select{width:100%}
+button{cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:1060px){.gauges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.gauges{grid-template-columns:minmax(0,1fr)}}
+#shBox{height:300px} #galBox{height:300px} #chBox{height:170px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:4px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.scroll{overflow-x:auto}
+.pair{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.pair{grid-template-columns:minmax(0,1fr)}}
+#logBox{height:440px}
+#belts td:nth-child(4){min-width:200px}
+.flag{color:var(--warn)}
+.ex{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.ex{grid-template-columns:minmax(0,1fr)}}
+textarea{width:100%;font:12.5px/1.45 var(--f-mono);resize:vertical;min-height:300px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.msg{font:13px/1.4 var(--f-mono);color:var(--muted);min-height:1.4em}
+.msg.bad{color:var(--warn)}
+.check{display:flex;gap:6px;align-items:center;color:var(--ink);font-size:14px}
+ol.steps{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+code{font:13px var(--f-mono)}
+.refs{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px 20px}
+.ref{font-size:14px;min-width:0}
+.ref b{display:block;font-weight:700}
+.ref span{color:var(--muted)}
+.gcgrid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:760px){.gcgrid{grid-template-columns:minmax(0,1fr)}}
+#gcBox{height:640px;cursor:pointer} #gcHBox{height:170px} #gcKBox{height:44px} #cThinBox{height:260px;max-width:300px}
+#gcT tr{cursor:pointer} #gcT tr[aria-selected="true"] td{color:var(--accent);font-weight:700}
+.gcd{display:grid;gap:5px;font-size:15px} .gcd b.big{font:700 18px/1.2 var(--f-display)} .gcd .k{color:var(--muted);font:500 12px var(--f-mono);letter-spacing:.04em;text-transform:uppercase}
+.thin{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:620px){.thin{grid-template-columns:minmax(0,1fr)}}
+.howc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 20px}
+.howc div{font-size:14px} .howc b{display:block}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tabs button{font:700 15px/1.2 var(--f-body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:8px 12px}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.view{display:grid;gap:20px;min-width:0}
+.ipair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:1000px){.ipair{grid-template-columns:minmax(0,1fr)}}
+.obsgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+@media (max-width:560px){.obsgrid{grid-template-columns:minmax(0,1fr)}}
+.obs{display:grid;gap:4px}
+.obs .check{font-size:14px;line-height:1.3;align-items:flex-start}
+.obs .check input{margin-top:2px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 12px}
+input[type=number],input[type=text]{font:14px var(--f-mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%}
+#cProfBox{height:250px} #sRedoxBox{height:118px} #sHeckBox{height:280px} #secCBox{height:470px}
+.bars{display:grid;gap:3px;font-size:13px}
+.bar{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr) 42px;gap:8px;align-items:center}
+.bar .t{height:10px;background:var(--line);border-radius:1px;overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--accent)}
+.bar .p{font:12px var(--f-mono);text-align:right;color:var(--muted)}
+.bar.top span:first-child{font-weight:700}
+.verdict{font-size:15px;display:grid;gap:6px;min-width:0}
+.verdict b.big{font:700 18px/1.2 var(--f-display)}
+.verdict .ev{font-size:13.5px;color:var(--muted)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:14px;align-items:start}
+@media (max-width:520px){.split{grid-template-columns:minmax(0,1fr)}}
+.addrow{border-top:1px solid var(--line);padding-top:10px;align-items:flex-end}
+#sec_t button{padding:2px 7px;font-size:13px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Companion to Peat Swamp Hectare · exchanges <code>coastal-sed-params/v1</code></div>
+    <h1>Coastal Sediment &amp; Facies</h1>
+    <p class="lede">Model a coast forward from grain size, river flow, waves, tides and shoreline trajectory, or work backward from what you see in carbonate beds and distal shales. Export the settings as JSON for the Coast builder tab.</p>
+    <div class="tabs" role="tablist" aria-label="View">
+      <button type="button" role="tab" id="tabCoast" aria-selected="true" aria-controls="viewCoast">Coast model</button>
+      <button type="button" role="tab" id="tabInterp" aria-selected="false" aria-controls="viewInterp">Interpret carbonates &amp; condensed shales</button>
+    </div>
+  </header>
+
+  <div id="viewCoast" class="view" role="tabpanel" aria-labelledby="tabCoast">
+  <div class="presets" id="presets" role="group" aria-label="Worked examples"></div>
+  <p class="presetNote" id="presetNote"></p>
+
+  <div class="bench">
+    <section class="card" aria-label="Dip section">
+      <div class="head"><h2 id="secTitle">Dip section</h2><span class="scale" id="secScale"></span></div>
+      <div class="chips" id="chips"></div>
+      <div class="box" id="secBox"><canvas id="sec" role="img" aria-label="Dip cross-section of stacked facies belts from land to shelf"></canvas><div class="tip" id="secTip" hidden></div></div>
+      <div class="legend" id="legend"></div>
+      <p class="note">Each band is one time slice (a parasequence). The dashed line joins the shoreline in each slice: it climbs seaward when the coast progrades, landward when it transgresses, and zig-zags under eustatic cycles. Click the section to drill a core there. Horizontal scale adapts to the belt widths; vertical is schematic.</p>
+    </section>
+
+    <aside class="rail" aria-label="Model controls">
+      <fieldset>
+        <legend>Model</legend>
+        <label for="model">Sedimentological model
+          <select id="model">
+            <option value="auto">Classify from the controls</option>
+            <option value="river">River-dominated delta</option>
+            <option value="wave_delta">Wave-dominated delta</option>
+            <option value="tide">Tide-dominated delta / estuary</option>
+            <option value="wave_shore">Barrier or strandplain shoreline</option>
+            <option value="mud">Mud coast (chenier plain)</option>
+            <option value="carbonate">Carbonate shelf</option>
+            <option value="cyclothem">Pennsylvanian cyclothem</option>
+          </select></label>
+        <div class="row">
+          <label for="era" style="flex:1">Era<select id="era"><option value="modern">Modern</option><option value="paleo">Pennsylvanian–early Permian</option></select></label>
+          <label for="realm" style="flex:1">Mangrove realm<select id="realm"><option value="AEP">Atlantic–E Pacific</option><option value="IWP">Indo-West Pacific</option></select></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Setting</legend>
+        <label for="lat"><span class="lab">Latitude <b id="latV"></b></span><input id="lat" type="range" min="0" max="45" step="1"></label>
+        <label for="hum"><span class="lab">Climate, arid ↔ humid <b id="humV"></b></span><input id="hum" type="range" min="0" max="100" step="1"></label>
+        <label for="nut"><span class="lab">Nutrient input <b id="nutV"></b></span><input id="nut" type="range" min="0" max="100" step="1"></label>
+        <label for="inund"><span class="lab">Tidal inundation inland <b id="inundV"></b></span><input id="inund" type="range" min="0" max="100" step="1"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Waves, tides, shelf</legend>
+        <label for="wave"><span class="lab">Wave energy <b id="waveV"></b></span><input id="wave" type="range" min="0" max="100" step="1"></label>
+        <label for="tide"><span class="lab">Spring tidal range <b id="tideV"></b></span><input id="tide" type="range" min="0.2" max="8" step="0.1"></label>
+        <label for="shelf"><span class="lab">Shelf width <b id="shelfV"></b></span><input id="shelf" type="range" min="5" max="300" step="5"></label>
+        <label for="shelfT">Shelf type<select id="shelfT"><option value="clastic">Siliciclastic</option><option value="carbonate">Carbonate</option></select></label>
+      </fieldset>
+      <fieldset>
+        <legend>River and sediment</legend>
+        <label for="sup"><span class="lab">Clastic supply to the coast <b id="supV"></b></span><input id="sup" type="range" min="0" max="100" step="1"></label>
+        <label for="d50"><span class="lab">Median grain size, D<sub>50</sub> <b id="d50V"></b></span><input id="d50" type="range" min="-2" max="8.5" step="0.25" aria-describedby="d50V"></label>
+        <label for="Q"><span class="lab">Bankfull discharge <b id="QV"></b></span><input id="Q" type="range" min="1" max="5.5" step="0.05"></label>
+        <label for="S"><span class="lab">Channel slope <b id="SV"></b></span><input id="S" type="range" min="-5.3" max="-2" step="0.05"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Stacking through time</legend>
+        <label for="traj"><span class="lab">Shoreline trajectory <b id="trajV"></b></span><input id="traj" type="range" min="-100" max="100" step="1"></label>
+        <label for="eus"><span class="lab">Eustatic cycles <b id="eusV"></b></span><input id="eus" type="range" min="0" max="100" step="1"></label>
+      </fieldset>
+    </aside>
+  </div>
+
+  <div class="gauges">
+    <section class="card" aria-label="Shields diagram">
+      <div class="head"><h2>Will the bed move?</h2><span class="scale">Shields diagram</span></div>
+      <div class="box" id="shBox"><canvas id="sh" role="img" aria-label="Shields diagram with river, tide and wave points"></canvas></div>
+      <div class="scroll"><table id="tr"><thead><tr><th>Flow</th><th class="n">u* m/s</th><th class="n">θ / θcr</th><th class="n">Rouse P</th><th>Mode</th><th>Bedform</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section class="card" aria-label="Galloway triangle">
+      <div class="head"><h2>Which process wins?</h2><span class="scale">Galloway triangle</span></div>
+      <div class="box" id="galBox"><canvas id="gal" role="img" aria-label="Galloway ternary diagram of river, wave and tide influence"></canvas></div>
+      <p class="note" id="galNote">Click inside the triangle to set supply, wave energy and tidal range in that proportion. Open circles are the worked examples.</p>
+    </section>
+    <section class="card" aria-label="Channel pattern">
+      <div class="head"><h2>What does the river look like?</h2><span class="scale">plan view, schematic</span></div>
+      <div class="box" id="chBox"><canvas id="ch" role="img" aria-label="Plan-view sketch of the channel pattern"></canvas></div>
+      <table id="chT"><tbody></tbody></table>
+    </section>
+  </div>
+
+  <div class="pair">
+    <section class="card" aria-label="Graphic log">
+      <div class="head"><h2>Core at <span id="logX"></span></h2><span class="scale">graphic log · width = grain size</span></div>
+      <div class="box" id="logBox"><canvas id="log" role="img" aria-label="Graphic sedimentary log at the drilled position"></canvas></div>
+      <p class="note" id="logNote"></p>
+    </section>
+    <section class="card" aria-label="Facies belts">
+      <div class="head"><h2>Facies belts, landward → seaward</h2><span class="scale" id="beltScale"></span></div>
+      <div class="scroll"><table id="belts"><thead><tr><th>Facies</th><th>Zone</th><th>Grain</th><th>Structures and process</th><th class="n">width</th></tr></thead><tbody></tbody></table></div>
+      <p class="note">Walther’s law: belts that sit side by side on the surface stack on top of each other when the shoreline moves, unless an erosion surface cuts the record (a ravinement surface under transgression, a sequence boundary under forced regression).</p>
+    </section>
+  </div>
+
+  <section class="card" aria-label="Core at grain scale">
+    <div class="head"><h2>The same core, grain by grain</h2><span class="scale" id="gcScale">grains enlarged · click a bed</span></div>
+    <p class="note">Each bed is filled with grains drawn from its own size distribution and arranged the way its transport regime would leave them: sorted by swash, stacked in cross-sets by migrating dunes, draped by slack-water mud, graded by waning storms, churned by burrows, or made in place by carbonate organisms. Grains are enlarged; their sizes follow the φ scale, and clay and most silt show as matrix tone.</p>
+    <div class="gcgrid">
+      <div class="box" id="gcBox"><canvas id="gc" role="img" aria-label="Grain-scale drawing of the drilled core"></canvas></div>
+      <div style="display:grid;gap:10px;min-width:0;align-content:start">
+        <div class="gcd" id="gcDetail" role="status"></div>
+        <div class="box" id="gcHBox"><canvas id="gcH" role="img" aria-label="Grain-size distribution of the selected bed"></canvas></div>
+        <div class="box" id="gcKBox"><canvas id="gcK" role="img" aria-label="Key to drawn grain sizes and minerals"></canvas></div>
+        <div class="scroll"><table id="gcT"><thead><tr><th>Bed, top first</th><th>Grain</th><th>Sorting</th><th>Transport</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="Parameter exchange">
+    <div class="head"><h2>Send to the Coast builder</h2><span class="scale">schema coastal-sed-params/v1</span></div>
+    <div class="ex">
+      <div style="display:grid;gap:10px;min-width:0">
+        <label for="json">Parameters (JSON). Edit or paste here, then press Apply.<textarea id="json" spellcheck="false"></textarea></label>
+        <div class="row">
+          <button type="button" class="primary" id="copyJson">Copy JSON</button>
+          <button type="button" id="applyJson">Apply pasted parameters</button>
+          <button type="button" id="resetJson">Show current settings</button>
+          <label class="check" for="coreOnly"><input type="checkbox" id="coreOnly"> Coast-builder keys only</label>
+        </div>
+        <div class="msg" id="jsonMsg" role="status"></div>
+      </div>
+      <div style="display:grid;gap:10px;align-content:start;min-width:0">
+        <h3>To apply in the landscape model</h3>
+        <ol class="steps">
+          <li>Press <b>Copy JSON</b>.</li>
+          <li>Open <a href="https://claude.ai/artifact/NFcPTcdNaVC5cgnk3XcLMa" target="_blank" rel="noopener">Peat Swamp Hectare</a> and switch to the <b>Coast builder</b> tab.</li>
+          <li>Paste into <b>Parameter exchange</b> and press <b>Apply pasted parameters</b>.</li>
+        </ol>
+        <p class="note">The Coast builder reads the 12 shared keys and ignores the rest. The extra keys (model, grain size, discharge, slope, eustatic cycles and the derived results) let this page restore its own state when you paste the JSON back here. Going the other way, copy from the Coast builder and apply it here: the grain and river settings stay as they are.</p>
+        <div class="scroll"><table id="keyT"><thead><tr><th>Shared key</th><th>Range</th><th class="n">Now</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="Rules and sources">
+    <h2>Rules and where they come from</h2>
+    <div class="refs" id="refs"></div>
+    <p class="note">The physics is textbook first-order: one grain size, steady uniform flow, linear waves. Facies widths are schematic rules scaled by the controls, meant for intuition and for setting up the landscape model, not as a reconstruction of any one coast.</p>
+  </section>
+  </div>
+
+  <div id="viewInterp" class="view" role="tabpanel" aria-labelledby="tabInterp" hidden>
+    <p class="note">Describe a bed and the page scores it against standard settings, lists the evidence for and against, and estimates water depth. Add interpreted beds to a measured section to get a relative water-depth curve, then send the trajectory and cycle amplitude to the coast model. The scores are explicit weighted rules, listed in full at the bottom of this tab.</p>
+    <div class="ipair">
+      <section class="card" aria-label="Carbonate bed interpreter">
+        <div class="head"><h2>Carbonate bed</h2><span class="scale">Dunham texture · Wilson facies zones</span></div>
+        <div class="row">
+          <label for="c_ex" style="flex:2;min-width:200px">Load an example bed<select id="c_ex"></select></label>
+          <label for="c_age" style="flex:1;min-width:140px">Age<select id="c_age"><option value="paleo">Pennsylvanian–Permian</option><option value="modern">Modern / Cenozoic</option></select></label>
+        </div>
+        <label for="c_tex">Dunham texture<select id="c_tex"></select></label>
+        <div class="obsgrid">
+          <fieldset><legend>Grains</legend><div class="obs" id="c_grains"></div></fieldset>
+          <fieldset><legend>Structures</legend><div class="obs" id="c_struct"></div></fieldset>
+        </div>
+        <div class="box" id="cProfBox"><canvas id="c_prof" role="img" aria-label="Rimmed shelf and ramp profiles with the likely facies zone highlighted"></canvas></div>
+        <div class="bars" id="c_bars"></div>
+        <div class="verdict" id="c_out"></div>
+        <div class="thin">
+          <div class="box" id="cThinBox"><canvas id="c_thin" role="img" aria-label="Thin-section view of the described carbonate bed"></canvas></div>
+          <div class="verdict" id="c_thinNote"></div>
+        </div>
+        <div class="row addrow">
+          <label for="c_name" style="flex:2;min-width:160px">Bed name<input id="c_name" type="text" value="Limestone bed"></label>
+          <label for="c_th" style="flex:1;min-width:90px">Thickness (m)<input id="c_th" type="number" min="0.05" step="0.05" value="1"></label>
+          <button type="button" class="primary" id="c_add">Add to section</button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Distal shale interpreter">
+        <div class="head"><h2>Distal or condensed shale</h2><span class="scale">redox · condensation · cyclothem position</span></div>
+        <label for="s_ex">Load an example bed<select id="s_ex"></select></label>
+        <div class="fgrid">
+          <label for="s_color">Colour<select id="s_color"><option value="grey">Grey</option><option value="dark">Dark grey</option><option value="black">Black</option></select></label>
+          <label for="s_toc">TOC (wt %)<input id="s_toc" type="number" min="0" max="40" step="0.1"></label>
+          <label for="s_bi">Bioturbation index<select id="s_bi"><option value="0">0 · none</option><option value="1">1 · sparse</option><option value="2">2 · low</option><option value="3">3 · moderate</option><option value="4">4 · high</option><option value="5">5 · intense</option><option value="6">6 · complete</option></select></label>
+          <label for="s_lam">Lamination<select id="s_lam"><option value="none">None (massive or burrowed)</option><option value="faint">Faint, discontinuous</option><option value="fine">Fine, planar, fissile</option></select></label>
+          <label for="s_ben">Benthic fauna<select id="s_ben"><option value="abundant">Abundant, diverse</option><option value="sparse">Sparse, small</option><option value="absent">Absent</option></select></label>
+          <label for="s_phos">Phosphate nodules<select id="s_phos"><option value="none">None</option><option value="scattered">Scattered</option><option value="abundant">Abundant, laminae</option></select></label>
+          <label for="s_glauc">Glauconite<select id="s_glauc"><option value="none">None</option><option value="present">Present</option><option value="abundant">Abundant</option></select></label>
+          <label for="s_cono">Conodonts<select id="s_cono"><option value="low">Few</option><option value="mod">Common</option><option value="high">Very abundant (&gt;1,000 per kg)</option></select></label>
+          <label for="s_fram">Mean pyrite framboid (µm)<input id="s_fram" type="number" min="1" max="30" step="0.1" placeholder="not measured"></label>
+          <label for="s_uth">U/Th<input id="s_uth" type="number" min="0" max="20" step="0.05" placeholder="not measured"></label>
+          <label for="s_vcr">V/Cr<input id="s_vcr" type="number" min="0" max="30" step="0.1" placeholder="not measured"></label>
+          <label for="s_mo">Mo (ppm)<input id="s_mo" type="number" min="0" max="1000" step="1" placeholder="not measured"></label>
+          <label for="s_gr">Gamma ray (API)<input id="s_gr" type="number" min="0" max="1000" step="5" placeholder="not measured"></label>
+        </div>
+        <div class="obs" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+          <label class="check" for="s_amm"><input type="checkbox" id="s_amm"> Ammonoids, pelagic fauna</label>
+          <label class="check" for="s_fish"><input type="checkbox" id="s_fish"> Fish debris</label>
+          <label class="check" for="s_rad"><input type="checkbox" id="s_rad"> Radiolarians</label>
+          <label class="check" for="s_lag"><input type="checkbox" id="s_lag"> Basal lag or hardground</label>
+        </div>
+        <div class="box" id="sRedoxBox"><canvas id="s_redox" role="img" aria-label="Redox scale with each proxy placed on it"></canvas></div>
+        <div class="split">
+          <div class="verdict" id="s_out"></div>
+          <div class="box" id="sHeckBox"><canvas id="s_heck" role="img" aria-label="Idealized Heckel cyclothem with the matching unit highlighted"></canvas></div>
+        </div>
+        <div class="row addrow">
+          <label for="s_name" style="flex:2;min-width:160px">Bed name<input id="s_name" type="text" value="Shale bed"></label>
+          <label for="s_th" style="flex:1;min-width:90px">Thickness (m)<input id="s_th" type="number" min="0.05" step="0.05" value="1"></label>
+          <button type="button" class="primary" id="s_add">Add to section</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" aria-label="How carbonates work">
+      <h2>How carbonates work</h2>
+      <div class="howc">
+        <div><b>Born, not delivered</b>Most carbonate grains are made where they settle, by organisms or by precipitation from warm seawater supersaturated in calcium carbonate. Sand and mud in a siliciclastic rock were eroded from land and carried in.</div>
+        <div><b>The carbonate factory</b>Production is fastest in shallow, warm, clear, sunlit water and falls off with depth, muddy runoff and excess nutrients. A healthy factory can keep up with rising sea level, catch up later, or give up and drown (Kendall &amp; Schlager 1981).</div>
+        <div><b>Texture records energy</b>Grain size mostly reflects the organisms that made the grains, so sorting says less than it does in sandstone. Whether the lime mud survived is the energy signal: kept in calm water, winnowed where waves work (Dunham 1962).</div>
+        <div><b>Ooids need two things</b>Ooids grow concentric coats while rolling in warm, agitated, supersaturated water, as on Bahamian tidal bars. They mark high energy and high saturation together.</div>
+        <div><b>Early cement</b>Carbonates harden quickly on the sea floor and at shallow depth, making hardgrounds and locking in open fabrics. Coal balls are the same early cementation acting in peat.</div>
+        <div><b>The Pennsylvanian factory</b>Phylloid algae built mounds; crinoids, brachiopods, bryozoans and fusulinids made the skeletal sand; coral reefs were minor. It was an aragonite-sea interval, which favoured aragonite-secreting algae (Stanley &amp; Hardie 1998).</div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Measured section">
+      <div class="head"><h2>Measured section → water-depth curve → coast model</h2><span class="scale">oldest bed at the base</span></div>
+      <div class="row">
+        <button type="button" id="sec_ex">Load Swope cyclothem example</button>
+        <button type="button" id="sec_coal">Add coal</button>
+        <button type="button" id="sec_soil">Add paleosol (exposure)</button>
+        <button type="button" id="sec_sand">Add sandstone</button>
+        <button type="button" id="sec_clear">Clear section</button>
+      </div>
+      <div class="pair">
+        <div class="box" id="secCBox"><canvas id="sec_c" role="img" aria-label="Measured section with lithology column and relative water-depth curve"></canvas></div>
+        <div style="display:grid;gap:10px;min-width:0;align-content:start">
+          <div class="scroll"><table id="sec_t"><thead><tr><th>Bed, top first</th><th>Interpretation</th><th class="n">depth</th><th class="n">m</th><th><span class="vh">Move or remove</span></th></tr></thead><tbody></tbody></table></div>
+          <div class="verdict" id="sec_sum"></div>
+          <div class="row"><button type="button" class="primary" id="sec_send">Send to coast model</button><span class="msg" id="sec_msg" role="status"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Interpretation rules">
+      <h2>Interpretation rules and sources</h2>
+      <div class="refs" id="irefs"></div>
+      <div class="scroll"><table id="c_rules"><thead><tr><th>Observation</th><th>Pushes toward (+) or away from (−)</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const g = 9.81, s = 2.65, nu = 1.0e-6, kap = 0.4;
+
+// ---------------- presets ----------------
+const PRESETS = [
+  {id:"miss", name:"Mississippi bird-foot", model:"river", era:"modern", realm:"AEP", lat:29, hum:80, nut:80, inund:25, wave:15, tide:0.4, shelf:15, shelfT:"clastic", sup:95, d50:0.1, Q:35000, S:3e-5, traj:-70, eus:0,
+   note:"Shelf-edge lobe on a microtidal, low-wave coast with very high mud and fine-sand supply. Mouth bars stack into elongate bar-finger sands (Fisk 1961; Wright & Coleman 1973)."},
+  {id:"amaz", name:"Amazon–Guiana mud coast", model:"mud", era:"modern", realm:"AEP", lat:2, hum:95, nut:85, inund:70, wave:30, tide:6, shelf:300, shelfT:"clastic", sup:100, d50:0.008, Q:200000, S:2e-5, traj:-60, eus:0,
+   note:"Amazon mud travels northwest along the Guianas as migrating mud banks. Avicennia colonizes the bank crests; sandy cheniers form in the inter-bank zones (Anthony et al. 2010)."},
+  {id:"gbm", name:"Ganges–Brahmaputra", model:"tide", era:"modern", realm:"IWP", lat:22, hum:90, nut:80, inund:75, wave:25, tide:5, shelf:150, shelfT:"clastic", sup:85, d50:0.08, Q:100000, S:5e-5, traj:10, eus:0,
+   note:"Macrotidal delta fed by about a billion tonnes of sediment a year. Tidal channels, shore-normal sand ridges and the Sundarbans mangrove on the lower delta plain (Goodbred & Kuehl 2000)."},
+  {id:"rhone", name:"Rhône wave-dominated", model:"wave_delta", era:"modern", realm:"AEP", lat:43, hum:45, nut:50, inund:15, wave:60, tide:0.2, shelf:70, shelfT:"clastic", sup:50, d50:0.2, Q:4000, S:1e-4, traj:-30, eus:0,
+   note:"Microtidal Gulf of Lion. Waves rework mouth bars into beach ridges that flank the river mouths of the Camargue, giving a cuspate, sand-fringed delta front."},
+  {id:"fla", name:"Florida carbonate", model:"carbonate", era:"modern", realm:"AEP", lat:25, hum:70, nut:20, inund:55, wave:30, tide:0.6, shelf:200, shelfT:"carbonate", sup:3, d50:0.4, Q:30, S:3e-5, traj:25, eus:0,
+   note:"Florida Bay lime-mud lagoon behind the Keys reef tract, on a platform flooded during the Holocene rise. Mangrove peat on the supratidal fringe (Ginsburg 1956; Enos & Perkins 1977)."},
+  {id:"ill", name:"Illinois Basin cyclothem", model:"cyclothem", era:"paleo", realm:"AEP", lat:5, hum:90, nut:50, inund:45, wave:20, tide:1.5, shelf:300, shelfT:"clastic", sup:45, d50:0.1, Q:5000, S:5e-5, traj:30, eus:85,
+   note:"Late Pennsylvanian epeiric sea. Glacioeustatic swings of tens of metres drive the shoreline hundreds of kilometres: underclay, coal, black phosphatic shale at maximum flooding, limestone, grey shale, sandstone (Heckel 1977)."},
+  {id:"nay", name:"Prograding strandplain", model:"wave_shore", era:"modern", realm:"AEP", lat:21, hum:60, nut:45, inund:20, wave:55, tide:1.2, shelf:40, shelfT:"clastic", sup:50, d50:0.2, Q:1500, S:2e-4, traj:-60, eus:0,
+   note:"Beach ridges added one after another as the shoreline builds seaward, as on the Nayarit coast of Mexico. Shallowing-upward shoreface sands capped by beach and dune."},
+  {id:"barr", name:"Transgressive barrier", model:"wave_shore", era:"modern", realm:"AEP", lat:38, hum:60, nut:40, inund:30, wave:60, tide:1.2, shelf:100, shelfT:"clastic", sup:15, d50:0.3, Q:300, S:1e-4, traj:60, eus:0,
+   note:"Sand-starved barrier rolling landward over its own lagoon, as on the US mid-Atlantic coast. Washover fans and lagoon mud are cut by a ravinement surface and capped by shelf sand and mud."}
+];
+const MODEL_LABEL = {river:"River-dominated delta", wave_delta:"Wave-dominated delta", tide:"Tide-dominated delta / estuary", wave_shore:"Barrier or strandplain shoreline", mud:"Mud coast (chenier plain)", carbonate:"Carbonate shelf", cyclothem:"Pennsylvanian cyclothem"};
+
+// ---------------- state ----------------
+const IDS = ["model","era","realm","lat","hum","nut","inund","wave","tide","shelf","shelfT","sup","d50","Q","S","traj","eus"];
+let presetId = null, logX = null;
+const phiToMm = p => Math.pow(2, -p), mmToPhi = d => -Math.log2(d);
+function read(){
+  return { model: $("model").value, era: $("era").value, realm: $("realm").value, lat: +$("lat").value, hum: +$("hum").value/100, nut: +$("nut").value/100,
+    inund: +$("inund").value/100, wave: +$("wave").value/100, tide: +$("tide").value, shelf: +$("shelf").value, shelfT: $("shelfT").value,
+    sup: +$("sup").value/100, d50: phiToMm(+$("d50").value), Q: Math.pow(10, +$("Q").value), S: Math.pow(10, +$("S").value), traj: +$("traj").value/100, eus: +$("eus").value/100 };
+}
+function setPreset(p){
+  $("model").value = p.model; $("era").value = p.era; $("realm").value = p.realm; $("lat").value = p.lat; $("hum").value = p.hum; $("nut").value = p.nut;
+  $("inund").value = p.inund; $("wave").value = p.wave; $("tide").value = p.tide; $("shelf").value = p.shelf; $("shelfT").value = p.shelfT; $("sup").value = p.sup;
+  $("d50").value = mmToPhi(p.d50); $("Q").value = Math.log10(p.Q); $("S").value = Math.log10(p.S); $("traj").value = p.traj; $("eus").value = p.eus;
+}
+
+// ---------------- grain size ----------------
+function grainName(d){
+  if (d < 0.0039) return "clay"; if (d < 0.0625) return "silt"; if (d < 0.125) return "very fine sand"; if (d < 0.25) return "fine sand";
+  if (d < 0.5) return "medium sand"; if (d < 1) return "coarse sand"; if (d < 2) return "very coarse sand"; if (d < 4) return "granules"; if (d < 64) return "pebbles"; return "cobbles";
+}
+const fmtMm = d => d >= 1 ? d.toFixed(1) + " mm" : d >= 0.1 ? d.toFixed(2) + " mm" : d >= 0.01 ? (d*1000).toFixed(0) + " µm" : (d*1000).toFixed(1) + " µm";
+
+// ---------------- transport physics ----------------
+const Dstar = D => D * Math.cbrt((s - 1) * g / (nu * nu));                       // D in m
+const thetaCr = D => { const d = Dstar(D); return 0.30 / (1 + 1.2*d) + 0.055 * (1 - Math.exp(-0.020*d)); }; // Soulsby & Whitehouse 1997
+const settle = D => { const d = Dstar(D); return nu / D * (Math.sqrt(10.36*10.36 + 1.049*d*d*d) - 10.36); };  // Soulsby 1997
+const thetaOf = (us, D) => us*us / ((s - 1) * g * D);
+function mode(theta, thc, P, D){
+  if (D < 0.0000625) return theta > thc ? "suspension (cohesive mud, washload)" : "mud settles (if flow slackens)";
+  if (theta < thc) return "no motion";
+  if (P > 2.5) return "bedload";
+  if (P > 1.2) return "bedload + some suspension";
+  if (P > 0.8) return "mostly suspended";
+  return "fully suspended";
+}
+function bedform(U, h, us, D, Fr){
+  if (D < 0.0000625) return "none (cohesive)";
+  if (D > 0.002) { const th = thetaOf(us, D), tc = thetaCr(D); return th < tc ? "static armour" : th < 2*tc ? "gravel sheets" : "gravel bars"; }
+  const ks = 3 * 2 * D, Cp = 18 * Math.log10(12 * h / ks), usp = U * Math.sqrt(g) / Cp;   // van Rijn 1984 grain-related u*'
+  const ucr2 = thetaCr(D) * (s - 1) * g * D, T = (usp*usp - ucr2) / ucr2;
+  if (Fr > 0.8) return "antidunes, chutes and pools";
+  if (T <= 0) return "flat, no transport";
+  if (Dstar(D) < 10 && T < 3) return "current ripples";
+  if (T < 15) return "dunes";
+  if (T < 25) return "washed-out dunes";
+  return "upper plane bed";
+}
+function river(P){
+  const D = P.d50/1000, Q = P.Q, S = P.S, n = 0.03;
+  const w = 4 * Math.sqrt(Q), h = Math.pow(Q * n / (w * Math.sqrt(S)), 0.6), U = Q / (w*h);   // hydraulic geometry + Manning
+  const us = Math.sqrt(g * h * S), th = thetaOf(us, D), thc = thetaCr(D), ws = settle(D), Pr = ws / (kap * us), Fr = U / Math.sqrt(g*h);
+  const omega = 1000 * g * Q * S / w;                         // specific stream power W/m2
+  const St = 0.013 * Math.pow(Q, -0.44);                      // Leopold & Wolman 1957 meander–braid threshold
+  let pattern, why;
+  if (S > St && P.d50 >= 0.0625) { pattern = "braided"; why = `slope ${S.toExponential(1)} is above the meander–braid threshold ${St.toExponential(1)} for this discharge`; }
+  else if (omega < 10 && (P.d50 < 0.0625 || P.hum > 0.6)) { pattern = "anastomosing"; why = `low stream power (${omega.toFixed(1)} W/m²) and cohesive, vegetated banks keep several stable channels`; }
+  else if (omega < 25 && P.traj > 0.2 && P.d50 < 0.25) { pattern = "anastomosing"; why = "rapid aggradation under a rising base level favours avulsion into stable multiple channels"; }
+  else { pattern = "meandering"; why = `slope is below the braid threshold ${St.toExponential(1)}; banks hold, bends migrate`; }
+  return { D, w, h, U, us, th, thc, Pr, Fr, omega, St, pattern, why, ws, mode: mode(th, thc, Pr, D), bed: bedform(U, h, us, D, Fr) };
+}
+function tideFlow(P){
+  const D = P.d50/1000, U = Math.min(2.0, 0.15 + 0.3*P.tide), h = 10, us = Math.sqrt(0.0025) * U;
+  const th = thetaOf(us, D), thc = thetaCr(D), Pr = settle(D) / (kap*us), Fr = U / Math.sqrt(g*h);
+  return { D, U, h, us, th, thc, Pr, mode: mode(th, thc, Pr, D), bed: bedform(U, h, us, D, Fr) };
+}
+function waveLen(T, h){ const L0 = g*T*T/(2*Math.PI); return L0 * Math.pow(Math.tanh(Math.pow(2*Math.PI/T*Math.sqrt(h/g), 1.5)), 2/3); } // Fenton & McKee 1990
+function waveFlow(P){
+  const D = P.d50/1000, Hs = 0.2 + 2.8*P.wave, T = 4 + 7*P.wave, h = 10;
+  const H = Math.min(Hs, 0.78*h), k = 2*Math.PI / waveLen(T, h), Um = Math.PI * H / (T * Math.sinh(k*h));
+  const A = Um * T / (2*Math.PI), z0 = 2.5 * D / 30, fw = Math.min(0.3, 1.39 * Math.pow(A / z0, -0.52));
+  const us = Math.sqrt(0.5 * fw) * Um, th = thetaOf(us, D), thc = thetaCr(D), Pr = settle(D) / (kap*us);
+  const Hst = Math.min(10, 2.5*Hs + 1), Tst = 1.5*T;
+  const fwwb = g*T*T/(2*Math.PI)/4, swb = g*Tst*Tst/(2*Math.PI)/4;   // h = L0/4: orbital motion ~20% of the surface value
+  let b = "oscillation ripples"; if (D < 0.0000625) b = "none (cohesive)"; else if (th < thc) b = "no motion"; else if (th > 0.8) b = "sheet flow, plane bed"; else if (P.wave > 0.45 && th > 0.25) b = "hummocky / swaley bedforms";
+  return { D, Hs, T, Hst, Tst, Um, us, th, thc, Pr, fwwb, swb, mode: mode(th, thc, Pr, D), bed: b };
+}
+function galloway(P){ const f = P.sup, w = P.wave, t = Math.min(1, P.tide/4), sum = Math.max(1e-6, f + w + t); return { f: f/sum, w: w/sum, t: t/sum }; }
+function classify(P){
+  if (P.model !== "auto") return P.model;
+  if (P.shelfT === "carbonate" && P.sup < 0.35) return "carbonate";
+  if (P.era === "paleo" && P.eus > 0.4) return "cyclothem";
+  if (P.d50 < 0.03 && P.sup > 0.6) return "mud";
+  const G = galloway(P);
+  if (G.t >= G.f && G.t >= G.w) return "tide";
+  if (G.w >= G.f) return P.sup > 0.4 ? "wave_delta" : "wave_shore";
+  return "river";
+}
+
+// ---------------- facies belts ----------------
+// lith keys map to fill tokens and patterns; g = representative grain size (mm) for the log
+function vegWord(P){ if (P.era === "paleo") return null; return P.lat <= 30 ? "mangrove" : "salt marsh"; }
+function belts(model, P, W){
+  const D = P.d50, sandy = D >= 0.0625, V = vegWord(P), arid = P.hum < 0.35, sup = P.sup, tide = P.tide;
+  const sandL = sandy ? "sand" : "het", Dg = Math.max(D, 0.004);
+  const peatOr = arid ? "soil" : "peat";
+  const shoreface = [
+    {n:"Foreshore (beach)", lith:sandL, g:Dg*1.15, w:0.3, z:"intertidal", st:"planar lamination, low-angle cross-sets, heavy-mineral laminae", pr:"swash and backwash"},
+    {n:"Upper shoreface", lith:sandL, g:Dg, w:Math.max(0.5, W.fwwb*0.04), z:"shallow marine", st:"trough cross-bedding, rip-channel scours", pr:"breaking waves and longshore currents"},
+    {n:"Lower shoreface", lith:sandL, g:Math.max(0.07, Dg*0.7), w:Math.max(0.8, W.fwwb*0.09), z:"above fair-weather wave base", st:"hummocky and swaley cross-stratification, burrows", pr:"storm-wave reworking"},
+    {n:"Offshore transition", lith:"het", g:0.04, w:Math.max(2, (W.swb - W.fwwb)*0.15), z:"between wave bases", st:"storm sand beds in bioturbated mud", pr:"mud settles in fair weather; storms bring sand"}
+  ];
+  if (model === "river") return [
+    {n:"Floodplain and meander belt", lith:"soil", g:0.01, w:Infinity, z:"alluvial", st:"rooted mudstone, paleosols, thin splay sands", pr:"overbank flooding"},
+    {n:"Distributary channels and levees", lith:sandL, g:Dg, w:3 + 3*sup, z:"upper delta plain", st:"trough cross-bedding; climbing ripples on levees", pr:"channelized bedload; levee fallout"},
+    {n:"Interdistributary bay, marsh" + (arid ? "" : " and peat"), lith:arid ? "mud" : "peat", g:0.004, w:4 + 8*sup, z:"lower delta plain", st:"rooted mud, coaly laminae, crevasse splays", pr:"subsidence of abandoned lobes"},
+    {n:"Distributary mouth bar", lith:sandL, g:Dg, w:1 + 2*sup, z:"delta front, 0–10 m", st:"coarsening-up, cross-bedded bar-finger sand", pr:"effluent jet decelerates and drops bedload", sea:true, cl:true},
+    {n:"Distal delta front", lith:"het", g:Math.max(0.03, Dg*0.5), w:3 + 4*sup, z:"delta front slope", st:"flaser and lenticular bedding, slumps", pr:"suspension fallout with river-flood sand beds", sea:true, cl:true},
+    {n:"Prodelta", lith:"mud", g:0.004, w:5 + 12*sup, z:"below wave base", st:"laminated mud, sparse burrows", pr:"plume fallout, fluid mud", sea:true, cl:true},
+    {n:"Shelf mud", lith:"mud", g:0.004, w:Infinity, z:"shelf", st:"bioturbated mud", pr:"hemipelagic settling", sea:true}
+  ];
+  if (model === "wave_delta") return [
+    {n:"Coastal and alluvial plain", lith:"soil", g:0.01, w:Infinity, z:"alluvial", st:"rooted mudstone, channel sands", pr:"overbank flooding"},
+    {n:"Beach-ridge plain" + (arid ? "" : " with swale peat"), lith:sandL, g:Dg, w:2 + 6*sup, z:"delta plain", st:"stacked beach and dune sets; organic swale fills", pr:"wave-built ridges either side of the mouth"},
+    ...shoreface.map(b => ({...b, sea:true})),
+    {n:"Prodelta and shelf mud", lith:"mud", g:0.004, w:Infinity, z:"below storm wave base", st:"bioturbated mud", pr:"plume fallout", sea:true}
+  ];
+  if (model === "wave_shore") {
+    const land = P.traj < -0.2 ? [
+      {n:"Coastal plain" + (arid ? "" : " and swamp peat"), lith:peatOr, g:0.004, w:Infinity, z:"coastal plain", st:"rooted mud, peat", pr:"groundwater-fed swamp"},
+      {n:"Beach-ridge strandplain", lith:sandL, g:Dg, w:4 + 8*sup, z:"supratidal", st:"seaward-dipping beach sets under dune cross-beds", pr:"ridges added as the shore builds out"}
+    ] : [
+      {n:"Coastal plain" + (arid ? "" : " and swamp peat"), lith:peatOr, g:0.004, w:Infinity, z:"coastal plain", st:"rooted mud, peat", pr:"groundwater-fed swamp"},
+      {n:"Lagoon" + (V && !arid ? " and " + V : ""), lith:"mud", g:0.006, w:2 + 6*(1 - P.wave), z:"back-barrier", st:"laminated to bioturbated mud, oyster beds", pr:"restricted, brackish, tidal exchange through inlets"},
+      {n:"Washover fans and flood-tidal deltas", lith:sandL, g:Dg, w:0.8 + (P.traj > 0.2 ? 1 : 0), z:"back-barrier", st:"landward-dipping sand sheets, foresets", pr:"storm overwash and inlet currents"},
+      {n:"Barrier beach and dunes", lith:sandL, g:Dg*1.1, w:0.8, z:"supratidal", st:"aeolian cross-beds, root traces", pr:"wind and swash"}
+    ];
+    return [...land, ...shoreface.map(b => ({...b, sea:true})),
+      {n:"Offshore mud" + (P.traj > 0.2 ? " over a transgressive lag" : ""), lith:"mud", g:0.004, w:Infinity, z:"below storm wave base", st:P.traj > 0.2 ? "shell lag on the ravinement surface, then bioturbated mud" : "bioturbated mud", pr:"hemipelagic settling", sea:true}];
+  }
+  if (model === "tide") return [
+    {n:"Upper delta plain", lith:"soil", g:0.01, w:Infinity, z:"alluvial", st:"rooted mudstone", pr:"overbank flooding"},
+    arid ? {n:"Supratidal salt flat", lith:"evap", g:0.004, w:1.5 + tide*0.8, z:"supratidal", st:"evaporite crusts, mud cracks", pr:"evaporation exceeds rain"}
+         : {n:"Supratidal " + (V || "swamp") + " and peat", lith:"peat", g:0.004, w:1.5 + tide*0.8, z:"supratidal", st:"rooted mud and peat, " + (V ? "pneumatophore" : "stump") + " horizons", pr:"flooded only by spring tides"},
+    {n:"Tidal flats, mud to sand seaward", lith:"het", g:0.03, w:0.5 + tide*0.8, z:"intertidal", st:"flaser–wavy–lenticular bedding, tidal bundles", pr:"tidal currents, slack-water mud drapes"},
+    {n:"Tidal channels and point bars", lith:sandL, g:Dg, w:2 + tide, z:"intertidal–subtidal", st:"inclined heterolithic stratification, mud-draped cross-beds", pr:"ebb and flood currents, lateral accretion"},
+    {n:P.sup < 0.35 ? "Estuary-mouth sand bars" : "Tidal sand ridges", lith:sandL, g:Dg, w:3 + 2*tide, z:"subtidal", st:"herringbone cross-beds, double mud drapes", pr:"bidirectional tidal currents", sea:true},
+    {n:"Delta-front heterolithics", lith:"het", g:0.03, w:3 + 3*sup, z:"delta front", st:"tidal rhythmites, slumps", pr:"fluid mud and tidal sand", sea:true, cl:true},
+    {n:"Prodelta mud", lith:"mud", g:0.004, w:Infinity, z:"shelf", st:"laminated to bioturbated mud", pr:"plume fallout", sea:true}
+  ];
+  if (model === "mud") return [
+    {n:"Coastal plain" + (arid ? "" : " and swamp peat"), lith:peatOr, g:0.004, w:Infinity, z:"coastal plain", st:"rooted clay, peat", pr:"freshwater swamp"},
+    {n:"Chenier plain: mud with shelly sand ridges", lith:"het", g:0.02, w:4 + 6*sup, z:"supratidal", st:"mud flats cut by thin shell-sand ridges", pr:"ridges form when mud supply pauses and waves winnow"},
+    {n:(V ? V[0].toUpperCase() + V.slice(1) : "Vegetated") + " mudflat", lith:"mud", g:0.005, w:1 + tide*0.6, z:"upper intertidal", st:"rooted, bioturbated clay", pr:"trapping by vegetation"},
+    {n:"Intertidal mudflat", lith:"mud", g:0.005, w:0.5 + tide*0.5, z:"intertidal", st:"fluid-mud laminae, burrows", pr:"tidal settling and lag"},
+    {n:"Migrating mud banks (fluid mud)", lith:"mud", g:0.004, w:8 + 15*sup, z:"shoreface", st:"structureless gel-like mud layers", pr:"waves push mud alongshore; damping creates calm water", sea:true},
+    {n:"Inner-shelf mud wedge", lith:"mud", g:0.004, w:15 + 25*sup, z:"inner shelf", st:"laminated, sparse burrows", pr:"plume fallout", sea:true, cl:true},
+    {n:"Mid-shelf relict sand", lith:"sand", g:0.25, w:Infinity, z:"mid shelf", st:"bioturbated transgressive sand", pr:"starved of modern sediment", sea:true}
+  ];
+  if (model === "carbonate") {
+    const paleo = P.era === "paleo";
+    return [
+      {n:paleo ? "Exposed limestone, karst soil" : "Pleistocene limestone, karst", lith:"lime", g:0.004, w:Infinity, z:"hinterland", st:"caliche, karst surfaces", pr:"meteoric diagenesis"},
+      arid ? {n:"Supratidal sabkha", lith:"evap", g:0.004, w:1 + tide*0.5, z:"supratidal", st:"nodular anhydrite, gypsum, mud cracks", pr:"evaporative pumping"}
+           : {n:"Supratidal " + (V || "swamp") + " peat", lith:"peat", g:0.004, w:1 + tide*0.5, z:"supratidal", st:"peat over marl", pr:"flooded by spring tides"},
+      {n:"Intertidal flat: microbial laminites", lith:"lam", g:0.004, w:0.5 + tide*0.8, z:"intertidal", st:"stromatolites, fenestrae, mud cracks", pr:"microbial mats trap lime mud"},
+      {n:"Restricted lagoon: mudstone–wackestone", lith:"lime", g:0.006, w:clamp(P.shelf*0.3, 4, 30), z:"lagoon", st:paleo ? "bioturbated lime mud, algal plates" : "bioturbated lime mud, seagrass baffle", pr:"lime mud from algae, little wave energy", sea:true},
+      {n:paleo ? "Phylloid-algal mounds and crinoid shoals" : "Reef tract and skeletal–ooid shoals", lith:"reef", g:2, w:2 + P.wave*5, z:"shelf margin", st:paleo ? "algal mound wackestone, crinoid grainstone" : "coral boundstone, cross-bedded grainstone", pr:"carbonate factory at its most productive", sea:true},
+      {n:"Fore-reef slope", lith:"rud", g:8, w:3, z:"slope", st:"rudstone and debris beds", pr:"gravity transport of margin debris", sea:true, cl:true},
+      {n:"Basin: pelagic lime mud and marl", lith:"mud", g:0.004, w:Infinity, z:"basin", st:"thin-bedded lime mud, marl", pr:"settling", sea:true}
+    ];
+  }
+  // cyclothem (Heckel 1977)
+  return [
+    {n:"Underclay and paleosol (seatearth)", lith:"soil", g:0.003, w:Infinity, z:"exposed coastal plain", st:"rooted, slickensided clay, siderite nodules", pr:"soil formation at lowstand"},
+    {n:"Peat mire → coal", lith:"peat", g:0.003, w:8 + 10*P.hum, z:"coastal swamp", st:"banded coal; upright lycopsid stumps where drowned fast", pr:"peat accumulates as the water table rises"},
+    {n:"Estuarine and tidal-channel sandstone", lith:sandL, g:Dg, w:3 + 4*sup, z:"coastline", st:"tidal rhythmites, inclined heterolithic beds", pr:"incised valleys filled during transgression"},
+    {n:"Outside grey shale", lith:"mud", g:0.006, w:8 + 8*sup, z:"nearshore marine", st:"plant debris, siderite bands, brachiopods", pr:"prodelta mud as the shore returns", sea:true, cl:true},
+    {n:"Shallow-shelf limestone", lith:"lime", g:0.2, w:10, z:"shallow shelf", st:"fusulinid–brachiopod–crinoid wackestone to packstone", pr:"clear, warm, shallow water", sea:true},
+    {n:"Core black phosphatic shale", lith:"black", g:0.003, w:Infinity, z:"deepest shelf", st:"fissile, phosphate nodules, conodonts", pr:"condensed section below a thermocline at maximum flooding", sea:true}
+  ];
+}
+
+// ---------------- stacking ----------------
+const NL = 12;
+function build(){
+  const P = read(), W = waveFlow(P), R = river(P), Td = tideFlow(P), G = galloway(P), model = classify(P);
+  const B = belts(model, P, W).map(b => ({...b, sea: !!b.sea}));
+  const land = B.filter(b => !b.sea), sea = B.filter(b => b.sea);
+  const landSpan = land.filter(b => isFinite(b.w)).reduce((a, b) => a + b.w, 0), seaSpan = sea.filter(b => isFinite(b.w)).reduce((a, b) => a + b.w, 0);
+  const span = landSpan + seaSpan;
+  const step = span * 0.07, A = P.eus * span * 0.5;
+  const xs = []; for (let k = 0; k < NL; k++) xs.push(-P.traj * step * (k - (NL-1)/2) + A * Math.sin(2*Math.PI*k/6));
+  const x0 = Math.min(...xs) - landSpan - 0.12*span - 0.5, x1 = Math.max(...xs) + seaSpan + 0.18*span + 0.5;
+  return { P, W, R, Td, G, model, B, land, sea, xs, x0, x1, span };
+}
+function beltAt(M, k, x){
+  const xs = M.xs[k];
+  if (x >= xs) { let a = xs; for (const b of M.sea) { if (x < a + b.w || !isFinite(b.w)) return b; a += b.w; } return M.sea[M.sea.length - 1]; }
+  let a = xs; for (let i = M.land.length - 1; i >= 0; i--) { const b = M.land[i]; if (x >= a - b.w || !isFinite(b.w)) return b; a -= b.w; } return M.land[0];
+}
+
+// ---------------- drawing helpers ----------------
+let dpr = 1;
+function fit(c, box){ dpr = window.devicePixelRatio || 1; const r = $(box).getBoundingClientRect(); c.width = Math.max(1, Math.round(r.width*dpr)); c.height = Math.max(1, Math.round(r.height*dpr)); const x = c.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); return {ctx: x, W: r.width, H: r.height}; }
+function rgb(hex){ const h = hex.replace("#", ""); const n = parseInt(h.length === 3 ? h.split("").map(c => c+c).join("") : h, 16); return [n>>16&255, n>>8&255, n&255]; }
+const rgba = (hex, a) => { const [r, g2, b] = rgb(hex); return `rgba(${r},${g2},${b},${a})`; };
+const lum = hex => { const [r, g2, b] = rgb(hex); return (0.299*r + 0.587*g2 + 0.114*b) / 255; };
+const LITH = {
+  sand:{v:"--l-sand", name:"Sand / sandstone"}, het:{v:"--l-het", name:"Heterolithic sand–mud"}, mud:{v:"--l-mud", name:"Mud / shale"},
+  black:{v:"--l-black", name:"Black shale"}, peat:{v:"--l-peat", name:"Peat / coal"}, soil:{v:"--l-soil", name:"Paleosol, floodplain mud"},
+  lime:{v:"--l-lime", name:"Lime mud / limestone"}, lam:{v:"--l-lime", name:"Microbial laminite"}, reef:{v:"--l-reef", name:"Reef, grainstone"},
+  rud:{v:"--l-lime", name:"Carbonate rudstone"}, evap:{v:"--l-evap", name:"Evaporite"}, gravel:{v:"--l-gravel", name:"Gravel"}
+};
+let PAT = {};
+function makePatterns(){
+  PAT = {};
+  for (const [k, L] of Object.entries(LITH)) {
+    const base = css(L.v), c = document.createElement("canvas"), S = 14; c.width = c.height = S; const x = c.getContext("2d");
+    x.fillStyle = base; x.fillRect(0, 0, S, S);
+    const ink = lum(base) > 0.5 ? "rgba(20,25,28,.42)" : "rgba(255,255,255,.30)"; x.fillStyle = ink; x.strokeStyle = ink; x.lineWidth = 1;
+    const dot = (a, b, r) => { x.beginPath(); x.arc(a, b, r, 0, 2*Math.PI); x.fill(); };
+    const ln = (a, b, c2, d) => { x.beginPath(); x.moveTo(a, b); x.lineTo(c2, d); x.stroke(); };
+    if (k === "sand") { dot(3, 3, 0.9); dot(10, 6, 0.9); dot(5, 11, 0.9); }
+    else if (k === "het") { dot(3, 3, 0.8); dot(10, 3, 0.8); ln(1, 9.5, 6, 9.5); ln(8, 9.5, 13, 9.5); }
+    else if (k === "mud") { ln(1, 4.5, 6, 4.5); ln(8, 11.5, 13, 11.5); }
+    else if (k === "black") { ln(1, 4.5, 7, 4.5); ln(7, 11.5, 13, 11.5); }
+    else if (k === "peat") { ln(0, 3.5, 14, 3.5); ln(0, 9.5, 14, 9.5); }
+    else if (k === "soil") { ln(4, 2, 5, 7); ln(5, 7, 3.5, 10); ln(11, 6, 10, 12); dot(9, 2.5, 0.8); }
+    else if (k === "lime" || k === "rud") { ln(0, 0.5, 14, 0.5); ln(0, 7.5, 14, 7.5); ln(4, 0.5, 4, 7.5); ln(11, 7.5, 11, 14); if (k === "rud") { x.beginPath(); x.arc(7.5, 4, 2, 0, 2*Math.PI); x.stroke(); } }
+    else if (k === "lam") { x.beginPath(); for (let i = 0; i <= 14; i++) x.lineTo(i, 4 + Math.sin(i/14*2*Math.PI)*1.5); x.stroke(); x.beginPath(); for (let i = 0; i <= 14; i++) x.lineTo(i, 11 + Math.sin(i/14*2*Math.PI + 2)*1.5); x.stroke(); }
+    else if (k === "reef") { x.beginPath(); x.arc(4, 4, 2.4, Math.PI, 0); x.stroke(); x.beginPath(); x.arc(10.5, 10, 2.4, Math.PI, 0); x.stroke(); dot(11, 3, 0.8); dot(3, 11, 0.8); }
+    else if (k === "evap") { x.beginPath(); x.arc(4, 4, 2.6, 0, 2*Math.PI); x.stroke(); x.beginPath(); x.arc(10.5, 10.5, 2.6, 0, 2*Math.PI); x.stroke(); }
+    else if (k === "gravel") { x.beginPath(); x.arc(4, 4, 2.2, 0, 2*Math.PI); x.stroke(); x.beginPath(); x.arc(10.5, 10, 2.8, 0, 2*Math.PI); x.stroke(); }
+    PAT[k] = c;
+  }
+}
+const pat = (ctx, k) => ctx.createPattern(PAT[k] || PAT.mud, "repeat");
+
+// ---------------- section ----------------
+let M = null, secGeom = null;
+function drawSection(){
+  const {ctx, W, H} = fit($("sec"), "secBox");
+  const padL = 8, padR = 8, top = 46, bot = 30, Hs = H - top - bot, bh = Hs / NL;
+  const X = x => padL + (x - M.x0) / (M.x1 - M.x0) * (W - padL - padR);
+  const XI = px => M.x0 + (px - padL) / (W - padL - padR) * (M.x1 - M.x0);
+  secGeom = {X, XI, top, bh, H, W, bot};
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  // bands
+  const stepPx = 2;
+  for (let k = 0; k < NL; k++) {
+    const y0 = top + Hs - (k+1)*bh;
+    let run = null, runStart = padL;
+    const flush = (endPx) => { if (!run) return; ctx.fillStyle = pat(ctx, run.lith); ctx.fillRect(runStart, y0, endPx - runStart + 0.5, bh + 0.5);
+      if (run.cl && k > 0) { ctx.strokeStyle = rgba(css("--ink"), 0.22); ctx.lineWidth = 1; for (let px = runStart + 6; px < endPx; px += 9) { ctx.beginPath(); ctx.moveTo(px - 6, y0 + 1); ctx.lineTo(px, y0 + bh - 1); ctx.stroke(); } } };
+    for (let px = padL; px <= W - padR; px += stepPx) { const b = beltAt(M, k, XI(px)); if (b !== run) { flush(px); run = b; runStart = px; } }
+    flush(W - padR);
+    ctx.strokeStyle = rgba(css("--ink"), 0.18); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(padL, y0 + 0.5); ctx.lineTo(W - padR, y0 + 0.5); ctx.stroke();
+  }
+  // surface: land vegetation line and sea above the top slice
+  const yTop = top, xsTop = M.xs[NL-1], seaEnd = W - padR;
+  const sx = clamp(X(xsTop), padL, seaEnd);
+  ctx.fillStyle = css("--sea"); ctx.beginPath(); ctx.moveTo(sx, yTop); ctx.lineTo(seaEnd, yTop); ctx.lineTo(seaEnd, yTop - 30); ctx.lineTo(sx, yTop - 30); ctx.closePath(); ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
+  ctx.fillStyle = css("--sea-deep"); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(sx, yTop); ctx.lineTo(seaEnd, yTop); ctx.lineTo(seaEnd, yTop - 18); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+  ctx.strokeStyle = css("--sea-deep"); ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(sx, yTop - 30); ctx.lineTo(seaEnd, yTop - 30); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = css("--veg"); ctx.fillRect(padL, yTop - 4, Math.max(0, sx - padL), 4);
+  if (M.P.era === "modern" || M.model !== "carbonate") for (let px = padL + 4; px < sx - 2; px += 11) { ctx.strokeStyle = css("--veg"); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(px, yTop - 4); ctx.lineTo(px, yTop - 11 - (px % 3)); ctx.stroke(); }
+  ctx.font = `500 11px ${css("--f-mono")}`; ctx.fillStyle = css("--muted");
+  ctx.fillText("sea level", Math.min(seaEnd - 60, sx + 6), yTop - 34);
+  ctx.fillText("land ←", padL + 2, 14); const sea = "→ sea"; ctx.fillText(sea, W - padR - ctx.measureText(sea).width - 2, 14);
+  // shoreline trajectory
+  ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.6; ctx.setLineDash([6, 4]); ctx.beginPath();
+  M.xs.forEach((x, k) => { const y = top + Hs - (k + 0.5)*bh; k ? ctx.lineTo(X(x), y) : ctx.moveTo(X(x), y); }); ctx.stroke(); ctx.setLineDash([]);
+  M.xs.forEach((x, k) => { const y = top + Hs - (k + 0.5)*bh; ctx.beginPath(); ctx.arc(X(x), y, 2.6, 0, 2*Math.PI); ctx.fillStyle = css("--ink"); ctx.fill(); });
+  // core marker
+  if (logX != null) { const px = X(logX); ctx.strokeStyle = css("--accent"); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, top - 8); ctx.lineTo(px, top + Hs); ctx.stroke();
+    ctx.fillStyle = css("--accent"); ctx.beginPath(); ctx.moveTo(px - 6, top - 16); ctx.lineTo(px + 6, top - 16); ctx.lineTo(px, top - 6); ctx.closePath(); ctx.fill(); }
+  // km axis
+  ctx.fillStyle = css("--muted"); ctx.strokeStyle = rgba(css("--ink"), 0.3); ctx.lineWidth = 1;
+  const range = M.x1 - M.x0, raw = range / 6, mag = Math.pow(10, Math.floor(Math.log10(raw))), tick = [1, 2, 5, 10].map(m => m*mag).find(t => t >= raw);
+  const base = M.xs[NL-1];
+  for (let t = Math.ceil((M.x0 - base)/tick)*tick; base + t <= M.x1; t += tick) { const px = X(base + t); ctx.beginPath(); ctx.moveTo(px, top + Hs); ctx.lineTo(px, top + Hs + 5); ctx.stroke();
+    const lab = (t > 0 ? "+" : "") + (Math.abs(t) < 1e-9 ? "0" : +t.toFixed(1)); ctx.fillText(lab, px - ctx.measureText(lab).width/2, top + Hs + 17); }
+  ctx.fillText("km from the present shoreline", padL, H - 2);
+  $("secScale").textContent = `${range.toFixed(range < 20 ? 1 : 0)} km across · ${NL} time slices`;
+}
+
+// ---------------- log ----------------
+const gx = d => clamp((Math.log2(Math.max(d, 0.002)) - Math.log2(0.002)) / (Math.log2(16) - Math.log2(0.002)), 0.1, 1);
+function drawLog(){
+  const {ctx, W, H} = fit($("log"), "logBox");
+  const padT = 14, padB = 56, left = 36, labW = Math.min(150, W*0.42), colW = W - left - labW - 10, bh = (H - padT - padB) / NL;
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  const beds = []; for (let k = 0; k < NL; k++) { const b = beltAt(M, k, logX); if (beds.length && beds[beds.length-1].b === b) beds[beds.length-1].n++; else beds.push({b, k, n: 1}); }
+  ctx.font = `500 11px ${css("--f-mono")}`;
+  for (const bd of beds) {
+    const y1 = H - padB - bd.k*bh, y0 = y1 - bd.n*bh, w = colW * gx(bd.b.g);
+    ctx.fillStyle = pat(ctx, bd.b.lith); ctx.fillRect(left, y0, w, y1 - y0);
+    ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1; ctx.strokeRect(left + 0.5, y0 + 0.5, w - 1, y1 - y0 - 1);
+    if (y1 - y0 >= 13) { ctx.fillStyle = css("--ink"); const words = bd.b.n.split(" "); let line = "", yy = y0 + 13, lines = 0, max = Math.max(1, Math.floor((y1 - y0 - 2)/13));
+      const tx = left + colW + 8;
+      for (const wd of words) { const t = line ? line + " " + wd : wd; if (ctx.measureText(t).width > labW && line) { if (lines < max) ctx.fillText(lines === max - 1 ? line + "…" : line, tx, yy); lines++; yy += 13; line = wd; } else line = t; }
+      if (lines < max) ctx.fillText(line, tx, yy); }
+  }
+  // grain-size scale
+  const ticks = [["cl", 0.002], ["si", 0.0039], ["vf", 0.0625], ["f", 0.125], ["m", 0.25], ["c", 0.5], ["vc", 1], ["gr", 2]];
+  ctx.strokeStyle = rgba(css("--ink"), 0.35); ctx.fillStyle = css("--muted"); ctx.font = `500 10px ${css("--f-mono")}`;
+  ctx.beginPath(); ctx.moveTo(left, H - padB + 6); ctx.lineTo(left + colW, H - padB + 6); ctx.stroke();
+  for (const [l, d] of ticks) { const px = left + colW*gx(d*1.0001); ctx.beginPath(); ctx.moveTo(px, H - padB + 3); ctx.lineTo(px, H - padB + 9); ctx.stroke(); ctx.fillText(l, px + 2, H - padB + 20); }
+  ctx.fillText("mud ←  grain size  → sand · gravel", left, H - padB + 36);
+  ctx.save(); ctx.translate(12, (H - padB + padT)/2); ctx.rotate(-Math.PI/2); ctx.fillText("time slices, oldest at base", -70, 0); ctx.restore();
+  // interpretation
+  const rank = b => { const i = M.sea.indexOf(b); return i >= 0 ? i + 1 : -(M.land.length - M.land.indexOf(b)); };
+  const r = beds.map(bd => rank(bd.b)); let turns = 0; for (let i = 2; i < r.length; i++) if (Math.sign(r[i] - r[i-1]) && Math.sign(r[i-1] - r[i-2]) && Math.sign(r[i] - r[i-1]) !== Math.sign(r[i-1] - r[i-2])) turns++;
+  const d = r[r.length - 1] - r[0];
+  let txt = beds.length === 1 ? `One environment through all ${NL} slices: ${beds[0].b.n.toLowerCase()} aggrades in place.` :
+    turns >= 2 ? `Repeated deepening and shallowing (${turns} reversals): stacked cycles, read as base-level oscillation.` :
+    d < 0 ? "Shallowing-upward: seaward facies at the base pass up into landward facies as the shore builds past this point." :
+    d > 0 ? "Deepening-upward: landward facies at the base are overlain by more seaward facies as the sea transgresses." : "Facies change but return to the starting environment.";
+  if (M.model === "cyclothem" && turns >= 1) txt += " In the Illinois Basin each cycle is one cyclothem; the coal sits just below the transgressive marine units.";
+  $("logNote").textContent = txt;
+  const rel = logX - M.xs[NL-1]; $("logX").textContent = `${rel >= 0 ? "+" : "−"}${Math.abs(rel).toFixed(1)} km`;
+}
+
+// ---------------- Shields diagram ----------------
+function drawShields(){
+  const {ctx, W, H} = fit($("sh"), "shBox");
+  const L = 44, Rp = 10, T = 10, Bp = 34, dmin = Math.log10(0.002), dmax = Math.log10(64), tmin = -2, tmax = 2.3;
+  const X = d => L + (Math.log10(d) - dmin)/(dmax - dmin)*(W - L - Rp), Y = th => T + (tmax - Math.log10(clamp(th, 1e-3, 1e4)))/(tmax - tmin)*(H - T - Bp);
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillStyle = css("--muted"); ctx.strokeStyle = rgba(css("--ink"), 0.10); ctx.lineWidth = 1;
+  for (const d of [0.004, 0.0625, 0.25, 1, 2, 16, 64]) { const x = X(d); ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, H - Bp); ctx.stroke(); const l = d < 0.1 ? (d*1000).toFixed(0) + "µm" : d + ""; ctx.fillText(l, x - ctx.measureText(l).width/2, H - Bp + 13); }
+  for (const th of [0.01, 0.1, 1, 10, 100]) { const y = Y(th); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(W - Rp, y); ctx.stroke(); ctx.fillText(String(th), 4, y + 3); }
+  ctx.fillText("grain size, mm", W/2 - 36, H - 6); ctx.save(); ctx.translate(11, (H - Bp)/2 + 20); ctx.rotate(-Math.PI/2); ctx.restore();
+  ctx.fillText("θ", 4, T + 8);
+  const curve = (f, lo, col, dash) => { ctx.strokeStyle = col; ctx.setLineDash(dash || []); ctx.lineWidth = 1.8; ctx.beginPath(); let first = true;
+    for (let i = 0; i <= 200; i++) { const d = Math.pow(10, dmin + (dmax - dmin)*i/200); if (d < lo) continue; const y = Y(f(d/1000)); first ? ctx.moveTo(X(d), y) : ctx.lineTo(X(d), y); first = false; } ctx.stroke(); ctx.setLineDash([]); };
+  const susp = Pc => D => { const us = settle(D)/(kap*Pc); return thetaOf(us, D); };
+  // shade suspension zone faintly
+  ctx.fillStyle = rgba(css("--sea"), 0.18); ctx.beginPath(); ctx.moveTo(X(0.002), Y(1e4));
+  for (let i = 0; i <= 120; i++) { const d = Math.pow(10, dmin + (dmax - dmin)*i/120); ctx.lineTo(X(d), Y(susp(2.5)(d/1000))); } ctx.lineTo(X(64), Y(1e4)); ctx.closePath(); ctx.fill();
+  curve(thetaCr, 0.0625, css("--ink")); curve(thetaCr, 0.002, rgba(css("--ink"), 0.45), [3, 3]);
+  curve(susp(2.5), 0.002, css("--sea-deep"), [6, 3]);
+  ctx.fillStyle = css("--ink"); ctx.fillText("threshold θcr", X(8), Y(thetaCr(0.008)) - 6);
+  ctx.fillStyle = css("--sea-deep"); ctx.fillText("suspension onset, P = 2.5", X(0.07), Y(susp(2.5)(0.00007)) - 8);
+  ctx.fillStyle = css("--muted"); ctx.fillText("no motion", X(2), Y(0.015)); ctx.fillText("cohesive", X(0.0025), Y(0.02));
+  const pts = [["river", M.R, "◆"], ["tide", M.Td, "▲"], ["waves", M.W, "●"]];
+  ctx.font = `500 12px ${css("--f-mono")}`;
+  for (const [n, F, sym] of pts) { const x = X(M.P.d50), y = Y(F.th); ctx.fillStyle = css("--accent"); ctx.fillText(sym, x - 5, y + 4);
+    ctx.fillStyle = css("--ink"); ctx.font = `500 11px ${css("--f-mono")}`; ctx.fillText(n, x + 8, y + 4); ctx.font = `500 12px ${css("--f-mono")}`; }
+}
+
+// ---------------- Galloway triangle ----------------
+let galGeom = null;
+function drawGal(){
+  const {ctx, W, H} = fit($("gal"), "galBox");
+  const side = Math.min(W - 40, (H - 50) / 0.866), cx = W/2, topY = 22, A = {x: cx, y: topY}, Bw = {x: cx - side/2, y: topY + side*0.866}, Ct = {x: cx + side/2, y: topY + side*0.866};
+  galGeom = {A, Bw, Ct};
+  const P2 = (f, w, t) => ({x: f*A.x + w*Bw.x + t*Ct.x, y: f*A.y + w*Bw.y + t*Ct.y});
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = rgba(css("--ink"), 0.12); ctx.lineWidth = 1;
+  for (let i = 1; i < 5; i++) { const q = i/5; for (const [a, b] of [[P2(q, 1-q, 0), P2(q, 0, 1-q)], [P2(0, q, 1-q), P2(1-q, q, 0)], [P2(0, 1-q, q), P2(1-q, 0, q)]]) { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } }
+  ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(Bw.x, Bw.y); ctx.lineTo(Ct.x, Ct.y); ctx.closePath(); ctx.stroke();
+  ctx.font = `700 13px ${css("--f-body")}`; ctx.fillStyle = css("--ink");
+  ctx.fillText("River", A.x - 16, A.y - 7); ctx.fillText("Wave", Bw.x - 4, Bw.y + 18); const tl = "Tide"; ctx.fillText(tl, Ct.x - ctx.measureText(tl).width + 4, Ct.y + 18);
+  ctx.font = `500 10px ${css("--f-mono")}`;
+  for (const p of PRESETS) { const fake = {sup: p.sup/100, wave: p.wave/100, tide: p.tide}; const G = galloway(fake); const q = P2(G.f, G.w, G.t);
+    ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(q.x, q.y, 4, 0, 2*Math.PI); ctx.stroke(); ctx.fillStyle = css("--muted");
+    const lab = p.name.split(/[ –-]/)[0]; ctx.fillText(lab, q.x + 6, q.y - 4); }
+  const q = P2(M.G.f, M.G.w, M.G.t); ctx.fillStyle = css("--accent"); ctx.beginPath(); ctx.arc(q.x, q.y, 6.5, 0, 2*Math.PI); ctx.fill(); ctx.strokeStyle = css("--panel"); ctx.lineWidth = 2; ctx.stroke();
+}
+function galClick(ev){
+  const r = $("gal").getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, {A, Bw, Ct} = galGeom;
+  const det = (Bw.y - Ct.y)*(A.x - Ct.x) + (Ct.x - Bw.x)*(A.y - Ct.y);
+  let f = ((Bw.y - Ct.y)*(x - Ct.x) + (Ct.x - Bw.x)*(y - Ct.y)) / det, w = ((Ct.y - A.y)*(x - Ct.x) + (A.x - Ct.x)*(y - Ct.y)) / det, t = 1 - f - w;
+  f = Math.max(0, f); w = Math.max(0, w); t = Math.max(0, t); const m = Math.max(f, w, t, 1e-6);
+  $("sup").value = Math.round(f/m*90); $("wave").value = Math.round(w/m*90); $("tide").value = clamp(+(t/m*0.9*4).toFixed(1), 0.2, 8);
+  presetId = null; update();
+}
+
+// ---------------- channel sketch ----------------
+function drawChannel(){
+  const {ctx, W, H} = fit($("ch"), "chBox"), R = M.R; let sd = 7;
+  const rnd = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+  ctx.fillStyle = rgba(css("--veg"), 0.14); ctx.fillRect(0, 0, W, H);
+  const water = css("--sea"), bar = css("--l-sand"), mid = H/2;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  if (R.pattern === "meandering") {
+    const amp = clamp(H*0.32 * (1 - R.omega/400), H*0.12, H*0.36), wl = W/3.2, pts = [];
+    for (let x = -10; x <= W + 10; x += 2) pts.push([x, mid + amp*Math.sin(2*Math.PI*x/wl) + amp*0.25*Math.sin(2*Math.PI*x/wl*2 + 1)]);
+    ctx.strokeStyle = bar; ctx.lineWidth = 22; ctx.globalAlpha = 0.55; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = water; ctx.lineWidth = 9; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+    ctx.strokeStyle = rgba(css("--sea-deep"), 0.6); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(W*0.72, mid - amp*1.1, 12, 0.3, Math.PI*1.6); ctx.stroke();
+  } else if (R.pattern === "braided") {
+    ctx.fillStyle = rgba(css("--l-sand"), 0.5); ctx.fillRect(0, mid - H*0.36, W, H*0.72);
+    for (let i = 0; i < 5; i++) { ctx.strokeStyle = water; ctx.lineWidth = 3 + rnd()*4; ctx.beginPath();
+      for (let x = -10; x <= W + 10; x += 6) ctx.lineTo(x, mid + H*0.3*Math.sin(x/(35 + i*9) + i*1.7) * (0.5 + 0.5*Math.sin(x/90 + i))); ctx.stroke(); }
+  } else {
+    ctx.fillStyle = rgba(css("--l-peat"), 0.35); ctx.fillRect(0, mid - H*0.4, W, H*0.8);
+    for (let i = 0; i < 3; i++) { ctx.strokeStyle = water; ctx.lineWidth = 5; ctx.beginPath();
+      for (let x = -10; x <= W + 10; x += 4) { const split = Math.sin(x/70 + i*2.1); ctx.lineTo(x, mid + (i - 1)*H*0.22*Math.max(0.15, Math.abs(split)) + 6*Math.sin(x/23 + i)); } ctx.stroke(); }
+  }
+  ctx.fillStyle = css("--ink"); ctx.font = `700 13px ${css("--f-body")}`; ctx.fillText(R.pattern[0].toUpperCase() + R.pattern.slice(1), 8, 18);
+  const rows = [["Width × depth", `${R.w.toFixed(0)} m × ${R.h.toFixed(1)} m`], ["Mean velocity", `${R.U.toFixed(2)} m/s (Froude ${R.Fr.toFixed(2)})`], ["Stream power", `${R.omega.toFixed(1)} W/m²`], ["Why", R.why]];
+  $("chT").querySelector("tbody").innerHTML = rows.map(([a, b]) => `<tr><th style="width:38%">${a}</th><td>${b}</td></tr>`).join("");
+}
+
+// ---------------- tables, chips, legend ----------------
+function tables(){
+  const row = (n, F) => `<tr><td>${n}</td><td class="n">${F.us.toFixed(3)}</td><td class="n">${(F.th/F.thc).toFixed(F.th/F.thc < 10 ? 1 : 0)}</td><td class="n">${F.Pr < 100 ? F.Pr.toFixed(2) : "≫"}</td><td>${F.mode}</td><td>${F.bed}</td></tr>`;
+  $("tr").querySelector("tbody").innerHTML = row("River channel", M.R) + row(`Tidal current, ${M.Td.U.toFixed(1)} m/s`, M.Td) + row(`Waves at 10 m, Hs ${M.W.Hs.toFixed(1)} m`, M.W);
+  const ww = M.B.map(b => isFinite(b.w) ? b.w : null);
+  $("belts").querySelector("tbody").innerHTML = M.B.map((b, i) => `<tr><td><span class="sw" style="background:var(${LITH[b.lith].v})"></span> ${b.n}</td><td>${b.z}</td><td>${grainName(b.g)}</td><td>${b.st}. <span style="color:var(--muted)">${b.pr}.</span></td><td class="n">${ww[i] == null ? "open" : ww[i].toFixed(1) + " km"}</td></tr>`).join("");
+  $("beltScale").textContent = `${MODEL_LABEL[M.model]} · fair-weather wave base ≈ ${M.W.fwwb.toFixed(0)} m, storm ≈ ${M.W.swb.toFixed(0)} m`;
+  const used = [...new Set(M.B.map(b => b.lith))];
+  $("legend").innerHTML = used.map(k => `<span><canvas class="sw" width="18" height="12" data-l="${k}"></canvas>${LITH[k].name}</span>`).join("");
+  document.querySelectorAll("#legend canvas").forEach(c => { const x = c.getContext("2d"); x.fillStyle = x.createPattern(PAT[c.dataset.l], "repeat"); x.fillRect(0, 0, 18, 12); });
+  const trajWord = M.P.traj > 0.2 ? "transgressive" : M.P.traj < -0.2 ? "prograding" : "aggrading";
+  const chips = [["model", MODEL_LABEL[M.model] + (M.P.model === "auto" ? " (classified)" : "")], ["river · wave · tide", `${Math.round(M.G.f*100)} · ${Math.round(M.G.w*100)} · ${Math.round(M.G.t*100)} %`],
+    ["D50", `${fmtMm(M.P.d50)} ${grainName(M.P.d50)}`], ["channel", M.R.pattern], ["shoreline", trajWord + (M.P.eus > 0.3 ? " + cycles" : "")]];
+  $("chips").innerHTML = chips.map(([a, b]) => `<span class="chip">${a} <b>${b}</b></span>`).join("");
+  $("secTitle").textContent = "Dip section · " + MODEL_LABEL[M.model];
+}
+function labels(){
+  const P = read();
+  $("latV").textContent = `${P.lat}°`; $("humV").textContent = P.hum < 0.33 ? "arid" : P.hum < 0.6 ? "seasonal" : "humid";
+  $("nutV").textContent = P.nut < 0.33 ? "oligotrophic" : P.nut < 0.66 ? "moderate" : "eutrophic"; $("inundV").textContent = `${Math.round(P.inund*100)}%`;
+  const Hs = 0.2 + 2.8*P.wave; $("waveV").textContent = `${Math.round(P.wave*100)}% · Hs ≈ ${Hs.toFixed(1)} m`;
+  $("tideV").textContent = `${P.tide.toFixed(1)} m · ${P.tide < 2 ? "micro" : P.tide < 4 ? "meso" : "macro"}tidal`;
+  $("shelfV").textContent = `${P.shelf} km`; $("supV").textContent = `${Math.round(P.sup*100)}%`;
+  $("d50V").textContent = `${fmtMm(P.d50)} · φ ${(+$("d50").value).toFixed(2)}`;
+  $("QV").textContent = `${P.Q >= 1000 ? Math.round(P.Q).toLocaleString("en-US") : P.Q.toFixed(0)} m³/s`; $("SV").textContent = P.S.toExponential(1);
+  $("trajV").textContent = P.traj > 0.2 ? `transgressive ${P.traj.toFixed(2)}` : P.traj < -0.2 ? `prograding ${P.traj.toFixed(2)}` : `aggrading ${P.traj.toFixed(2)}`;
+  $("eusV").textContent = P.eus < 0.05 ? "none" : `${Math.round(P.eus*100)}%`;
+  $("realm").disabled = P.era === "paleo";
+}
+
+// ---------------- JSON exchange ----------------
+const CORE = [
+  // key, control id, from UI value, to UI value, min, max (in schema units)
+  ["era", "era", v => v, v => v, null, null, ["modern", "paleo"]],
+  ["realm", "realm", v => v, v => v, null, null, ["AEP", "IWP"]],
+  ["latitude_deg", "lat", v => +v, v => Math.round(v), 0, 45],
+  ["humidity_0_1", "hum", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1],
+  ["spring_tidal_range_m", "tide", v => +(+v).toFixed(1), v => +v.toFixed(1), 0.2, 8],
+  ["wave_energy_0_1", "wave", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1],
+  ["shelf_width_km", "shelf", v => +v, v => Math.round(v/5)*5, 5, 300],
+  ["shelf_type", "shelfT", v => v, v => v, null, null, ["clastic", "carbonate"]],
+  ["clastic_supply_0_1", "sup", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1],
+  ["nutrient_input_0_1", "nut", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1],
+  ["shoreline_trajectory_-1_1", "traj", v => +(v/100).toFixed(2), v => Math.round(v*100), -1, 1],
+  ["tidal_inundation_0_1", "inund", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1]
+];
+const EXTRA = [
+  ["model", "model", v => v, v => v, null, null, ["auto", ...Object.keys(MODEL_LABEL)]],
+  ["d50_mm", "d50", v => +phiToMm(+v).toPrecision(3), v => mmToPhi(v), 0.0028, 4],
+  ["river_bankfull_discharge_m3s", "Q", v => Math.round(Math.pow(10, +v)), v => Math.log10(v), 10, 316000],
+  ["channel_slope", "S", v => +Math.pow(10, +v).toPrecision(2), v => Math.log10(v), 5e-6, 0.01],
+  ["eustatic_cycles_0_1", "eus", v => +(v/100).toFixed(2), v => Math.round(v*100), 0, 1]
+];
+function exportObj(coreOnly){
+  const o = { schema: "coastal-sed-params/v1" };
+  for (const [k, id, from] of CORE) o[k] = from($(id).value);
+  if (coreOnly) return o;
+  o.source = "Coastal Sediment & Facies";
+  if (presetId) o.preset = PRESETS.find(p => p.id === presetId).name;
+  for (const [k, id, from] of EXTRA) o[k] = from($(id).value);
+  o.derived = {
+    model_resolved: M.model, model_label: MODEL_LABEL[M.model], grain_class: grainName(M.P.d50),
+    galloway_river_wave_tide: [+M.G.f.toFixed(2), +M.G.w.toFixed(2), +M.G.t.toFixed(2)],
+    channel_pattern: M.R.pattern, channel_width_m: Math.round(M.R.w), channel_depth_m: +M.R.h.toFixed(1), stream_power_w_m2: +M.R.omega.toFixed(1),
+    river_transport_mode: M.R.mode, river_bedform: M.R.bed,
+    fair_weather_wave_base_m: Math.round(M.W.fwwb), storm_wave_base_m: Math.round(M.W.swb),
+    facies_landward_to_seaward: M.B.map(b => b.n)
+  };
+  if (typeof SECT !== "undefined" && SECT.length) o.interpreted_section = sectionSummary().json;
+  return o;
+}
+let dirty = false;
+function writeJson(){ if (!dirty) $("json").value = JSON.stringify(exportObj($("coreOnly").checked), null, 2); }
+function msg(t, bad){ const m = $("jsonMsg"); m.textContent = t; m.classList.toggle("bad", !!bad); }
+function applyObj(o){
+  if (!o || typeof o !== "object" || Array.isArray(o)) throw new Error("The JSON must be an object in curly braces.");
+  const notes = [], ignored = []; let nCore = 0, nExtra = 0;
+  const known = new Set(["schema", "source", "preset", "derived", "interpreted_section",...CORE.map(c => c[0]), ...EXTRA.map(c => c[0])]);
+  for (const k of Object.keys(o)) if (!known.has(k)) ignored.push(k);
+  const take = (list, isCore) => { for (const [k, id, , to, lo, hi, opts] of list) { if (!(k in o)) continue; let v = o[k];
+    if (opts) { if (!opts.includes(v)) { notes.push(`${k} "${v}" is not one of ${opts.join(", ")}`); continue; } $(id).value = to(v); }
+    else { v = Number(v); if (!isFinite(v)) { notes.push(`${k} is not a number`); continue; }
+      const c = clamp(v, lo, hi); if (c !== v) notes.push(`${k} ${v} → ${c}`); $(id).value = to(c); }
+    isCore ? nCore++ : nExtra++; } };
+  take(CORE, true); take(EXTRA, false);
+  return { nCore, nExtra, notes, ignored };
+}
+function extractJson(text){ const t = text.trim(); try { return JSON.parse(t); } catch (e) { const a = t.indexOf("{"), b = t.lastIndexOf("}"); if (a >= 0 && b > a) return JSON.parse(t.slice(a, b + 1)); throw e; } }
+
+
+// ---------------- core at grain scale ----------------
+const FAB = {
+  beach:{s:0.35, gr:0, sf:0.97, ag:"waves", lab:"planar laminae with heavy-mineral bands", why:"swash and backwash winnow out silt and sort the sand very evenly"},
+  xbed:{s:0.5, gr:0, sf:0.95, ag:"waves", lab:"trough cross-bedding", why:"breaking waves and longshore currents keep the sand moving as bedload dunes"},
+  channel:{s:0.8, gr:1.2, sf:0.9, ag:"river", lab:"trough cross-sets, fining upward", why:"dunes migrate along the channel floor; waning flow and lateral migration leave finer sand on top"},
+  bar:{s:0.7, gr:-1.0, sf:0.92, ag:"river", lab:"cross-sets coarsening upward", why:"the bar builds up into the faster core of the river jet, so each layer is coarser than the last"},
+  hcs:{s:0.55, gr:0.6, sf:0.85, ag:"storm", lab:"hummocky cross-stratification", why:"storm waves throw fine sand into suspension; it settles in broad, low-angle undulating laminae"},
+  storm:{s:0.7, gr:1.4, sf:0.3, ag:"storm", lab:"graded storm sands in mud", why:"each storm drops a sharp-based sand that fines upward; mud settles between storms"},
+  tidalx:{s:0.6, gr:0, sf:0.9, ag:"tide", lab:"herringbone cross-sets with mud drapes", why:"ebb and flood currents reverse the dune direction; slack water drapes the foresets in mud"},
+  ihs:{s:0.9, gr:1.0, sf:0.55, ag:"tide", lab:"inclined heterolithic strata", why:"channel bars accrete sideways, alternating current-moved sand with slack-water mud"},
+  flaser:{s:0.9, gr:0, sf:0.45, ag:"tide", lab:"flaser, wavy and lenticular bedding", why:"sand ripples move at peak flow and mud settles whenever the flow stops"},
+  mudlam:{s:1.0, gr:0, sf:0.04, ag:"settle", lab:"laminated mud", why:"silt and clay settle from suspension and nothing burrows deeply enough to erase the laminae"},
+  bioturb:{s:1.2, gr:0, sf:0.08, ag:"settle", lab:"bioturbated mud", why:"slow settling gives burrowers time to churn the sediment and erase laminae"},
+  fluidmud:{s:1.0, gr:0, sf:0.02, ag:"settle", lab:"structureless fluid-mud layers", why:"dense mud suspensions settle all at once, leaving thick layers with no internal structure"},
+  bsand:{s:0.8, gr:0, sf:0.8, ag:"waves", lab:"bioturbated sand", why:"slow sedimentation lets animals rework the sand and mix in some mud"},
+  soil:{s:2.0, gr:0, sf:0.1, ag:"soil", lab:"rooted, mottled paleosol", why:"weathering and roots overprint whatever was deposited"},
+  peat:{s:0, gr:0, sf:0, ag:"plant", lab:"peat with plant fragments", why:"plant matter piles up in place faster than it decays"},
+  lime:{s:1.5, gr:0, sf:0.2, ag:"factory", lab:"skeletal wackestone", why:"organisms make the grains in place; calm water keeps the lime mud"},
+  cmud:{s:1.0, gr:0, sf:0.05, ag:"factory", lab:"lime mudstone with pelagic grains", why:"fine carbonate rains from the open sea onto a calm, deep floor"},
+  grain:{s:0.5, gr:0, sf:0.95, ag:"waves", lab:"cross-bedded grainstone", why:"waves and tidal currents winnow away lime mud and pile up ooids or skeletal sand"},
+  rud:{s:2.5, gr:0, sf:0.6, ag:"gravity", lab:"rudstone debris", why:"blocks and debris slide and flow down the slope, and gravity flows hardly sort"},
+  microbial:{s:0.8, gr:0, sf:0.1, ag:"mats", lab:"crinkly microbial laminae with fenestrae", why:"microbial mats trap and bind lime mud; gas bubbles and drying leave fenestral pores"},
+  evap:{s:0, gr:0, sf:0, ag:"evap", lab:"chicken-wire anhydrite nodules", why:"evaporating brine grows sulfate nodules inside the mud"},
+  black:{s:0.9, gr:0, sf:0.02, ag:"settle", lab:"fissile laminated black shale", why:"very slow settling under oxygen-free water; nothing burrows and organic matter survives"}
+};
+const CARB = new Set(["lime", "cmud", "grain", "rud", "microbial"]);
+function fabricOf(b){
+  const n = b.n.toLowerCase(), st = b.st.toLowerCase();
+  const map = {peat:"peat", soil:"soil", evap:"evap", lam:"microbial", black:"black", reef:"grain", rud:"rud", lime:"lime"};
+  if (map[b.lith]) return map[b.lith];
+  if (b.lith === "mud" && M.model === "carbonate") return "cmud";
+  if (/foreshore|beach|barrier|strandplain|washover/.test(n)) return "beach";
+  if (/upper shoreface/.test(n)) return "xbed";
+  if (/lower shoreface/.test(n)) return "hcs";
+  if (/offshore transition/.test(n)) return "storm";
+  if (/mouth bar/.test(n)) return "bar";
+  if (/chenier/.test(n)) return "flaser";
+  if (/sand ridges|sand bars/.test(n)) return "tidalx";
+  if (/tidal channel|tidal-channel|estuarine/.test(n)) return "ihs";
+  if (/channel/.test(n)) return "channel";
+  if (/mud banks/.test(n)) return "fluidmud";
+  if (/tidal flat|heterolith|delta front|chenier/.test(n) || b.lith === "het") return "flaser";
+  if (b.lith === "sand") return /bioturbated/.test(st) ? "bsand" : "xbed";
+  if (b.lith === "mud") return /bioturbated/.test(st) ? "bioturb" : "mudlam";
+  return "bioturb";
+}
+function carbSpecOf(f, b){ const paleo = M.P.era === "paleo", n = b.n.toLowerCase();
+  if (f === "grain") return { tex:"grain", grains: paleo ? ["crinoid", "crinoid", "shell", "fus", "bryo"] : (M.P.wave > 0.3 ? ["ooid", "ooid", "ooid", "pel"] : ["skel", "halimeda", "shell", "foram"]) };
+  if (f === "rud") return { tex:"rud", grains: paleo ? ["phylloid", "crinoid", "shell", "intra"] : ["coral", "halimeda", "shell", "intra"] };
+  if (f === "microbial") return { tex:"mud", lam:true, fen:true, grains:["pel"] };
+  if (f === "cmud") return { tex:"mud", grains:["calcisphere", "foram"] };
+  if (/lagoon/.test(n)) return { tex:"wack", grains: paleo ? ["pel", "foram", "shell", "ostracod"] : ["pel", "foram", "shell", "halimeda"] };
+  return { tex:"wack", grains: paleo ? ["crinoid", "fus", "shell", "bryo", "foram"] : ["shell", "foram", "coral", "pel"] };
+}
+function bedTexture(f, b){
+  const F = FAB[f];
+  if (f === "peat" || f === "evap") return { mu: NaN, s: 0, sf: 0 };
+  if (CARB.has(f)) return { mu: {lime:0, cmud:7, grain:1.2, rud:-3, microbial:6.5}[f], s: F.s, sf: F.sf };
+  if (["mudlam", "bioturb", "fluidmud", "black"].includes(f)) return { mu: 6, s: F.s, sf: F.sf };
+  if (f === "soil") return { mu: 6.5, s: F.s, sf: F.sf };
+  if (F.sf >= 0.8) return { mu: -Math.log2(Math.max(0.004, b.g)), s: F.s, sf: F.sf };
+  return { mu: -Math.log2(clamp(M.P.d50, 0.088, 0.25)), s: F.s, sf: F.sf };
+}
+function coreBeds(){ const beds = [];
+  for (let k = 0; k < NL; k++) { const b = beltAt(M, k, logX); if (beds.length && beds[beds.length-1].b === b) beds[beds.length-1].n++; else beds.push({ b, k, n: 1 }); }
+  for (const bd of beds) { bd.f = fabricOf(bd.b); Object.assign(bd, bedTexture(bd.f, bd.b)); }
+  return beds; }
+function mulberry(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t2 = Math.imul(a ^ a >>> 15, 1 | a); t2 = t2 + Math.imul(t2 ^ t2 >>> 7, 61 | t2) ^ t2; return ((t2 ^ t2 >>> 14) >>> 0) / 4294967296; }; }
+const hashStr = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
+const sortWord = s => s < 0.35 ? "very well sorted" : s < 0.5 ? "well sorted" : s < 0.71 ? "moderately well sorted" : s < 1 ? "moderately sorted" : s < 2 ? "poorly sorted" : "very poorly sorted";
+const phiName = mu => grainName(Math.pow(2, -mu));
+function gcColors(){ const o = {}; for (const k of ["qtz","fsp","lith","heavy","pyr","phos","edge","mic","micD","spar","skel","skel2","ooid","pel","alg","coral"]) o[k] = css("--g-" + k);
+  o.mud = css("--l-mud"); o.ink = css("--ink"); o.panel = css("--panel"); return o; }
+const grainR = phi => clamp(0.8*Math.pow(2, (4 - phi)/2), 0.45, 16);
+
+function carbGrain(ctx, kind, x, y, r, rnd, C){
+  const E = (rx, ry, rot, fill) => { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, 2*Math.PI); ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.7; ctx.stroke(); };
+  const rot = rnd()*Math.PI;
+  switch (kind) {
+    case "ooid": E(r, r*0.9, rot, C.ooid); ctx.beginPath(); ctx.ellipse(x, y, r*0.62, r*0.56, rot, 0, 2*Math.PI); ctx.stroke(); ctx.beginPath(); ctx.ellipse(x, y, r*0.32, r*0.3, rot, 0, 2*Math.PI); ctx.fillStyle = C.pel; ctx.fill(); break;
+    case "pel": ctx.beginPath(); ctx.ellipse(x, y, r*0.75, r*0.5, rot, 0, 2*Math.PI); ctx.fillStyle = C.pel; ctx.fill(); break;
+    case "crinoid": E(r, r, 0, C.skel); ctx.fillStyle = C.edge; ctx.beginPath(); ctx.arc(x, y, Math.max(0.6, r*0.18), 0, 2*Math.PI); ctx.fill();
+      ctx.strokeStyle = C.edge; ctx.lineWidth = 0.4; for (let i = 0; i < 5; i++) { const a = i*1.2566 + rot; ctx.beginPath(); ctx.moveTo(x + Math.cos(a)*r*0.3, y + Math.sin(a)*r*0.3); ctx.lineTo(x + Math.cos(a)*r*0.85, y + Math.sin(a)*r*0.85); ctx.stroke(); } break;
+    case "shell": ctx.strokeStyle = C.skel2; ctx.lineWidth = Math.max(1.2, r*0.4); ctx.beginPath(); ctx.arc(x, y, r*1.7, rot, rot + 1.5); ctx.stroke();
+      ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.arc(x, y, r*1.7 + Math.max(0.6, r*0.2), rot, rot + 1.5); ctx.stroke(); break;
+    case "fus": E(r*1.9, r*0.75, rot, C.skel); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.4;
+      for (let i = -3; i <= 3; i++) { const dx = i*r*0.45; ctx.beginPath(); ctx.moveTo(x + Math.cos(rot)*dx - Math.sin(rot)*r*0.6, y + Math.sin(rot)*dx + Math.cos(rot)*r*0.6); ctx.lineTo(x + Math.cos(rot)*dx + Math.sin(rot)*r*0.6, y + Math.sin(rot)*dx - Math.cos(rot)*r*0.6); ctx.stroke(); } break;
+    case "bryo": ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.fillStyle = C.skel; ctx.fillRect(-r*1.3, -r*0.45, r*2.6, r*0.9); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.strokeRect(-r*1.3, -r*0.45, r*2.6, r*0.9);
+      ctx.fillStyle = C.mic; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.arc(i*r*0.5, 0, Math.max(0.5, r*0.16), 0, 2*Math.PI); ctx.fill(); } ctx.restore(); break;
+    case "foram": for (let i = 0; i < 4; i++) { const a = rot + i*1.7, d = r*0.18*i; ctx.beginPath(); ctx.arc(x + Math.cos(a)*d, y + Math.sin(a)*d, r*(0.22 + 0.09*i), 0, 2*Math.PI); ctx.fillStyle = C.skel; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.stroke(); } break;
+    case "ostracod": E(r*0.9, r*0.55, rot, C.skel); ctx.beginPath(); ctx.moveTo(x - Math.cos(rot)*r*0.9, y - Math.sin(rot)*r*0.9); ctx.lineTo(x + Math.cos(rot)*r*0.9, y + Math.sin(rot)*r*0.9); ctx.stroke(); break;
+    case "phylloid": ctx.strokeStyle = C.alg; ctx.lineWidth = Math.max(1, r*0.35); ctx.beginPath();
+      for (let i = -6; i <= 6; i++) { const u = i/6*r*2.6, v = Math.sin(i*0.9 + rot)*r*0.35; ctx.lineTo(x + Math.cos(rot)*u - Math.sin(rot)*v, y + Math.sin(rot)*u + Math.cos(rot)*v); } ctx.stroke(); break;
+    case "halimeda": for (let i = 0; i < 3; i++) { const a = rot, d = (i - 1)*r*0.9; ctx.beginPath(); ctx.ellipse(x + Math.cos(a)*d, y + Math.sin(a)*d, r*0.45, r*0.32, a, 0, 2*Math.PI); ctx.fillStyle = C.alg; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.stroke(); } break;
+    case "coral": E(r*1.1, r*1.1, 0, C.coral); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.4; for (let i = 0; i < 8; i++) { const a = i*0.785; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a)*r*1.05, y + Math.sin(a)*r*1.05); ctx.stroke(); } break;
+    case "calcisphere": ctx.beginPath(); ctx.arc(x, y, Math.max(0.8, r*0.45), 0, 2*Math.PI); ctx.fillStyle = C.spar; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.6; ctx.stroke(); break;
+    case "intra": ctx.beginPath(); for (let i = 0; i < 7; i++) { const a = i/7*2*Math.PI, rr = r*(0.75 + 0.35*rnd()); ctx.lineTo(x + Math.cos(a)*rr*1.3, y + Math.sin(a)*rr); } ctx.closePath(); ctx.fillStyle = C.micD; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.stroke(); break;
+    default: ctx.beginPath(); for (let i = 0; i < 5; i++) { const a = i/5*2*Math.PI + rot, rr = r*(0.6 + 0.5*rnd()); ctx.lineTo(x + Math.cos(a)*rr, y + Math.sin(a)*rr); } ctx.closePath(); ctx.fillStyle = C.skel; ctx.fill(); ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.stroke();
+  }
+}
+function carbThin(ctx, R, spec, rnd, C, scale){
+  const tex = spec.tex, frac = {mud:0.05, wack:0.2, pack:0.5, grain:0.6, bound:0.35, rud:0.55}[tex] ?? 0.2;
+  ctx.fillStyle = tex === "grain" ? C.spar : C.mic; ctx.fillRect(R.x, R.y, R.w, R.h);
+  if (tex === "grain") { ctx.strokeStyle = C.edge; ctx.lineWidth = 0.3; ctx.globalAlpha = 0.35; for (let i = 0; i < R.w*R.h/120; i++) { const x = R.x + rnd()*R.w, y = R.y + rnd()*R.h, a = rnd()*Math.PI; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a)*4, y + Math.sin(a)*4); ctx.stroke(); } ctx.globalAlpha = 1; }
+  else { ctx.fillStyle = C.micD; ctx.globalAlpha = 0.5; for (let i = 0; i < R.w*R.h/14; i++) ctx.fillRect(R.x + rnd()*R.w, R.y + rnd()*R.h, 0.8, 0.8); ctx.globalAlpha = 1; }
+  if (spec.lam) { ctx.strokeStyle = C.micD; ctx.lineWidth = 1; for (let y0 = R.y + 3; y0 < R.y + R.h; y0 += 4 + rnd()*3) { ctx.beginPath(); let y = y0; for (let x = R.x; x <= R.x + R.w; x += 3) { y += (rnd() - 0.5)*(spec.planar ? 0.4 : 1.6); y = clamp(y, y0 - 2.5, y0 + 2.5); ctx.lineTo(x, y); } ctx.stroke(); } }
+  if (spec.fen) { ctx.fillStyle = C.spar; ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; for (let i = 0; i < R.w*R.h/500; i++) { ctx.beginPath(); ctx.ellipse(R.x + rnd()*R.w, R.y + rnd()*R.h, (2 + rnd()*4)*scale/1.4, (0.8 + rnd()*1.4)*scale/1.4, 0, 0, 2*Math.PI); ctx.fill(); ctx.stroke(); } }
+  if (tex === "bound") { const builders = spec.grains.filter(g => g === "phylloid" || g === "coral"); const bk = builders.length ? builders : ["phylloid"];
+    for (let i = 0; i < R.w*R.h/(260*scale*scale); i++) { const x = R.x + rnd()*R.w, y = R.y + rnd()*R.h, kind = bk[Math.floor(rnd()*bk.length)];
+      if (kind === "phylloid") { ctx.fillStyle = C.spar; ctx.beginPath(); ctx.ellipse(x, y + 3*scale, 6*scale, 2.4*scale, 0, 0, Math.PI); ctx.fill(); }   // shelter pore under the blade
+      carbGrain(ctx, kind, x, y, (kind === "coral" ? 4 : 3.2)*scale, rnd, C); } }
+  const base = (tex === "rud" ? 5.5 : 2.3)*scale, gl = spec.grains.length ? spec.grains : ["pel", "foram"];
+  const n = Math.min(2600, Math.round(R.w*R.h*frac/(Math.PI*base*base*1.2)));
+  for (let i = 0; i < n; i++) { const kind = gl[Math.floor(rnd()*gl.length)];
+    let r = base*(0.6 + 0.8*rnd())*({pel:0.7, ooid:0.85, foram:0.75, calcisphere:0.6, ostracod:0.7, fus:1.1}[kind] ?? 1); if (tex === "rud" && i % 3 === 0) r *= 2;
+    carbGrain(ctx, kind, R.x + rnd()*R.w, R.y + rnd()*R.h, r, rnd, C); }
+}
+function renderFabric(ctx, bd, R, rnd, C){
+  const F = FAB[bd.f], mu = bd.mu, s = bd.s, lithCol = css(LITH[bd.b.lith].v);
+  const G = () => { let u = 0, v = 0; while (!u) u = rnd(); while (!v) v = rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+  const grain = (x, y, phi) => { if (phi > 6.2) return; const r = grainR(phi), q = rnd();
+    ctx.fillStyle = phi > 2.3 && q < 0.05 ? C.heavy : q < 0.68 ? C.qtz : q < 0.84 ? C.fsp : C.lith;
+    ctx.beginPath(); ctx.ellipse(x, y, r, r*(0.65 + 0.35*rnd()), rnd()*Math.PI, 0, 2*Math.PI); ctx.fill(); if (r > 1.2) { ctx.strokeStyle = C.edge; ctx.lineWidth = 0.5; ctx.stroke(); } };
+  const fill = col => { ctx.fillStyle = col; ctx.fillRect(R.x, R.y, R.w, R.h); };
+  const sandMatrix = () => { fill(C.panel); ctx.fillStyle = rgba(lithCol, 0.45); ctx.fillRect(R.x, R.y, R.w, R.h); };
+  const tAt = y => 1 - (y - R.y)/R.h;
+  const sandFill = (Rg, density, phiAt) => { const rb = grainR(mu), n = Math.min(4200, Math.round(Rg.w*Rg.h*density/(Math.PI*rb*rb)));
+    for (let i = 0; i < n; i++) { const x = Rg.x + rnd()*Rg.w, y = Rg.y + rnd()*Rg.h; grain(x, y, phiAt(x, y) + s*G()); } };
+  const laminae = (step, col, a) => { ctx.strokeStyle = col; ctx.globalAlpha = a; ctx.lineWidth = 0.8; for (let y = R.y + step/2; y < R.y + R.h; y += step*(0.7 + 0.6*rnd())) { ctx.beginPath(); ctx.moveTo(R.x, y); for (let x = R.x; x <= R.x + R.w; x += 12) ctx.lineTo(x, y + (rnd() - 0.5)*0.8); ctx.stroke(); } ctx.globalAlpha = 1; };
+  const specks = (k, col) => { ctx.fillStyle = col; for (let i = 0; i < R.w*R.h*k; i++) ctx.fillRect(R.x + rnd()*R.w, R.y + rnd()*R.h, 0.9, 0.9); };
+  const burrows = (n, col) => { ctx.strokeStyle = col; ctx.lineCap = "round"; for (let i = 0; i < n; i++) { let x = R.x + rnd()*R.w, y = R.y + rnd()*R.h, a = rnd()*Math.PI*2; ctx.lineWidth = 2.5 + rnd()*2.5; ctx.beginPath(); ctx.moveTo(x, y);
+    for (let j = 0; j < 8; j++) { a += (rnd() - 0.5)*0.9; x += Math.cos(a)*4; y += Math.sin(a)*4; ctx.lineTo(x, y); } ctx.stroke(); } ctx.lineCap = "butt"; };
+  const crossSets = (dir0, herring, drapes) => { let setI = 0;
+    for (let yb = R.y + R.h; yb > R.y; setI++) { const h = 13 + rnd()*11, yt = Math.max(R.y, yb - h), dir = herring && setI % 2 ? -1 : dir0, tn = 0.6, sp = 5;
+      const phiAt = (x, y) => mu + F.gr*(tAt(y) - 0.5) + ((Math.floor(((x - R.x)*tn*dir + y)/sp) & 1) ? -0.45 : 0.25);
+      sandFill({x: R.x, y: yt, w: R.w, h: yb - yt}, 0.95, phiAt);
+      ctx.save(); ctx.beginPath(); ctx.rect(R.x, yt, R.w, yb - yt); ctx.clip();
+      for (let c = -R.h - R.w; c < R.w + R.h; c += sp*(drapes ? 3 : 2)) { ctx.strokeStyle = drapes && rnd() < 0.7 ? C.mud : C.edge; ctx.lineWidth = drapes ? 1.3 : 0.5; ctx.globalAlpha = drapes ? 0.9 : 0.35;
+        ctx.beginPath(); ctx.moveTo(R.x + c, yt); ctx.lineTo(R.x + c + dir*(yb - yt)/tn, yb); ctx.stroke(); }
+      ctx.restore(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = C.edge; ctx.lineWidth = 0.9; ctx.beginPath(); for (let x = R.x; x <= R.x + R.w; x += 6) ctx.lineTo(x, yt + 2*Math.sin((x - R.x)/R.w*Math.PI)); ctx.stroke();
+      yb = yt; } };
+  switch (bd.f) {
+    case "beach": sandMatrix(); sandFill(R, 0.95, (x, y) => mu + ((Math.floor((y - R.y + (x - R.x)*0.07)/4) % 4 === 0) ? 0.35 : -0.05));
+      for (let y = R.y + 6; y < R.y + R.h; y += 7 + rnd()*7) for (let i = 0; i < R.w/3; i++) { ctx.fillStyle = C.heavy; ctx.beginPath(); ctx.arc(R.x + rnd()*R.w, y + (rnd() - 0.5)*1.5 + (rnd()*R.w)*0, 0.7, 0, 2*Math.PI); ctx.fill(); } break;
+    case "xbed": case "channel": case "bar": sandMatrix(); crossSets(rnd() < 0.5 ? 1 : -1, false, false); break;
+    case "tidalx": sandMatrix(); crossSets(1, true, true); break;
+    case "bsand": sandMatrix(); sandFill(R, 0.85, () => mu); burrows(Math.round(R.w*R.h/900), rgba(C.mud, 0.75)); break;
+    case "hcs": { sandMatrix(); const ph = rnd()*6, A = 6; sandFill(R, 0.9, (x, y) => mu + F.gr*(tAt(y) - 0.5) + ((Math.floor((y - A*Math.sin((x - R.x)/40 + ph)*tAt(y))/4) & 1) ? -0.3 : 0.2));
+      ctx.strokeStyle = C.edge; ctx.globalAlpha = 0.35; ctx.lineWidth = 0.6; for (let y0 = R.y + 4; y0 < R.y + R.h; y0 += 8) { ctx.beginPath(); for (let x = R.x; x <= R.x + R.w; x += 4) ctx.lineTo(x, y0 - A*Math.sin((x - R.x)/40 + ph)*tAt(y0)); ctx.stroke(); } ctx.globalAlpha = 1; break; }
+    case "storm": { fill(C.mud); laminae(3, C.edge, 0.25); specks(0.02, C.qtz);
+      const nb = 2 + Math.floor(rnd()*3); for (let i = 0; i < nb; i++) { const th = 5 + rnd()*10, yb = R.y + R.h*(i + 0.7 + rnd()*0.2)/nb, yt = yb - th;
+        ctx.save(); ctx.beginPath(); ctx.moveTo(R.x, yt); ctx.lineTo(R.x + R.w, yt); for (let x = R.x + R.w; x >= R.x; x -= 5) ctx.lineTo(x, yb + 1.5*Math.sin(x/7)); ctx.closePath(); ctx.clip();
+        ctx.fillStyle = rgba(css("--l-sand"), 0.5); ctx.fillRect(R.x, yt, R.w, th + 3); sandFill({x: R.x, y: yt, w: R.w, h: th + 2}, 0.95, (x, y) => mu - 0.6 + 1.4*(1 - (y - yt)/th)); ctx.restore(); } break; }
+    case "flaser": case "ihs": { fill(C.mud); ctx.save(); if (bd.f === "ihs") { ctx.translate(R.x + R.w/2, R.y + R.h/2); ctx.rotate(-0.13); ctx.translate(-(R.x + R.w/2), -(R.y + R.h/2)); }
+      const rh = 8, sf = bd.sf, X0 = R.x - 30, X1 = R.x + R.w + 30;
+      for (let yb = R.y + R.h + 20; yb > R.y - 20; yb -= rh) { const a = rh*(0.25 + 0.95*sf), ph = rnd()*6, wl = 26 + rnd()*10;
+        const top = x => yb - a*Math.max(sf < 0.35 ? 0 : 0.15, Math.sin((x - X0)/wl*2*Math.PI + ph));
+        ctx.save(); ctx.beginPath(); ctx.moveTo(X0, yb); for (let x = X0; x <= X1; x += 3) ctx.lineTo(x, top(x)); ctx.lineTo(X1, yb); ctx.closePath(); ctx.clip();
+        ctx.fillStyle = rgba(css("--l-sand"), 0.45); ctx.fillRect(X0, yb - rh*1.4, X1 - X0, rh*1.5); sandFill({x: X0, y: yb - rh*1.3, w: X1 - X0, h: rh*1.3}, 0.95, () => mu); ctx.restore();
+        ctx.strokeStyle = rgba(C.ink, 0.55); ctx.lineWidth = 1.1; ctx.beginPath(); for (let x = X0; x <= X1; x += 3) ctx.lineTo(x, top(x) - 0.6); ctx.stroke(); }
+      ctx.restore(); break; }
+    case "mudlam": fill(C.mud); laminae(2.6, C.edge, 0.35); specks(0.03, C.qtz); break;
+    case "bioturb": fill(C.mud); specks(0.03, C.qtz); burrows(Math.round(R.w*R.h/500), rgba(css("--l-sand"), 0.6)); break;
+    case "fluidmud": fill(C.mud); specks(0.01, C.qtz); laminae(18, C.edge, 0.2); break;
+    case "black": fill(css("--l-black")); laminae(2, "#ffffff", 0.08);
+      ctx.fillStyle = C.pyr; for (let i = 0; i < R.w*R.h/400; i++) ctx.fillRect(R.x + rnd()*R.w, R.y + rnd()*R.h, 1.4, 1.4);
+      for (let i = 0; i < R.w*R.h/5000; i++) { ctx.fillStyle = C.phos; ctx.beginPath(); ctx.ellipse(R.x + rnd()*R.w, R.y + rnd()*R.h, 6 + rnd()*5, 3 + rnd()*2, 0, 0, 2*Math.PI); ctx.fill(); } break;
+    case "soil": { fill(css("--l-soil")); for (let i = 0; i < R.w*R.h/180; i++) { ctx.fillStyle = rgba(rnd() < 0.5 ? css("--l-mud") : css("--l-sand"), 0.35); ctx.beginPath(); ctx.arc(R.x + rnd()*R.w, R.y + rnd()*R.h, 3 + rnd()*7, 0, 2*Math.PI); ctx.fill(); }
+      ctx.strokeStyle = rgba(css("--l-peat"), 0.9); for (let i = 0; i < R.w/18; i++) { let x = R.x + rnd()*R.w, y = R.y, w = 1.8; ctx.lineWidth = w;
+        for (let j = 0; j < 9 && y < R.y + R.h; j++) { const nx = x + (rnd() - 0.5)*6, ny = y + 4 + rnd()*5; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke(); if (rnd() < 0.3) { ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(nx + (rnd() - 0.5)*10, ny + 5); ctx.stroke(); } x = nx; y = ny; ctx.lineWidth = Math.max(0.6, ctx.lineWidth*0.85); } }
+      ctx.fillStyle = C.phos; for (let i = 0; i < R.w*R.h/1500; i++) { ctx.beginPath(); ctx.arc(R.x + rnd()*R.w, R.y + rnd()*R.h, 2 + rnd()*2, 0, 2*Math.PI); ctx.fill(); } break; }
+    case "peat": { fill(css("--l-peat")); for (let i = 0; i < R.w*R.h/35; i++) { const w = 4 + rnd()*30, h = 0.8 + rnd()*2.2, q = rnd(); ctx.fillStyle = q < 0.45 ? "rgba(0,0,0,.45)" : q < 0.75 ? "rgba(255,240,200,.16)" : "rgba(120,80,40,.5)"; ctx.fillRect(R.x + rnd()*R.w - 10, R.y + rnd()*R.h, w, h); }
+      ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 1; for (let i = 0; i < R.w/30; i++) { const x = R.x + rnd()*R.w, y = R.y + rnd()*R.h*0.6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (rnd() - 0.5)*4, y + 10 + rnd()*14); ctx.stroke(); } break; }
+    case "evap": { fill(C.mud); for (let y = R.y + 5; y < R.y + R.h + 5; y += 9) for (let x = R.x + (Math.floor(y) % 2)*6; x < R.x + R.w + 6; x += 12) { ctx.beginPath(); ctx.ellipse(x + (rnd() - 0.5)*3, y + (rnd() - 0.5)*2, 5.2, 3.6, 0, 0, 2*Math.PI); ctx.fillStyle = css("--l-evap"); ctx.fill(); ctx.strokeStyle = rgba(C.ink, 0.5); ctx.lineWidth = 0.8; ctx.stroke(); } break; }
+    default: if (CARB.has(bd.f)) { const spec = carbSpecOf(bd.f, bd.b); carbThin(ctx, R, spec, rnd, C, 1);
+        if (bd.f === "grain") { ctx.strokeStyle = C.edge; ctx.globalAlpha = 0.4; ctx.lineWidth = 0.6; for (let c = -R.h; c < R.w; c += 9) { ctx.beginPath(); ctx.moveTo(R.x + c, R.y); ctx.lineTo(R.x + c + R.h/0.6, R.y + R.h); ctx.stroke(); } ctx.globalAlpha = 1; } }
+      else { fill(C.mud); }
+  }
+}
+let gcGeom = null, gcSel = null;
+function drawGrainCore(){
+  if (!M || logX == null) return;
+  const {ctx, W, H} = fit($("gc"), "gcBox"), C = gcColors(), beds = coreBeds(), padT = 6, padB = 6, L = 30, Rr = W - 4, bh = (H - padT - padB)/NL;
+  if (gcSel == null || !beds.some(b => b.k === gcSel)) gcSel = beds[beds.length - 1].k;
+  gcGeom = {beds, L, Rr, padT, padB, bh, H};
+  ctx.fillStyle = C.panel; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(L, padT, Rr - L, H - padT - padB, 10) : ctx.rect(L, padT, Rr - L, H - padT - padB); ctx.clip();
+  for (const bd of beds) { const y1 = H - padB - bd.k*bh, y0 = y1 - bd.n*bh, R = {x: L, y: y0, w: Rr - L, h: y1 - y0};
+    ctx.save(); ctx.beginPath(); ctx.rect(R.x, R.y, R.w, R.h); ctx.clip(); renderFabric(ctx, bd, R, mulberry(hashStr(bd.b.n) + bd.k*7919), C); ctx.restore();
+    const erosive = ["channel", "hcs", "ihs", "tidalx", "bar"].includes(bd.f);
+    ctx.strokeStyle = rgba(C.ink, 0.8); ctx.lineWidth = erosive ? 1.6 : 1; ctx.beginPath(); for (let x = L; x <= Rr; x += 4) ctx.lineTo(x, y1 - (erosive ? 2.2*Math.abs(Math.sin(x/9)) : 0)); ctx.stroke(); }
+  ctx.restore();
+  ctx.strokeStyle = C.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(L, padT, Rr - L, H - padT - padB, 10) : ctx.rect(L, padT, Rr - L, H - padT - padB); ctx.stroke();
+  const sb = beds.find(b => b.k === gcSel); if (sb) { const y1 = H - padB - sb.k*bh, y0 = y1 - sb.n*bh; ctx.strokeStyle = css("--accent"); ctx.lineWidth = 3; ctx.strokeRect(L - 1, y0 + 1, Rr - L + 2, y1 - y0 - 2);
+    ctx.fillStyle = css("--accent"); ctx.beginPath(); ctx.moveTo(L - 3, (y0 + y1)/2); ctx.lineTo(L - 12, (y0 + y1)/2 - 6); ctx.lineTo(L - 12, (y0 + y1)/2 + 6); ctx.closePath(); ctx.fill(); }
+  ctx.fillStyle = css("--muted"); ctx.font = `500 10px ${css("--f-mono")}`; for (let k = 0; k < NL; k += 2) ctx.fillText(String(k + 1), 2, H - padB - (k + 0.5)*bh + 3);
+  ctx.save(); ctx.translate(10, 60); ctx.rotate(-Math.PI/2); ctx.restore();
+  gcDetail(); drawGrainKey(C);
+}
+function bedTransport(bd){
+  const F = FAB[bd.f]; let ag = F.ag;
+  if (bd.f === "flaser" || bd.f === "ihs") ag = ["tide", "mud", "cyclothem"].includes(M.model) ? "tide" : ["wave_delta", "wave_shore"].includes(M.model) ? "waves" : "river";
+  const fixed = {soil:"Soil formation overprints deposition", plant:"Accumulates in place as plant matter", factory:"Made in place by organisms; calm water keeps the lime mud", gravity:"Gravity flow down the slope: dumped, hardly sorted", mats:"Trapped and bound by microbial mats", evap:"Precipitated from evaporating brine"};
+  if (fixed[ag]) return { ag, txt: fixed[ag], short: {soil:"pedogenic", plant:"in place", factory:"made in place", gravity:"gravity flow", mats:"microbial", evap:"precipitated"}[ag] };
+  const D = Math.pow(2, -bd.mu)/1000;
+  if (ag === "settle") { const ws = settle(D); return { ag, txt: `Settling from suspension: a ${phiName(bd.mu)} grain sinks at about ${ws < 1e-4 ? (ws*1e6).toFixed(0) + " µm/s" : (ws*1000).toFixed(2) + " mm/s"}, so only quiet water lets it reach the bed`, short: "settling" }; }
+  const us = ag === "river" ? M.R.us : ag === "tide" ? M.Td.us : ag === "storm" ? M.W.us*Math.max(1.5, M.W.Hst/Math.max(0.2, M.W.Hs)) : M.W.us;
+  const th = thetaOf(us, D), thc = thetaCr(D), Pr = settle(D)/(kap*us), md = mode(th, thc, Pr, D);
+  const name = {river:"River current", tide:`Tidal current (${M.Td.U.toFixed(1)} m/s)`, waves:"Fair-weather waves at 10 m", storm:"Storm waves"}[ag];
+  return { ag, txt: `${name}: u* ${us.toFixed(3)} m/s, θ/θcr ${(th/thc).toFixed(th/thc < 10 ? 1 : 0)}, Rouse P ${Pr < 100 ? Pr.toFixed(2) : "≫ 2.5"} → ${md}`, short: `${ag === "storm" ? "storm waves" : ag} · ${md}` };
+}
+function gcDetail(){
+  const beds = gcGeom.beds, bd = beds.find(b => b.k === gcSel); if (!bd) return; const F = FAB[bd.f], T = bedTransport(bd);
+  const tex = isNaN(bd.mu) ? "No clastic grain-size distribution (organic or chemical sediment)." :
+    CARB.has(bd.f) ? `Carbonate grains around ${fmtMm(Math.pow(2, -bd.mu))}; their size reflects the organisms that made them more than the flow, so sorting (${sortWord(bd.s)}) means less here.` :
+    `${bd.sf >= 0.5 ? "Sand mode" : "Coarse fraction"} ${fmtMm(Math.pow(2, -bd.mu))} (${phiName(bd.mu)}, φ ${bd.mu.toFixed(1)}), ${sortWord(bd.s)} (σφ ${bd.s.toFixed(2)}), about ${Math.round((1 - bd.sf)*100)}% mud.` + (F.gr > 0.3 ? " Fines upward." : F.gr < -0.3 ? " Coarsens upward." : "");
+  $("gcDetail").innerHTML = `<span class="k">slices ${bd.k + 1}${bd.n > 1 ? "–" + (bd.k + bd.n) : ""} · ${bd.b.z}</span><b class="big">${bd.b.n}</b>
+    <span><b>Fabric:</b> ${F.lab}. ${F.why[0].toUpperCase() + F.why.slice(1)}.</span><span><b>Transport:</b> ${T.txt}.</span><span><b>Texture:</b> ${tex}</span>`;
+  $("gcT").querySelector("tbody").innerHTML = [...beds].reverse().map(b => { const t = bedTransport(b);
+    return `<tr data-k="${b.k}" aria-selected="${b.k === gcSel}" tabindex="0"><td>${b.b.n}</td><td>${isNaN(b.mu) ? "—" : CARB.has(b.f) ? "carbonate grains" : phiName(b.mu)}</td><td>${isNaN(b.mu) || CARB.has(b.f) ? "—" : sortWord(b.s)}</td><td>${t.short}</td></tr>`; }).join("");
+  drawGrainHist(bd);
+}
+function drawGrainHist(bd){
+  const {ctx, W, H} = fit($("gcH"), "gcHBox"), L = 8, Rr = W - 8, T = 16, B = H - 30, pmin = -4, pmax = 11, X = p => L + (p - pmin)/(pmax - pmin)*(Rr - L);
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  const bands = [[-4, -1, "gravel", "--l-gravel"], [-1, 4, "sand", "--l-sand"], [4, 8, "silt", "--l-het"], [8, 11, "clay", "--l-mud"]];
+  ctx.font = `500 10px ${css("--f-mono")}`;
+  for (const [a, b, n, v] of bands) { ctx.fillStyle = rgba(css(v), 0.25); ctx.fillRect(X(a), T, X(b) - X(a), B - T); ctx.fillStyle = css("--muted"); ctx.fillText(n, X(a) + 3, T - 4); }
+  if (isNaN(bd.mu)) { ctx.fillStyle = css("--muted"); ctx.fillText("organic or chemical: no grain-size distribution", L + 4, (T + B)/2); return; }
+  const dens = p => bd.sf*Math.exp(-0.5*Math.pow((p - bd.mu)/Math.max(0.25, bd.s), 2))/Math.max(0.25, bd.s) + (1 - bd.sf)*Math.exp(-0.5*Math.pow((p - 8.3)/1.6, 2))/1.6;
+  let mx = 0; for (let p = pmin; p <= pmax; p += 0.05) mx = Math.max(mx, dens(p));
+  const bw = 0.5; for (let p = pmin; p < pmax; p += bw) { const v = dens(p + bw/2)/mx; ctx.fillStyle = rgba(css("--accent"), 0.75); ctx.fillRect(X(p) + 1, B - v*(B - T - 4), X(p + bw) - X(p) - 2, v*(B - T - 4)); }
+  ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, B); ctx.lineTo(Rr, B); ctx.stroke();
+  ctx.fillStyle = css("--muted"); for (const p of [-4, -2, 0, 2, 4, 6, 8, 10]) { ctx.fillText(String(p), X(p) - 3, B + 12); }
+  ctx.fillText("φ (coarse ← → fine); bars: share of grains by size", L, H - 3);
+}
+function drawGrainKey(C){
+  const {ctx, W, H} = fit($("gcK"), "gcKBox"); ctx.fillStyle = C.panel; ctx.fillRect(0, 0, W, H); ctx.font = `500 10px ${css("--f-mono")}`;
+  let x = 6; for (const [phi, l] of [[3, "fine"], [2, "medium"], [1, "coarse"], [-1, "granule"]]) { const r = grainR(phi); ctx.fillStyle = C.qtz; ctx.beginPath(); ctx.arc(x + r, 14, r, 0, 2*Math.PI); ctx.fill(); ctx.strokeStyle = C.edge; ctx.stroke(); ctx.fillStyle = css("--muted"); ctx.fillText(l, x, 38); x += Math.max(2*r + 8, ctx.measureText(l).width + 10); }
+  for (const [c, l] of [[C.qtz, "quartz"], [C.fsp, "feldspar"], [C.lith, "rock fragment"], [C.heavy, "heavy mineral"]]) { if (x > W - 60) break; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + 4, 14, 4, 0, 2*Math.PI); ctx.fill(); ctx.strokeStyle = C.edge; ctx.stroke(); ctx.fillStyle = css("--muted"); ctx.fillText(l, x, 38); x += ctx.measureText(l).width + 12; }
+}
+$("gc").addEventListener("click", e => { if (!gcGeom) return; const r = $("gc").getBoundingClientRect(), y = e.clientY - r.top, k = Math.floor((gcGeom.H - gcGeom.padB - y)/gcGeom.bh);
+  const bd = gcGeom.beds.find(b => k >= b.k && k < b.k + b.n); if (bd) { gcSel = bd.k; drawGrainCore(); } });
+$("gcT").addEventListener("click", e => { const tr = e.target.closest("tr[data-k]"); if (tr) { gcSel = +tr.dataset.k; drawGrainCore(); } });
+$("gcT").addEventListener("keydown", e => { if (e.key !== "Enter" && e.key !== " ") return; const tr = e.target.closest("tr[data-k]"); if (tr) { e.preventDefault(); gcSel = +tr.dataset.k; drawGrainCore(); } });
+
+// ---------------- refs ----------------
+const REFS = [
+  ["Threshold of motion", "Shields parameter θ = τ / ((ρs − ρ) g D). Critical value from Soulsby & Whitehouse (1997). Below about 63 µm mud is cohesive and the curve is only a guide."],
+  ["Settling and suspension", "Settling velocity from Soulsby (1997). Rouse number P = ws / (κ u*): above 2.5 bedload, 0.8–2.5 partly suspended, below 0.8 fully suspended (Rouse 1937)."],
+  ["Bedforms", "Transport-stage rules of van Rijn (1984): ripples in fine sand at low stage, then dunes, washed-out dunes and upper plane bed; antidunes when Froude > 0.8."],
+  ["River geometry", "Width ≈ 4 √Q, depth from Manning’s equation with n = 0.03, bed shear from depth × slope. Meander–braid threshold S = 0.013 Q^−0.44 (Leopold & Wolman 1957); stream-power classes after Nanson & Croke (1992)."],
+  ["Waves", "Hs from wave energy, linear wave theory with the Fenton & McKee (1990) wavelength, wave friction after Soulsby (1997). Wave base taken as a quarter of the deep-water wavelength, where orbital motion has fallen to about 20% of its surface value."],
+  ["Process triangle", "River, wave and tide control of delta shape after Galloway (1975), with the shoreline classification of Boyd, Dalrymple & Zaitlin (1992). Here supply, wave energy and tidal range (scaled to 4 m) set the three shares."],
+  ["Deltas", "Mouth-bar and bar-finger sands of river-dominated deltas (Fisk 1961; Wright & Coleman 1973). Ganges–Brahmaputra sediment budget from Goodbred & Kuehl (2000)."],
+  ["Mud coasts", "Amazon-derived mud banks, Avicennia colonization and cheniers along the Guianas (Anthony et al. 2010)."],
+  ["Carbonates", "South Florida facies belts and lime-mud production (Ginsburg 1956; Enos & Perkins 1977). Pennsylvanian margins use phylloid-algal mounds instead of coral reefs."],
+  ["Cyclothems", "Heckel (1977): underclay, coal, transgressive limestone, core black shale at maximum flooding, regressive limestone, outside grey shale, sandstone, driven by glacioeustasy."],
+  ["Stacking", "Walther’s law and shoreline trajectory: progradation shallows upward, transgression deepens upward and leaves a ravinement surface (Helland-Hansen & Martinsen 1996)."],
+  ["Shared schema", "The 12 Coast builder keys use the same units and ranges as its sliders; values outside a range are clamped on import and reported."]
+];
+
+// ---------------- main ----------------
+function update(){
+  labels(); M = build();
+  if (logX == null || logX < M.x0 || logX > M.x1) logX = (Math.min(...M.xs) + Math.max(...M.xs)) / 2 + (M.sea[0] && isFinite(M.sea[0].w) ? M.sea[0].w*0.4 : 0.5);
+  drawSection(); drawLog(); drawGrainCore(); drawShields(); drawGal(); drawChannel(); tables(); writeJson(); keyTable();
+  document.querySelectorAll("#presets button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === presetId)));
+  const p = PRESETS.find(q => q.id === presetId); $("presetNote").textContent = p ? p.note : "Custom settings. Pick a worked example to reset.";
+  try { localStorage.setItem("csf-last", JSON.stringify(exportObj(false))); } catch (e) {}
+}
+function keyTable(){
+  const o = exportObj(true);
+  $("keyT").querySelector("tbody").innerHTML = CORE.map(([k, , , , lo, hi, opts]) => `<tr><td><code>${k}</code></td><td>${opts ? opts.join(" | ") : lo + " to " + hi}</td><td class="n">${o[k]}</td></tr>`).join("");
+}
+function redrawAll(){ makePatterns(); if (view === "interp") { renderCarb(); renderShale(); renderSection(); } else if (M) { drawSection(); drawLog(); drawGrainCore(); drawShields(); drawGal(); drawChannel(); tables(); } }
+
+// ================= interpreter: carbonates =================
+// Wilson (1975) standard facies zones as revised by Flügel (2010); dm = typical depth used for the depth curve
+const FZ = {
+  1:{n:"Basin", d:"> 200 m, below storm wave base", dm:250, en:"very low", sal:"normal marine", note:"pelagic lime mud, marl and fine turbidites, often below the photic zone"},
+  2:{n:"Open shelf / deep ramp", d:"30–150 m, between wave bases", dm:60, en:"low, storm-affected", sal:"normal marine", note:"diverse benthos, tempestites, nodular bedding"},
+  3:{n:"Toe of slope", d:"150–500 m", dm:200, en:"low, with gravity flows", sal:"normal marine", note:"calciturbidites and debris aprons"},
+  4:{n:"Foreslope", d:"20–300 m, steep", dm:80, en:"variable", sal:"normal marine", note:"clinoforms of reef-derived debris, slumps"},
+  5:{n:"Margin buildup", d:"0–30 m", dm:10, en:"high (moderate for mud mounds)", sal:"normal marine", note:"framework reefs; phylloid-algal mounds in the Pennsylvanian"},
+  6:{n:"Margin sand shoals", d:"0–10 m", dm:3, en:"very high", sal:"normal to slightly raised", note:"ooid and skeletal sand bars, tidal deltas, beaches"},
+  7:{n:"Open platform / lagoon", d:"2–30 m", dm:8, en:"low to moderate", sal:"normal marine", note:"behind the margin but well circulated"},
+  8:{n:"Restricted platform", d:"0–10 m", dm:3, en:"low", sal:"variable, often hypersaline", note:"low-diversity fauna, peloids, lime mud"},
+  9:{n:"Tidal flat and sabkha", d:"intertidal to supratidal", dm:0, en:"low, episodic", sal:"hypersaline (arid) or brackish (humid)", note:"fenestrae, microbial laminae, desiccation, evaporites"}
+};
+const TEX = {
+  mud:["Mudstone (mud-supported, < 10% grains)", {1:2, 2:1, 3:1, 8:2, 9:1, 7:1}, 0.004],
+  wack:["Wackestone (mud-supported, > 10% grains)", {2:2, 7:2, 8:1, 3:1, 1:1}, 0.03],
+  pack:["Packstone (grain-supported, with mud)", {2:1, 7:1, 6:1, 4:1, 3:1}, 0.1],
+  grain:["Grainstone (grain-supported, no mud)", {6:3, 4:1, 5:1, 7:-1, 1:-2, 2:-1}, 0.4],
+  bound:["Boundstone (organically bound)", {5:4}, 2],
+  rud:["Rudstone / floatstone (> 2 mm clasts)", {4:3, 3:2, 5:1}, 4]
+};
+const COBS = [
+  ["g","ooid","Ooids",{6:3, 8:-1, 1:-2, 2:-1}],
+  ["g","peloid","Peloids, grapestones",{7:2, 8:2}],
+  ["g","skel","Diverse normal-marine skeletal grains (crinoids, brachiopods, bryozoans)",{2:2, 7:2, 4:1, 5:1, 8:-2, 9:-2}],
+  ["g","fus","Fusulinids or large benthic forams",{7:2, 6:1, 2:1, 1:-2}],
+  ["g","green","Green algae (phylloid, dasyclad, Halimeda)",{5:2, 7:2, 1:-2, 2:-1}],
+  ["g","coral","Framework builders (corals, sponges, encrusters)",{5:3, 4:1}],
+  ["g","plank","Planktonic microfossils (radiolaria, calcispheres, planktonic forams)",{1:3, 2:1, 3:1, 9:-2, 8:-2, 6:-2}],
+  ["g","lowdiv","Low-diversity fauna (ostracods, gastropods, miliolids)",{8:3, 9:1, 7:-1, 2:-2, 5:-2}],
+  ["g","intra","Intraclasts, flat-pebble conglomerate",{9:2, 8:1, 3:1}],
+  ["g","allo","Shallow-water clasts in a deep-water matrix",{3:3, 4:2, 1:1}],
+  ["s","fen","Fenestrae (birdseye)",{9:3, 8:1}],
+  ["s","microb","Microbial laminae, stromatolites",{9:3, 8:1}],
+  ["s","crack","Desiccation cracks, tepees",{9:3, 8:1}],
+  ["s","evap","Evaporite nodules or pseudomorphs",{9:3, 8:2}],
+  ["s","karst","Caliche, karst, rhizoliths (exposure)",{9:2}],
+  ["s","xbed","Cross-bedding",{6:3, 5:-1, 1:-2, 2:-1, 8:-1}],
+  ["s","hcs","Hummocky cross-stratification, tempestites",{2:3, 7:1}],
+  ["s","biot","Intense bioturbation",{7:2, 2:2, 8:1, 9:-1}],
+  ["s","graded","Graded beds, turbidites",{3:3, 1:2}],
+  ["s","slump","Slumps, debris flows, steep clinoforms",{4:3, 3:2}],
+  ["s","hard","Hardgrounds, borings, encrustation",{2:1, 6:1, 1:1, 7:1}],
+  ["s","nod","Nodular bedding",{2:2, 1:1}],
+  ["s","lamC","Fine planar lamination, no burrows",{1:2, 9:1, 3:1, 8:1}],
+  ["s","dark","Dark, organic-rich, pyritic",{1:2, 3:1, 8:1}]
+];
+const CARB_EX = [
+  {n:"Crinoid–fusulinid wackestone (Pennsylvanian shelf)", age:"paleo", tex:"wack", obs:["skel","fus","biot","nod"], name:"Regressive limestone, lower"},
+  {n:"Phylloid-algal mound (Pennsylvanian)", age:"paleo", tex:"bound", obs:["green","skel"], name:"Algal mound"},
+  {n:"Ooid grainstone shoal (Bahamas type)", age:"modern", tex:"grain", obs:["ooid","xbed"], name:"Oolite"},
+  {n:"Peloidal wackestone, restricted lagoon (Florida Bay type)", age:"modern", tex:"wack", obs:["peloid","lowdiv","biot"], name:"Lagoonal limestone"},
+  {n:"Fenestral microbial laminite (tidal flat)", age:"modern", tex:"mud", obs:["fen","microb","crack","intra"], name:"Laminite"},
+  {n:"Calciturbidite (toe of slope)", age:"modern", tex:"pack", obs:["graded","allo","plank"], name:"Calciturbidite"},
+  {n:"Radiolarian lime mudstone (basin)", age:"modern", tex:"mud", obs:["plank","lamC","dark"], name:"Basinal lime mudstone"}
+];
+function carbRead(){ return { age: $("c_age").value, tex: $("c_tex").value, obs: COBS.filter(o => $("co_" + o[1]).checked).map(o => o[1]) }; }
+function carbInterp(C){
+  const sc = {}, why = {}; for (const k in FZ) { sc[k] = 0; why[k] = []; }
+  const add = (w, label) => { for (const k in w) { sc[k] += w[k]; why[k].push([w[k], label]); } };
+  add(TEX[C.tex][1], TEX[C.tex][0].split(" (")[0]);
+  for (const id of C.obs) { const o = COBS.find(q => q[1] === id); add(o[3], o[2].split(" (")[0]); }
+  const ks = Object.keys(FZ), mx = Math.max(...ks.map(k => sc[k])), ex = ks.map(k => Math.exp((sc[k] - mx)/1.3)), sum = ex.reduce((a, b) => a + b, 0);
+  const prob = {}; ks.forEach((k, i) => prob[k] = ex[i]/sum);
+  const best = ks.sort((a, b) => prob[b] - prob[a]);
+  return { sc, why, prob, best, top: best[0] };
+}
+let CI = null;
+function renderCarb(){
+  const C = carbRead(); CI = carbInterp(C);
+  const order = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+  $("c_bars").innerHTML = order.map(k => `<div class="bar${+CI.top === k ? " top" : ""}"><span>FZ ${k} · ${FZ[k].n}</span><span class="t"><i style="width:${(CI.prob[k]*100).toFixed(1)}%"></i></span><span class="p">${Math.round(CI.prob[k]*100)}%</span></div>`).join("");
+  const F = FZ[CI.top], pro = CI.why[CI.top].filter(w => w[0] > 0).map(w => w[1]), con = CI.why[CI.top].filter(w => w[0] < 0).map(w => w[1]);
+  const second = CI.best[1], margin = CI.prob[CI.top] - CI.prob[second];
+  let alt = margin < 0.15 ? `<span class="ev">Close second: FZ ${second} ${FZ[second].n} (${Math.round(CI.prob[second]*100)}%). Look for ${second <= 4 ? "gravity-flow structures and pelagic grains" : second >= 8 ? "evidence of restriction or exposure" : "the energy indicators that separate them"}.</span>` : "";
+  const paleoNote = C.age === "paleo" && +CI.top === 5 ? " In the Pennsylvanian, buildups are mostly phylloid-algal mounds with mud cores, not rigid coral reefs." : "";
+  const lag = C.obs.includes("hard") ? `<span class="ev">Hardgrounds point to slow sedimentation: a possible condensed interval or flooding surface.</span>` : "";
+  const expo = C.obs.includes("karst") ? `<span class="ev">Exposure features: the top of this bed may be a sequence boundary.</span>` : "";
+  $("c_out").innerHTML = `<b class="big">FZ ${CI.top} · ${F.n}</b>
+    <span>${F.d}; energy ${F.en}; salinity ${F.sal}. ${F.note[0].toUpperCase() + F.note.slice(1)}.${paleoNote}</span>
+    <span class="ev">For: ${pro.join(", ") || "nothing specific"}.${con.length ? " Against: " + con.join(", ") + "." : ""}</span>${alt}${lag}${expo}`;
+  drawCarbProfile(); drawCarbThin();
+}
+
+function drawCarbThin(){
+  const {ctx, W, H} = fit($("c_thin"), "cThinBox"), C = gcColors(), Cx = carbRead(), paleo = Cx.age === "paleo", o = new Set(Cx.obs);
+  const gmap = {ooid:["ooid"], peloid:["pel"], skel: paleo ? ["crinoid", "shell", "bryo"] : ["shell", "skel", "coral"], fus:["fus"], green: paleo ? ["phylloid"] : ["halimeda"], coral:["coral"],
+    plank:["calcisphere"], lowdiv:["ostracod", "foram", "shell"], intra:["intra"], allo:["intra", "skel"]};
+  let grains = []; for (const k of Object.keys(gmap)) if (o.has(k)) grains.push(...gmap[k]); if (!grains.length) grains = ["pel", "foram"];
+  const tex = {mud:"mud", wack:"wack", pack:"pack", grain:"grain", bound:"bound", rud:"rud"}[Cx.tex];
+  const spec = { tex, grains, lam: o.has("microb") || o.has("lamC"), planar: o.has("lamC") && !o.has("microb"), fen: o.has("fen") };
+  const D = Math.min(W, H) - 8, cx = W/2, cy = H/2;
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, D/2, 0, 2*Math.PI); ctx.clip();
+  carbThin(ctx, {x: cx - D/2, y: cy - D/2, w: D, h: D}, spec, mulberry(hashStr(Cx.tex + Cx.obs.join(""))), C, 2.4);
+  if (o.has("evap")) { ctx.fillStyle = css("--l-evap"); for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(cx - D/3 + i*D/8, cy + (i % 2 ? -D/5 : D/6), 12, 8, 0, 0, 2*Math.PI); ctx.fill(); } }
+  ctx.restore(); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, D/2, 0, 2*Math.PI); ctx.stroke();
+  ctx.fillStyle = css("--ink"); ctx.fillRect(cx - D/2 + 14, cy + D/2 - 16, 40, 3); ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillText("≈ 1 mm", cx - D/2 + 14, cy + D/2 - 20);
+  const T = {mud:"Mud-supported with few grains: the water was too calm to winnow lime mud, which algae and microbes make in place.",
+    wack:"Mud-supported with scattered grains: organisms lived or were dropped here, but calm water kept the lime mud.",
+    pack:"Grains touch, and lime mud fills the gaps: grains piled up, but the energy never washed the mud away.",
+    grain:"Grains touch with no mud left; clear calcite cement fills the pores. Waves or currents winnowed the mud, so this records high energy.",
+    bound:"Organisms bound the sediment as it formed, leaving sheltered pores beneath blades and fronds. A framework built it, not transport.",
+    rud:"Large clasts touch: debris shed from a margin by storms or slope failure, hardly sorted."}[tex];
+  const GN = {ooid:"Ooids grow coats while rolling in warm, agitated, supersaturated water, so they need high energy and high saturation together.",
+    peloid:"Peloids are mostly fecal pellets or micritized grains, typical of quiet lagoons.", fus:"Fusulinids were large forams of warm, open Pennsylvanian–Permian shelves.",
+    green: paleo ? "Phylloid algae were the Pennsylvanian mound builders; their leafy blades shelter pores." : "Green algae such as Halimeda shed plates that become sand and lime mud.",
+    skel: paleo ? "Crinoid ossicles (each a single calcite crystal), brachiopods and bryozoans mark normal-marine water." : "Mollusc and coral fragments mark normal-marine water.",
+    lowdiv:"A few tough groups (ostracods, gastropods, miliolids) signal stressed, restricted water.", plank:"Planktonic grains rain from the open sea; with little else, the floor was deep or far offshore.",
+    coral:"Framework builders need light, warmth and clear water.", fen:"Fenestrae are gas or drying voids, typical of tidal flats.", microb:"Crinkly laminae are microbial mats that trapped lime mud."};
+  const gs = Cx.obs.filter(k => GN[k]).slice(0, 3).map(k => GN[k]);
+  $("c_thinNote").innerHTML = `<b>Thin-section view</b><span>${T}</span>${gs.map(g => `<span class="ev">${g}</span>`).join("")}`;
+}
+function drawCarbProfile(){
+  const {ctx, W, H} = fit($("c_prof"), "cProfBox");
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  const pmax = Math.max(...Object.values(CI.prob));
+  const prof = (order, depth, y0, h, title) => {
+    const cw = (W - 16) / order.length, X = i => 8 + i*cw, sea = y0 + 16, deep = y0 + h - 22;
+    const Y = d => sea + d*(deep - sea);
+    ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillStyle = css("--muted"); ctx.fillText(title, 8, y0 + 9);
+    order.forEach((k, i) => { const a = CI.prob[k]/pmax; ctx.fillStyle = rgba(css("--accent"), 0.05 + 0.35*a); ctx.fillRect(X(i) + 1, sea - 4, cw - 2, deep - sea + 6); });
+    const pts = []; order.forEach((k, i) => { const d = depth[k]; if (Array.isArray(d)) { pts.push([X(i), Y(d[0])]); pts.push([X(i) + cw, Y(d[1])]); } else { pts.push([X(i), Y(d)]); pts.push([X(i) + cw, Y(d)]); } });
+    ctx.fillStyle = rgba(css("--sea"), 0.5); ctx.beginPath(); ctx.moveTo(pts[0][0], sea); pts.forEach(p => ctx.lineTo(p[0], Math.max(sea, p[1]))); ctx.lineTo(pts[pts.length-1][0], sea); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = pat(ctx, "lime"); ctx.beginPath(); ctx.moveTo(pts[0][0], deep + 4); pts.forEach(p => ctx.lineTo(p[0], p[1])); ctx.lineTo(pts[pts.length-1][0], deep + 4); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1.2; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke();
+    ctx.strokeStyle = css("--sea-deep"); ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(8, sea); ctx.lineTo(W - 8, sea); ctx.stroke(); ctx.setLineDash([]);
+    order.forEach((k, i) => { ctx.font = `${+CI.top === k ? 700 : 500} 11px ${css("--f-mono")}`; ctx.fillStyle = +CI.top === k ? css("--accent") : css("--ink"); const t = String(k); ctx.fillText(t, X(i) + cw/2 - ctx.measureText(t).width/2, deep + 16); });
+  };
+  const half = H / 2;
+  prof([9, 8, 7, 6, 5, 4, 3, 1], {9:0.0, 8:0.06, 7:0.13, 6:[0.08, 0.02], 5:[0.02, 0.0], 4:[0.0, 0.62], 3:[0.62, 0.8], 1:0.85}, 0, half, "rimmed shelf  (zone numbers are FZ)");
+  prof([9, 8, 7, 6, 2, 1], {9:0.0, 8:0.04, 7:0.08, 6:[0.08, 0.04], 2:[0.1, 0.45], 1:[0.45, 0.7]}, half, half, "ramp, no rim: FZ 2 lies between the shoals and the basin");
+}
+
+// ================= interpreter: distal shales =================
+const SHALE_EX = [
+  {n:"Heckel core shale (Hushpuckney type)", name:"Core black shale", v:{color:"black", toc:12, bi:"0", lam:"fine", ben:"absent", phos:"abundant", glauc:"none", cono:"high", fram:4.5, uth:3, vcr:6, mo:120, gr:250, amm:true, fish:true, rad:false, lag:true}},
+  {n:"Outside grey shale (regressive, nearshore)", name:"Outside grey shale", v:{color:"grey", toc:0.8, bi:"3", lam:"none", ben:"sparse", phos:"none", glauc:"none", cono:"low", fram:"", uth:0.5, vcr:1.5, mo:3, gr:90, amm:false, fish:false, rad:false, lag:false}},
+  {n:"Glauconitic condensed shelf mudstone (oxic)", name:"Glauconitic mudstone", v:{color:"grey", toc:0.6, bi:"5", lam:"none", ben:"abundant", phos:"scattered", glauc:"abundant", cono:"mod", fram:"", uth:0.7, vcr:1.8, mo:2, gr:130, amm:true, fish:true, rad:false, lag:true}},
+  {n:"Dysoxic offshore shale", name:"Dark grey shale", v:{color:"dark", toc:3, bi:"1", lam:"faint", ben:"sparse", phos:"scattered", glauc:"none", cono:"mod", fram:6.5, uth:1.0, vcr:3, mo:20, gr:140, amm:false, fish:false, rad:false, lag:false}},
+  {n:"Prodelta mud (rapid, not condensed)", name:"Prodelta mudstone", v:{color:"grey", toc:0.9, bi:"3", lam:"faint", ben:"sparse", phos:"none", glauc:"none", cono:"low", fram:8, uth:0.6, vcr:1.6, mo:4, gr:100, amm:false, fish:false, rad:false, lag:false}}
+];
+const SH_IDS = ["color","toc","bi","lam","ben","phos","glauc","cono","fram","uth","vcr","mo","gr"], SH_CB = ["amm","fish","rad","lag"];
+const REDOX = ["oxic", "dysoxic", "anoxic", "euxinic"];
+const num = id => { const v = $(id).value; return v === "" || !isFinite(+v) ? null : +v; };
+function shaleRead(){ const o = {}; for (const k of SH_IDS) o[k] = $("s_" + k).value; for (const k of SH_CB) o[k] = $("s_" + k).checked;
+  for (const k of ["toc","fram","uth","vcr","mo","gr"]) o[k] = num("s_" + k); o.bi = +o.bi; return o; }
+function shaleInterp(S){
+  const P = [];   // proxy, value 0 oxic … 3 euxinic, reading
+  P.push(["Bioturbation", S.bi >= 4 ? 0 : S.bi >= 2 ? 1 : S.bi === 1 ? 1.6 : 2.2, `BI ${S.bi}`]);
+  P.push(["Benthic fauna", {abundant:0, sparse:1, absent:2}[S.ben], S.ben]);
+  P.push(["Lamination", {none:0.3, faint:1.2, fine:2}[S.lam], S.lam]);
+  if (S.toc != null) P.push(["TOC", S.toc < 1 ? 0.2 : S.toc < 2 ? 1 : S.toc < 5 ? 2 : 2.4, S.toc + " %"]);
+  if (S.fram != null) P.push(["Framboid size", S.fram < 5 ? 3 : S.fram <= 7 ? 2 : 0.8, S.fram + " µm"]);
+  if (S.uth != null) P.push(["U/Th", S.uth < 0.75 ? 0.3 : S.uth < 1.25 ? 1 : 2.2, String(S.uth)]);
+  if (S.vcr != null) P.push(["V/Cr", S.vcr < 2 ? 0.3 : S.vcr < 4.25 ? 1 : 2.2, String(S.vcr)]);
+  if (S.mo != null) P.push(["Mo", S.mo < 5 ? 0.4 : S.mo < 25 ? 1.5 : S.mo <= 100 ? 2.6 : 3, S.mo + " ppm"]);
+  const vals = P.map(p => p[1]).sort((a, b) => a - b), med = vals.length % 2 ? vals[(vals.length-1)/2] : (vals[vals.length/2 - 1] + vals[vals.length/2]) / 2;
+  const cls = med < 0.75 ? 0 : med < 1.5 ? 1 : med < 2.5 ? 2 : 3;
+  const C = [[{none:0, scattered:0.5, abundant:1}[S.phos], 1.5, "phosphate"], [{none:0, present:0.6, abundant:1}[S.glauc], 1, "glauconite"], [{low:0, mod:0.5, high:1}[S.cono], 1.2, "conodont concentration"],
+    [S.lag ? 1 : 0, 1, "basal lag or hardground"], [S.fish ? 1 : 0, 0.5, "fish debris"], [S.amm ? 1 : 0, 0.5, "pelagic fauna"], [S.rad ? 1 : 0, 0.4, "radiolarians"]];
+  if (S.gr != null) C.push([S.gr > 150 ? 1 : S.gr > 110 ? 0.5 : 0, 0.8, "high gamma ray (uranium)"]);
+  if (S.toc != null) C.push([S.toc > 5 ? 0.6 : 0, 0.5, "high TOC"]);
+  const cond = C.reduce((a, c) => a + c[0]*c[1], 0) / C.reduce((a, c) => a + c[1], 0), condWhy = C.filter(c => c[0] > 0).map(c => c[2]);
+  let k;
+  if (med >= 1.9 && cond >= 0.5) k = S.phos !== "none" ? "core" : "condAnox";
+  else if (med < 1.5 && cond >= 0.5) k = "condOx";
+  else if (med >= 1.9) k = "anox";
+  else if (med >= 0.9) k = "dys";
+  else k = "outside";
+  return { P, med, cls, cond, condWhy, k, ...SHALE_CLASS[k] };
+}
+const SHALE_CLASS = {
+  core:{t:"Core shale at maximum flooding (Heckel type)", dm:100, heck:4, seq:"Condensed section at the maximum flooding surface, between the transgressive and regressive limestones.",
+    set:"Offshore, below storm wave base, with a bottom-water anoxic layer. Heckel (1977) put it below a thermocline at roughly 100 m or more; Algeo et al. (2004) argued for a shallower sea with estuarine-type circulation."},
+  condAnox:{t:"Condensed anoxic offshore shale", dm:80, heck:4, seq:"Probably near maximum flooding; check for phosphate or a hardground to confirm.", set:"Starved, oxygen-poor outer shelf below storm wave base."},
+  condOx:{t:"Condensed, sediment-starved oxic shelf mudstone", dm:60, heck:4, seq:"Flooding surface or condensed section on an oxygenated shelf (glauconite and phosphate form at the sea floor during long pauses).", set:"Outer shelf, below fair-weather wave base, well-oxygenated bottom water."},
+  anox:{t:"Anoxic offshore mudstone, not strongly condensed", dm:70, heck:4, seq:"Transgressive to early highstand; organic-rich but accumulating at normal rates.", set:"Below storm wave base with stagnant bottom water, or a high-productivity margin."},
+  dys:{t:"Dysoxic offshore shale", dm:45, heck:2, seq:"Late transgressive or early regressive phase; check neighbouring beds.", set:"Offshore below fair-weather wave base; oxygen limited a sparse, small benthos."},
+  outside:{t:"Outside grey shale or prodelta mud", dm:15, heck:2, seq:"Regressive (highstand) prodelta mud that rapidly buries the marine carbonates.", set:"Nearshore to inner shelf, oxygenated, high mud supply, rapid deposition."}
+};
+let SI = null;
+function renderShale(){
+  const S = shaleRead(); SI = shaleInterp(S);
+  $("s_out").innerHTML = `<b class="big">${SI.t}</b><span>Bottom water: <b>${REDOX[SI.cls]}</b> (median of ${SI.P.length} proxies). Condensation index ${SI.cond.toFixed(2)}${SI.condWhy.length ? " from " + SI.condWhy.join(", ") : ""}.</span>
+    <span>${SI.set}</span><span class="ev">${SI.seq}</span>`;
+  drawRedox(); drawHeckel(SI.heck);
+}
+function drawRedox(){
+  const {ctx, W, H} = fit($("s_redox"), "sRedoxBox"), L = 8, R = W - 8, y = 26, h = 14, X = v => L + v/3*(R - L);
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  const cols = [css("--l-sand"), css("--l-het"), css("--l-mud"), css("--l-black")];
+  for (let i = 0; i < 4; i++) { ctx.fillStyle = cols[i]; const a = i === 0 ? 0 : i - 0.25, b = i === 3 ? 3 : i + 0.75; ctx.fillRect(X(Math.max(0, i === 0 ? 0 : [0, 0.75, 1.5, 2.5][i])), y, X([0.75, 1.5, 2.5, 3][i]) - X([0, 0.75, 1.5, 2.5][i]), h); }
+  ctx.font = `500 11px ${css("--f-mono")}`; ctx.fillStyle = css("--ink");
+  REDOX.forEach((r, i) => { const c = ([0, 0.75, 1.5, 2.5][i] + [0.75, 1.5, 2.5, 3][i]) / 2; ctx.fillText(r, X(c) - ctx.measureText(r).width/2, y - 6); });
+  ctx.font = `500 10px ${css("--f-mono")}`;
+  SI.P.forEach((p, i) => { const px = X(clamp(p[1], 0, 3)), row = y + h + 12 + (i % 3)*14; ctx.strokeStyle = css("--muted"); ctx.beginPath(); ctx.moveTo(px, y + h); ctx.lineTo(px, row - 9); ctx.stroke();
+    ctx.fillStyle = css("--muted"); const t = p[0]; ctx.fillText(t, clamp(px - ctx.measureText(t).width/2, L, R - ctx.measureText(t).width), row); });
+  const mx = X(SI.med); ctx.fillStyle = css("--accent"); ctx.beginPath(); ctx.moveTo(mx - 7, y - 2); ctx.lineTo(mx + 7, y - 2); ctx.lineTo(mx, y + 9); ctx.closePath(); ctx.fill();
+}
+const HECKEL = [["Sandstone or paleosol", "soil", 0.06], ["Outside grey shale", "mud", 0.004], ["Regressive limestone", "lime", 0.1], ["Core black shale", "black", 0.003], ["Transgressive limestone", "lime", 0.03], ["Coal", "peat", 0.003], ["Underclay (paleosol)", "soil", 0.004]];
+function drawHeckel(hi){
+  const {ctx, W, H} = fit($("s_heck"), "sHeckBox"), n = HECKEL.length, top = 14, bh = (H - top - 6) / n, colW = 34;
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillStyle = css("--muted"); ctx.fillText("Heckel cyclothem", 0, 9);
+  HECKEL.forEach(([t, l, g2], i) => { const y0 = top + i*bh, w = colW*(0.45 + gx(g2)*0.9);
+    if (hi === i + 1) { ctx.fillStyle = rgba(css("--accent"), 0.22); ctx.fillRect(0, y0, W, bh); }
+    ctx.fillStyle = pat(ctx, l); ctx.fillRect(2, y0, w, bh); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1; ctx.strokeRect(2.5, y0 + 0.5, w, bh - 1);
+    ctx.fillStyle = hi === i + 1 ? css("--accent") : css("--ink"); ctx.font = `${hi === i + 1 ? 700 : 500} 11px ${css("--f-body")}`;
+    const words = t.split(" "); let line = "", yy = y0 + bh/2 - 2, lines = []; for (const wd of words) { const tt = line ? line + " " + wd : wd; if (ctx.measureText(tt).width > W - colW*1.4 - 10 && line) { lines.push(line); line = wd; } else line = tt; } lines.push(line);
+    lines.forEach((ln, j) => ctx.fillText(ln, colW*1.4 + 8, yy - (lines.length - 1)*6 + j*12 + 4)); });
+}
+
+// ================= measured section =================
+let SECT = [];
+const SWOPE = [
+  {name:"Underclay (paleosol)", th:1.0, kind:"other", env:"Exposure, soil formation", depth:-5, lith:"soil", g:0.004, expo:true},
+  {name:"Coal (thin, local)", th:0.3, kind:"other", env:"Peat mire", depth:0, lith:"peat", g:0.003},
+  {name:"Middle Creek Limestone", th:0.6, kind:"carb", env:"FZ 2 · Open shelf (transgressive)", depth:30, lith:"lime", g:0.03},
+  {name:"Hushpuckney Shale", th:0.9, kind:"shale", env:"Core shale at maximum flooding", depth:100, lith:"black", g:0.003, cond:true},
+  {name:"Bethany Falls Limestone, lower", th:3, kind:"carb", env:"FZ 2 · Open shelf / deep ramp", depth:60, lith:"lime", g:0.03},
+  {name:"Bethany Falls Limestone, upper (oolitic)", th:3, kind:"carb", env:"FZ 6 · Margin sand shoals", depth:3, lith:"reef", g:0.4},
+  {name:"Exposure surface, caliche", th:0.4, kind:"other", env:"Exposure, soil formation", depth:-5, lith:"soil", g:0.004, expo:true}
+];
+function saveSect(){ try { localStorage.setItem("csf-section", JSON.stringify(SECT)); } catch (e) {} }
+function addBed(b){ SECT.push(b); saveSect(); renderSection(); if (M) writeJson(); }
+function sectionSummary(){
+  const n = SECT.length, d = SECT.map(b => b.depth), mx = Math.max(...d), mn = Math.min(...d), range = mx - mn, mfs = d.indexOf(mx);
+  const third = Math.max(1, Math.floor(n/3)), mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const trend = mean(d.slice(n - third)) - mean(d.slice(0, third));
+  let rev = 0; for (let i = 2; i < n; i++) { const a = Math.sign(d[i] - d[i-1]), b = Math.sign(d[i-1] - d[i-2]); if (a && b && a !== b) rev++; }
+  const thick = SECT.reduce((a, b) => a + b.th, 0), carb = SECT.filter(b => b.kind === "carb").reduce((a, b) => a + b.th, 0) / thick;
+  const coal = SECT.some(b => b.lith === "peat"), expo = SECT.some(b => b.expo), marine = SECT.some(b => b.depth > 10);
+  const traj = clamp(trend / 80, -1, 1), eus = rev >= 1 || (expo && marine) ? clamp(range / 110, 0, 1) : clamp(range / 300, 0, 0.3);
+  const model = (coal || expo) && marine && range > 30 ? "cyclothem" : carb > 0.5 ? "carbonate" : "auto";
+  const era = $("c_age").value;
+  const send = { model, era, shelf_type: carb > 0.5 ? "carbonate" : "clastic", "shoreline_trajectory_-1_1": +traj.toFixed(2), eustatic_cycles_0_1: +eus.toFixed(2) };
+  if (carb > 0.5 && !coal) send.clastic_supply_0_1 = 0.1;
+  return { n, range, mfs, rev, traj, eus, model, carb, send,
+    json: { beds_base_to_top: SECT.map(b => ({ name: b.name, thickness_m: b.th, interpretation: b.env, depth_m: b.depth })), depth_range_m: Math.round(range),
+      maximum_flooding_bed: n ? SECT[mfs].name : null, reversals: rev, suggested: send } };
+}
+function renderSection(){
+  const tb = $("sec_t").querySelector("tbody");
+  tb.innerHTML = SECT.map((b, i) => [b, i]).reverse().map(([b, i]) => `<tr><td>${b.name}</td><td>${b.env}</td><td class="n">${b.depth < 0 ? "exposed" : b.depth + " m"}</td><td class="n">${b.th}</td>
+    <td style="white-space:nowrap"><button type="button" data-a="up" data-i="${i}" aria-label="Move ${b.name} up">↑</button> <button type="button" data-a="dn" data-i="${i}" aria-label="Move ${b.name} down">↓</button> <button type="button" data-a="rm" data-i="${i}" aria-label="Remove ${b.name}">✕</button></td></tr>`).join("") ||
+    `<tr><td colspan="5" style="color:var(--muted)">No beds yet. Interpret a bed above and press Add to section, or load the Swope example.</td></tr>`;
+  drawSectionCurve();
+  if (!SECT.length) { $("sec_sum").innerHTML = ""; $("sec_send").disabled = true; return; }
+  $("sec_send").disabled = false;
+  const Z = sectionSummary();
+  const trajW = Z.traj > 0.2 ? "deepening upward overall (transgressive)" : Z.traj < -0.2 ? "shallowing upward overall (prograding)" : "no strong net trend";
+  $("sec_sum").innerHTML = `<span>Water depth spans about <b>${Math.round(Z.range)} m</b> with ${Z.rev} reversal${Z.rev === 1 ? "" : "s"}; ${trajW}. Maximum flooding at <b>${SECT[Z.mfs].name}</b>.</span>
+    <span class="ev">Sends: model ${MODEL_LABEL[Z.model] || "classify from controls"}, shelf ${Z.send.shelf_type}, trajectory ${Z.traj.toFixed(2)}, eustatic cycles ${Z.eus.toFixed(2)}, era ${Z.send.era}. Other coast settings stay as they are.</span>`;
+}
+const dz = d => Math.sign(d) * Math.sqrt(Math.abs(d));
+function drawSectionCurve(){
+  const {ctx, W, H} = fit($("sec_c"), "secCBox"), top = 18, bot = 34, colL = 6, colW = Math.min(120, W*0.3), cL = colL + colW + 26, cR = W - 10;
+  ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, W, H);
+  ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillStyle = css("--muted");
+  if (!SECT.length) { ctx.fillText("Add beds to draw the section", 10, 30); return; }
+  const thick = SECT.reduce((a, b) => a + b.th, 0), minPx = 10, avail = H - top - bot, scale = Math.max(0, avail - SECT.length*minPx) / thick;
+  const hs = SECT.map(b => minPx + b.th*scale);
+  const dmin = -5, dmax = 260, X = d => cL + (dz(clamp(d, dmin, dmax)) - dz(dmin)) / (dz(dmax) - dz(dmin)) * (cR - cL);
+  // depth grid
+  ctx.strokeStyle = rgba(css("--ink"), 0.1);
+  for (const d of [0, 10, 30, 60, 100, 200]) { const x = X(d); ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, H - bot); ctx.stroke(); ctx.fillText(d + "", x - ctx.measureText(d + "").width/2, H - bot + 13); }
+  ctx.fillText("relative water depth, m (square-root scale)", cL, H - 4);
+  ctx.fillStyle = rgba(css("--l-soil"), 0.18); ctx.fillRect(cL, top, X(0) - cL, H - top - bot);
+  // column and curve points
+  let y = H - bot; const pts = [];
+  SECT.forEach((b, i) => { const h = hs[i], y0 = y - h, w = colW*(0.35 + 0.65*gx(b.g));
+    ctx.fillStyle = pat(ctx, b.lith); ctx.fillRect(colL, y0, w, h); ctx.strokeStyle = css("--ink"); ctx.lineWidth = 1; ctx.strokeRect(colL + 0.5, y0 + 0.5, w - 1, h - 1);
+    if (b.expo) { ctx.strokeStyle = css("--warn"); ctx.lineWidth = 2; ctx.beginPath(); for (let x = colL; x <= cR; x += 4) ctx.lineTo(x, y0 + Math.sin(x/3)*1.5); ctx.stroke(); }
+    pts.push([X(b.depth), y0 + h/2, b]); y = y0; });
+  for (let i = 1; i < pts.length; i++) { ctx.strokeStyle = pts[i][0] > pts[i-1][0] ? css("--accent") : css("--warn"); ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(pts[i-1][0], pts[i-1][1]); ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); }
+  const Z = sectionSummary();
+  pts.forEach(([x, yy, b], i) => { ctx.fillStyle = css("--ink"); ctx.beginPath(); ctx.arc(x, yy, 3, 0, 2*Math.PI); ctx.fill();
+    if (i === Z.mfs) { ctx.fillStyle = css("--accent"); ctx.font = `700 11px ${css("--f-mono")}`; const t = "MFS"; ctx.fillText(t, Math.min(x + 7, cR - 30), yy + 4); ctx.strokeStyle = css("--accent"); ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(colL, yy); ctx.lineTo(x - 4, yy); ctx.stroke(); ctx.setLineDash([]); } });
+  ctx.font = `500 10px ${css("--f-mono")}`; ctx.fillStyle = css("--accent"); ctx.fillText("deepening (T)", cL, 11); ctx.fillStyle = css("--warn"); ctx.fillText("shallowing (R)", cL + 92, 11);
+  ctx.fillStyle = css("--muted"); ctx.fillText("exposed", cL + 2, top + 10);
+}
+function bedFromCarb(){ const k = +CI.top; return { name: $("c_name").value.trim() || "Limestone bed", th: Math.max(0.05, +$("c_th").value || 1), kind:"carb", env:`FZ ${k} · ${FZ[k].n}`, depth: FZ[k].dm, lith: k === 5 ? "reef" : k === 9 ? "lam" : k === 6 ? "reef" : k === 4 || k === 3 ? "rud" : "lime", g: TEX[$("c_tex").value][2], expo: carbRead().obs.includes("karst") }; }
+function bedFromShale(){ return { name: $("s_name").value.trim() || "Shale bed", th: Math.max(0.05, +$("s_th").value || 1), kind:"shale", env: SI.t, depth: SI.dm, lith: SI.cls >= 2 ? "black" : "mud", g: 0.003, cond: SI.cond >= 0.5 }; }
+
+// ================= interpreter wiring =================
+let view = "coast";
+function showView(v){ view = v; $("viewCoast").hidden = v !== "coast"; $("viewInterp").hidden = v !== "interp";
+  $("tabCoast").setAttribute("aria-selected", String(v === "coast")); $("tabInterp").setAttribute("aria-selected", String(v === "interp"));
+  try { history.replaceState(null, "", v === "interp" ? "#interpret" : "#coast"); } catch (e) {}
+  redrawAll(); }
+$("tabCoast").addEventListener("click", () => showView("coast"));
+$("tabInterp").addEventListener("click", () => showView("interp"));
+window.addEventListener("hashchange", () => showView(location.hash === "#interpret" ? "interp" : "coast"));
+$("c_tex").innerHTML = Object.entries(TEX).map(([k, t]) => `<option value="${k}">${t[0]}</option>`).join("");
+$("c_ex").innerHTML = `<option value="">Choose an example…</option>` + CARB_EX.map((e, i) => `<option value="${i}">${e.n}</option>`).join("");
+$("s_ex").innerHTML = `<option value="">Choose an example…</option>` + SHALE_EX.map((e, i) => `<option value="${i}">${e.n}</option>`).join("");
+const obsHtml = grp => COBS.filter(o => o[0] === grp).map(o => `<label class="check" for="co_${o[1]}"><input type="checkbox" id="co_${o[1]}"> ${o[2]}</label>`).join("");
+$("c_grains").innerHTML = obsHtml("g"); $("c_struct").innerHTML = obsHtml("s");
+function loadCarb(e){ $("c_age").value = e.age; $("c_tex").value = e.tex; COBS.forEach(o => $("co_" + o[1]).checked = e.obs.includes(o[1])); $("c_name").value = e.name; }
+function loadShale(e){ for (const k of SH_IDS) $("s_" + k).value = e.v[k] == null ? "" : e.v[k]; for (const k of SH_CB) $("s_" + k).checked = !!e.v[k]; $("s_name").value = e.name; }
+$("c_ex").addEventListener("change", () => { const e = CARB_EX[$("c_ex").value]; if (e) { loadCarb(e); renderCarb(); } });
+$("s_ex").addEventListener("change", () => { const e = SHALE_EX[$("s_ex").value]; if (e) { loadShale(e); renderShale(); } });
+for (const id of ["c_age", "c_tex", ...COBS.map(o => "co_" + o[1])]) $(id).addEventListener("change", () => { $("c_ex").value = ""; renderCarb(); if (id === "c_age") renderSection(); });
+for (const id of [...SH_IDS, ...SH_CB].map(k => "s_" + k)) { $(id).addEventListener("input", () => { $("s_ex").value = ""; renderShale(); }); $(id).addEventListener("change", () => renderShale()); }
+$("c_add").addEventListener("click", () => addBed(bedFromCarb()));
+$("s_add").addEventListener("click", () => addBed(bedFromShale()));
+$("sec_coal").addEventListener("click", () => addBed({name:"Coal", th:0.5, kind:"other", env:"Peat mire", depth:0, lith:"peat", g:0.003}));
+$("sec_soil").addEventListener("click", () => addBed({name:"Paleosol", th:0.8, kind:"other", env:"Exposure, soil formation", depth:-5, lith:"soil", g:0.004, expo:true}));
+$("sec_sand").addEventListener("click", () => addBed({name:"Sandstone", th:2, kind:"other", env:"Shoreface or channel sand", depth:4, lith:"sand", g:0.2}));
+$("sec_ex").addEventListener("click", () => { SECT = SWOPE.map(b => ({...b})); $("c_age").value = "paleo"; saveSect(); renderSection(); if (M) writeJson(); });
+$("sec_clear").addEventListener("click", () => { SECT = []; saveSect(); renderSection(); if (M) writeJson(); $("sec_msg").textContent = "Section cleared."; });
+$("sec_t").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.i;
+  if (b.dataset.a === "rm") SECT.splice(i, 1);
+  else if (b.dataset.a === "up" && i < SECT.length - 1) [SECT[i], SECT[i+1]] = [SECT[i+1], SECT[i]];
+  else if (b.dataset.a === "dn" && i > 0) [SECT[i], SECT[i-1]] = [SECT[i-1], SECT[i]];
+  saveSect(); renderSection(); if (M) writeJson(); });
+$("sec_send").addEventListener("click", () => { if (!SECT.length) return; const Z = sectionSummary(), r = applyObj(Z.send);
+  presetId = null; dirty = false; logX = null; showView("coast"); update();
+  msg(`Applied the interpreted section: ${MODEL_LABEL[Z.model] || "classify from controls"}, trajectory ${Z.traj.toFixed(2)}, eustatic cycles ${Z.eus.toFixed(2)}.` + (r.notes.length ? " Adjusted: " + r.notes.join("; ") : ""));
+  $("sec_msg").textContent = "Sent."; });
+$("irefs").innerHTML = [
+  ["Carbonate textures", "Dunham (1962) classification; Embry & Klovan (1971) for floatstone and rudstone."],
+  ["Facies zones", "Wilson (1975) nine standard facies belts on a rimmed shelf, as revised by Flügel (2010); ramps after Burchette & Wright (1992), where the open shelf (FZ 2) lies seaward of the shoals."],
+  ["Scoring", "Each observation adds the weights in the table below; zone probabilities are a softmax of the totals (temperature 1.3). Weights are judgement calls drawn from those sources, meant to be inspected and argued with."],
+  ["Redox proxies", "Bioturbation index after Taylor & Goldring (1993). U/Th and V/Cr thresholds from Jones & Manning (1994). Mean framboid diameter under about 5 µm suggests euxinia (Wilkin et al. 1996). Mo above 25 ppm suggests intermittent and above 100 ppm persistent euxinia (Scott & Lyons 2012). The verdict is the median of the proxies you enter."],
+  ["Condensation", "Phosphate, glauconite, conodont concentration, hardgrounds and lags, fish debris and uranium-rich high gamma ray all mark slow net sedimentation (Loutit et al. 1988). The index is their weighted mean; above 0.5 counts as condensed."],
+  ["Cyclothems", "Heckel (1977, 1986): the core black phosphatic shale marks maximum flooding below a thermocline. Algeo et al. (2004) offered a shallower, estuarine-circulation alternative for the Hushpuckney Shale."],
+  ["Swope example", "Middle Creek Limestone, Hushpuckney Shale and Bethany Falls Limestone of the Swope cyclothem (Kansas City Group). Thicknesses are rounded for illustration; depths come from the rules here, not from published estimates."],
+  ["From section to model", "Trajectory is the change in mean depth between the lowest and highest thirds of the section (80 m = 1). Eustatic cycles scale with the depth range (110 m = 1) when depth reverses or exposure alternates with marine beds."]
+].map(([t, d]) => `<div class="ref"><b>${t}</b><span>${d}</span></div>`).join("");
+$("c_rules").querySelector("tbody").innerHTML = [...Object.values(TEX).map(t => [t[0], t[1]]), ...COBS.map(o => [o[2], o[3]])].map(([n, w]) =>
+  `<tr><td>${n}</td><td style="font-family:var(--f-mono);font-size:12.5px">${Object.entries(w).sort((a, b) => b[1] - a[1]).map(([k, v]) => `FZ${k} ${v > 0 ? "+" : "−"}${Math.abs(v)}`).join(" · ")}</td></tr>`).join("");
+makePatterns(); loadCarb(CARB_EX[0]); $("c_ex").value = "0"; loadShale(SHALE_EX[0]); $("s_ex").value = "0";
+try { const s = JSON.parse(localStorage.getItem("csf-section") || "null"); if (Array.isArray(s)) SECT = s; else SECT = SWOPE.map(b => ({...b})); } catch (e) { SECT = SWOPE.map(b => ({...b})); }
+renderCarb(); renderShale(); renderSection();
+if (location.hash === "#interpret") showView("interp");
+
+$("presets").innerHTML = PRESETS.map(p => `<button type="button" data-id="${p.id}" aria-pressed="false">${p.name}</button>`).join("");
+$("presets").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; presetId = b.dataset.id; setPreset(PRESETS.find(p => p.id === presetId)); logX = null; dirty = false; update(); });
+for (const id of IDS) { const el = $(id); el.addEventListener("input", () => { presetId = null; update(); }); }
+$("refs").innerHTML = REFS.map(([t, d]) => `<div class="ref"><b>${t}</b><span>${d}</span></div>`).join("");
+
+const sec = $("sec"), tip = $("secTip");
+function secPos(e){ const r = sec.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top, r}; }
+sec.addEventListener("click", e => { const {x} = secPos(e); logX = clamp(secGeom.XI(x), M.x0, M.x1); gcSel = null; drawSection(); drawLog(); drawGrainCore(); });
+sec.addEventListener("mousemove", e => { const {x, y, r} = secPos(e); const k = Math.floor((secGeom.top + NL*secGeom.bh - y) / secGeom.bh);
+  if (k < 0 || k >= NL) { tip.hidden = true; return; } const b = beltAt(M, k, secGeom.XI(x));
+  tip.hidden = false; tip.innerHTML = `<b>${b.n}</b><br>${b.z} · ${grainName(b.g)}<br>slice ${k + 1} of ${NL}<br><span style="color:var(--muted)">click to drill a core here</span>`;
+  tip.style.left = Math.min(r.width - 230, x + 14) + "px"; tip.style.top = Math.max(4, y - 70) + "px"; });
+sec.addEventListener("mouseleave", () => { tip.hidden = true; });
+$("gal").addEventListener("click", galClick);
+
+$("json").addEventListener("input", () => { dirty = true; msg("Edited. Press Apply to use these values, or Show current settings to discard."); });
+$("coreOnly").addEventListener("change", () => { dirty = false; writeJson(); });
+$("resetJson").addEventListener("click", () => { dirty = false; writeJson(); msg("Showing the current settings."); });
+$("copyJson").addEventListener("click", () => { const t = $("json").value;
+  const fallback = () => { $("json").focus(); $("json").select(); msg("Text selected. Press ⌘C or Ctrl+C to copy."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(() => msg("Copied. Paste it into the Coast builder’s Parameter exchange box."), fallback); else fallback(); });
+$("applyJson").addEventListener("click", () => {
+  let o; try { o = extractJson($("json").value); } catch (e) { msg("That isn’t valid JSON. Check for a missing comma, quote or brace.", true); return; }
+  try { const r = applyObj(o);
+    if (o.preset) { const p = PRESETS.find(q => q.name === o.preset); presetId = p ? p.id : null; } else presetId = null;
+    dirty = false; logX = null; update();
+    let t = `Applied ${r.nCore} of 12 shared keys` + (r.nExtra ? ` and ${r.nExtra} extra keys` : "") + ".";
+    if (o.schema && o.schema !== "coastal-sed-params/v1") t += ` Schema was "${o.schema}", read anyway.`;
+    if (r.notes.length) t += " Adjusted: " + r.notes.join("; ") + ".";
+    if (r.ignored.length) t += " Ignored: " + r.ignored.join(", ") + ".";
+    msg(t, r.nCore + r.nExtra === 0);
+  } catch (e) { msg(e.message, true); } });
+
+let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => M && redrawAll(), 80); }).observe(document.querySelector(".wrap"));
+if (window.matchMedia) { const mq = window.matchMedia("(prefers-color-scheme: dark)"); mq.addEventListener && mq.addEventListener("change", redrawAll); }
+new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+
+makePatterns();
+let restored = false;
+try { const last = JSON.parse(localStorage.getItem("csf-last") || "null"); if (last && last.schema === "coastal-sed-params/v1") { setPreset(PRESETS[0]); applyObj(last); presetId = last.preset ? (PRESETS.find(q => q.name === last.preset) || {}).id || null : null; restored = true; } } catch (e) {}
+if (!restored) { presetId = "miss"; setPreset(PRESETS[0]); }
+update();
+})();
+</script>
+
+<!-- uc-banner: remove this block when the page is finished -->
+<a id="uc-banner" href="https://songbird-soundscape.github.io/" title="This page is still being built. Click to visit Stephen C. Caird's main site."
+ style="position:fixed;left:12px;bottom:12px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:repeating-linear-gradient(-45deg,#f2c230 0 10px,#1f1f1f 10px 20px);box-shadow:0 2px 8px rgba(0,0,0,.35);text-decoration:none;font:600 13px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+ <span style="background:#fffbe6;color:#1f1f1f;padding:3px 9px;border-radius:999px;letter-spacing:.02em">&#128679; Under construction</span></a>
+<style>@media print{#uc-banner{display:none!important}}</style>
+<!-- /uc-banner -->
+</body></html>

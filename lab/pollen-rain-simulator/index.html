@@ -1,0 +1,1120 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Pollen Rain Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Spline+Sans:wght@500;600;700&display=swap">
+<style>
+/* Layout: a field-lab bench. Map (the landscape) on the left, instruments on the right, the slide count below. */
+:root{
+  --bg:#eceee7; --surface:#f7f8f3; --ink:#1c221b; --muted:#59634f; --line:#cdd3c4;
+  --accent:#a8205f;      /* safranin, the stain on a pollen slide */
+  --pollen:#c99417;      /* grain yellow */
+  --tree:#2f6b3a; --shrub:#7d8a22; --herb:#b5801a; --spore:#7a5236; --aquatic:#2b6a98; --indet:#8a8f86;
+  --chip:#e3e7dc;
+  --display:"Spline Sans", "Helvetica Neue", Arial, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11150f; --surface:#191e17; --ink:#e3e8dc; --muted:#98a28e; --line:#2e3529;
+  --accent:#e2669f; --pollen:#e6b63c;
+  --tree:#72b67e; --shrub:#bcc757; --herb:#e0ad4a; --spore:#c4916c; --aquatic:#6eaedb; --indet:#8f978a;
+  --chip:#232a20; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#11150f; --surface:#191e17; --ink:#e3e8dc; --muted:#98a28e; --line:#2e3529;
+  --accent:#e2669f; --pollen:#e6b63c;
+  --tree:#72b67e; --shrub:#bcc757; --herb:#e0ad4a; --spore:#c4916c; --aquatic:#6eaedb; --indet:#8f978a;
+  --chip:#232a20; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:14px; line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:24px 48px}
+.wrap{max-width:1240px; margin:0 auto; display:grid; gap:22px}
+header{display:grid; gap:8px; max-width:78ch}
+.eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+h1{font-family:var(--display); font-weight:700; font-size:clamp(28px,4vw,40px); line-height:1.08; margin:0; letter-spacing:-.01em; text-wrap:balance}
+h2{font-family:var(--display); font-weight:600; font-size:18px; margin:0; text-wrap:balance}
+h3{font-family:var(--mono); font-weight:500; font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:0}
+p{margin:0}
+.lede{color:var(--muted); font-size:15px; max-width:70ch}
+.bench{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:22px; align-items:start}
+@media (max-width:920px){ .bench{grid-template-columns:minmax(0,1fr)} }
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:16px; display:grid; gap:14px; min-width:0}
+.maptools{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between}
+.seg{display:inline-flex; border:1px solid var(--line); border-radius:5px; overflow:hidden}
+.seg button{font:inherit; font-size:12.5px; border:0; background:transparent; color:var(--muted); padding:6px 11px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--surface)}
+.seg button+button{border-left:1px solid var(--line)}
+button.btn{font:inherit; font-size:12.5px; border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:6px 11px; border-radius:5px; cursor:pointer}
+button.btn:hover{border-color:var(--muted)}
+button.btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+button:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.mapbox{position:relative; width:100%; aspect-ratio:1/1; max-width:100%; border-radius:4px; overflow:hidden; background:#1a1d18; touch-action:none}
+.mapbox canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+#mapC{cursor:crosshair}
+.legend{display:flex; flex-wrap:wrap; gap:6px}
+.legend button{font:inherit; font-size:12px; display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:4px 8px 4px 6px; border-radius:4px; cursor:pointer}
+.legend button i{width:12px; height:12px; border-radius:2px; display:inline-block; flex:none}
+.legend button[aria-pressed="true"]{border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink)}
+.legend.paintoff button{cursor:default}
+.hint{font-size:12.5px; color:var(--muted)}
+.controls{display:grid; gap:18px}
+.group{display:grid; gap:10px}
+.ctl{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 10px; align-items:center}
+.ctl label{font-size:13px}
+.ctl output{font-family:var(--mono); font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right}
+.ctl input[type=range]{grid-column:1/-1; width:100%; accent-color:var(--accent)}
+.ctl .sub{grid-column:1/-1; font-size:11.5px; color:var(--muted); margin-top:-2px}
+select{font:inherit; font-size:13px; padding:5px 8px; border:1px solid var(--line); border-radius:5px; background:var(--surface); color:var(--ink); max-width:100%}
+.row{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+details summary{cursor:pointer; font-size:12.5px; color:var(--muted)}
+details[open] summary{margin-bottom:10px}
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden}
+@media (max-width:720px){ .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.stat{background:var(--surface); padding:12px 14px; display:grid; gap:2px; align-content:start}
+.stat b{font-family:var(--display); font-weight:600; font-size:22px; font-variant-numeric:tabular-nums; letter-spacing:-.01em}
+.stat span{font-size:12px; color:var(--muted)}
+.results{display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:22px; align-items:start}
+@media (max-width:1020px){ .results{grid-template-columns:minmax(0,1fr)} }
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; min-width:720px; font-size:12.5px}
+th,td{padding:4px 8px; text-align:left; vertical-align:middle}
+thead th{font-family:var(--mono); font-weight:500; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line); padding-bottom:8px; vertical-align:bottom}
+tbody tr.taxon{cursor:pointer}
+tbody tr.taxon:hover td{background:var(--chip)}
+tbody tr.taxon.sel td{background:var(--chip)}
+tbody tr.taxon.sel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+tr.grp td{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding-top:12px; border-bottom:1px solid var(--line)}
+td.name{white-space:nowrap; font-style:italic}
+td.name small{font-style:normal; color:var(--muted); font-size:10.5px; margin-left:4px}
+td.v{width:15%}
+.bar{display:grid; grid-template-columns:38px minmax(0,1fr); gap:6px; align-items:center; font-family:var(--mono); font-size:11.5px; font-variant-numeric:tabular-nums}
+.bar span{text-align:right; color:var(--ink)}
+.bar span.zero{color:var(--muted)}
+.bar i{display:block; height:9px; border-radius:1px; background:var(--g); min-width:0}
+.bar i.ghost{opacity:.45}
+.surv{font-family:var(--mono); font-size:11.5px; font-variant-numeric:tabular-nums}
+.chartbox{display:grid; gap:10px}
+canvas#srcC{width:100%; height:260px; display:block}
+.keyrow{display:flex; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted)}
+.keyrow i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:5px; border-radius:1px}
+.note{font-size:12.5px; color:var(--muted); max-width:68ch}
+.notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px 28px}
+.notes div{display:grid; gap:6px; align-content:start}
+.notes p{font-size:13px; color:var(--muted); max-width:62ch}
+code,.mono{font-family:var(--mono); font-size:12px}
+.mystery-veil{position:absolute; inset:0; display:grid; place-items:center; pointer-events:none}
+.mystery-veil span{font-family:var(--display); font-size:15px; color:#e8e2cf; background:rgba(0,0,0,.45); padding:8px 14px; border-radius:4px}
+.pill{font-family:var(--mono); font-size:11px; padding:2px 7px; border-radius:20px; border:1px solid var(--line); color:var(--muted)}
+.caught{font-family:var(--mono); font-size:12px; color:var(--muted)}
+
+.scalenav{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.scalenav a{display:inline-grid; gap:0; text-decoration:none; color:var(--ink); border:1px solid var(--line); background:var(--surface); border-radius:5px; padding:7px 12px; min-width:120px}
+.scalenav a:hover{border-color:var(--accent)}
+.scalenav a small{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.scalenav a span{font-family:var(--display); font-weight:600; font-size:15px}
+.scale{display:grid; gap:18px; padding-top:26px; border-top:1px solid var(--line); scroll-margin-top:12px}
+.scalehead{display:grid; gap:6px; max-width:80ch}
+h2.big{font-size:clamp(22px,2.8vw,28px); font-weight:700; letter-spacing:-.01em}
+.scalehead .eyebrow b{font-weight:500; color:var(--ink)}
+canvas.sq{width:100%; aspect-ratio:1/1; max-width:100%; display:block; border-radius:4px; background:var(--chip)}
+canvas#fallC{width:100%; height:440px; display:block; border-radius:4px; background:var(--chip)}
+.readout{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden}
+.readout div{background:var(--surface); padding:10px 12px; display:grid; gap:1px}
+.readout b{font-family:var(--display); font-size:19px; font-weight:600; font-variant-numeric:tabular-nums}
+.readout span{font-size:11.5px; color:var(--muted)}
+.facts{width:100%; min-width:640px; font-size:13px}
+.facts th{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); text-align:left; padding:8px 10px; border-bottom:1px solid var(--line)}
+.facts td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+.facts td:first-child{font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; white-space:nowrap}
+.result{font-family:var(--mono); font-size:12.5px; font-variant-numeric:tabular-nums; display:flex; flex-wrap:wrap; gap:6px 16px}
+.result i{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:-1px}
+.corewrap{overflow-x:auto}
+canvas#coreC{display:block; min-width:940px; width:100%; height:620px}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Palynological inference · forward model</div>
+    <h1>Pollen Rain Simulator</h1>
+    <p class="lede">A core sits at one point in a landscape. Every grain in it was produced somewhere else, carried an unknown distance, and survived an unknown length of time. These four models follow pollen from the physics of a single grain to a pollen diagram spanning eleven thousand years.</p>
+    <nav class="scalenav" aria-label="Scales">
+      <a href="#grain"><small>µm · seconds</small><span>The grain</span></a>
+      <a href="#ovule"><small>mm · hours</small><span>Capture at the ovule</span></a>
+      <a href="#landscape"><small>km · one season</small><span>The landscape</span></a>
+      <a href="#core"><small>metres of mud · millennia</small><span>The core</span></a>
+    </nav>
+  </header>
+
+  <section class="scale" id="grain">
+    <div class="scalehead">
+      <div class="eyebrow">Scale 1 · <b>micrometres</b></div>
+      <h2 class="big">The grain: how fast it falls</h2>
+      <p class="lede">Fall speed is the single grain property that drives every dispersal model further down this page. In still air a small grain falls at the speed where drag balances weight, which is Stokes' law. Size counts twice (weight grows with d³, drag with d), so a maize grain falls about ten times faster than a birch grain and seldom travels far.</p>
+    </div>
+    <div class="bench">
+      <div class="panel">
+        <canvas id="fallC" aria-label="Grains falling through still air, one column per taxon"></canvas>
+        <p class="hint">One metre of still air, real time. Each column drops grains at its modelled fall speed. The highlighted column is the grain set by the sliders.</p>
+      </div>
+      <div class="panel controls">
+        <div class="group">
+          <h3>Grain</h3>
+          <select id="gPreset" aria-label="Grain preset"></select>
+          <div class="ctl"><label for="gD">Body diameter</label><output id="gDout"></output><input type="range" id="gD" min="10" max="120" step="1"></div>
+          <div class="ctl"><label for="gS">Air sacs (sacci), size relative to body</label><output id="gSout"></output><input type="range" id="gS" min="0" max="1" step="0.05"><div class="sub">Sacci are hollow, honeycomb-walled bladders: lots of volume for very little mass.</div></div>
+          <div class="ctl"><label for="gR">Density of the grain body</label><output id="gRout"></output><input type="range" id="gR" min="0.5" max="1.6" step="0.05"><div class="sub">Drops as the grain dries out after release.</div></div>
+          <div class="ctl"><label for="gX">Shape factor χ</label><output id="gXout"></output><input type="range" id="gX" min="1" max="2" step="0.05"><div class="sub">1 = smooth sphere. Flattened, lobed or spiny grains have more drag.</div></div>
+        </div>
+        <div class="readout">
+          <div><b id="gV">–</b><span>modelled fall speed</span></div>
+          <div><b id="gM">–</b><span>measured value, where known</span></div>
+          <div><b id="gRe">–</b><span>Reynolds number (Stokes holds below ~1)</span></div>
+          <div><b id="gNoS">–</b><span>same grain without sacci</span></div>
+        </div>
+        <div class="group">
+          <h3>Release</h3>
+          <div class="ctl"><label for="gH">Release height</label><output id="gHout"></output><input type="range" id="gH" min="0.5" max="40" step="0.5"></div>
+          <div class="ctl"><label for="gU">Wind speed</label><output id="gUout"></output><input type="range" id="gU" min="0.5" max="10" step="0.5"></div>
+          <p class="note" id="gTravel"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scale" id="ovule">
+    <div class="scalehead">
+      <div class="eyebrow">Scale 2 · <b>millimetres</b></div>
+      <h2 class="big">Capture at the ovule: pine and Ginkgo</h2>
+      <p class="lede">Gymnosperm ovules catch pollen in a pollination drop, a bead of fluid secreted from the micropyle and later withdrawn. In <i>Pinus</i> the ovule faces down and the drop hangs below it; buoyant saccate grains float up through the drop into the ovule. <i>Ginkgo</i> grains have no sacci and do not float, so capture depends on the drop being drawn back in. Run the season, then change the ovule orientation or the pollen mix to see which combinations work.</p>
+    </div>
+    <div class="bench">
+      <div class="panel">
+        <canvas id="ovC" class="sq" width="640" height="640" aria-label="Animated ovule with pollination drop"></canvas>
+        <div class="result" id="ovResult"></div>
+      </div>
+      <div class="panel controls">
+        <div class="group">
+          <h3>Presets</h3>
+          <div class="row">
+            <button class="btn" id="ovPinus"><i>Pinus</i></button>
+            <button class="btn" id="ovGinkgo"><i>Ginkgo</i></button>
+            <button class="btn" id="ovLeslie">Mixed pollen test</button>
+          </div>
+          <p class="note" id="ovPresetNote"></p>
+        </div>
+        <div class="group">
+          <h3>Set-up</h3>
+          <div class="ctl"><label for="ovOri">Micropyle faces</label><output></output>
+            <select id="ovOri" style="grid-column:1/-1"><option value="down">Down (drop hangs below)</option><option value="side">Sideways</option><option value="up">Up (drop sits on top)</option></select></div>
+          <div class="ctl"><label for="ovMix">Saccate grains in the pollen cloud</label><output id="ovMixOut"></output><input type="range" id="ovMix" min="0" max="1" step="0.1"></div>
+          <div class="ctl"><label for="ovRet">Drop withdrawal</label><output id="ovRetOut"></output><input type="range" id="ovRet" min="60" max="600" step="20"><div class="sub">Slow withdrawal carries grains in with the fluid. Fast drying leaves grains stuck on the outside.</div></div>
+          <div class="row"><button class="btn primary" id="ovRun">Run a pollination season</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>After capture</h2>
+      <div class="tablewrap">
+        <table class="facts">
+          <thead><tr><th></th><th><i>Pinus</i> (Pinaceae)</th><th><i>Ginkgo biloba</i></th></tr></thead>
+          <tbody>
+            <tr><td>Pollen</td><td>Bisaccate: a central body with two air sacs. Very abundant and easy to recognise in sediments.</td><td>Monosulcate, boat-shaped, no sacci. Hard to separate from cycad and some other monosulcate grains, so fossil grains are usually lumped into broad form-genera such as <i>Cycadopites</i>.</td></tr>
+            <tr><td>Ovules</td><td>Two per ovuliferous scale in an upright seed cone; micropyles point down toward the cone axis.</td><td>Usually two on a long stalk, exposed on short shoots, with no cone.</td></tr>
+            <tr><td>Capture</td><td>Grains on the drop float up through it into the micropyle (flotation), helped by withdrawal of the drop. Drops are secreted and withdrawn repeatedly over several days.</td><td>Grains caught in the drop are drawn into the pollen chamber as the drop is resorbed.</td></tr>
+            <tr><td>Male gametophyte</td><td>A pollen tube grows through the nucellus and delivers non-motile sperm.</td><td>A branched, haustorial pollen tube anchors in the nucellus and feeds there for months, then releases two large, many-flagellate swimming sperm.</td></tr>
+            <tr><td>Pollination to fertilisation</td><td>About 12–14 months: pollinated one spring, fertilised the next summer.</td><td>About 4–5 months: pollinated in spring, fertilised in late summer.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">The animation is a qualitative model: grains move by buoyancy relative to the drop fluid, and a grain left on the surface of a fast-shrinking drop can stick and be stranded. It reproduces the pattern Leslie (2010) found experimentally, where flotation in downward-facing ovules preferentially captures saccate pollen. The drop itself (sugars, proteins, its role in pollen germination) is not modelled.</p>
+    </div>
+  </section>
+
+  <section class="scale" id="landscape">
+    <div class="scalehead">
+      <div class="eyebrow">Scale 3 · <b>kilometres</b></div>
+      <h2 class="big">The landscape: one season of pollen rain</h2>
+      <p class="lede">A 10 × 10 km map at 62.5 m resolution. Each plant community releases pollen according to its species' productivity, the wind carries it according to its fall speed, and the basin integrates whatever lands. Paint the vegetation, move the core, and compare the count with the vegetation that produced it.</p>
+    </div>
+
+  <section class="bench">
+    <div class="panel">
+      <div class="maptools">
+        <div class="seg" role="group" aria-label="Map layer">
+          <button id="lyrVeg" aria-pressed="true">Vegetation</button>
+          <button id="lyrProv" aria-pressed="false">Where the pollen came from</button>
+        </div>
+        <div class="seg" role="group" aria-label="Map tool">
+          <button id="toolSite" aria-pressed="true">Move core</button>
+          <button id="toolPaint" aria-pressed="false">Paint</button>
+        </div>
+      </div>
+      <div class="mapbox" id="mapbox">
+        <canvas id="mapC" width="800" height="800" aria-label="Landscape map, 10 by 10 km"></canvas>
+        <canvas id="partC" width="800" height="800" style="pointer-events:none"></canvas>
+        <div class="mystery-veil" id="veil" hidden><span>Landscape hidden. Read the count below, then reveal.</span></div>
+      </div>
+      <div class="legend" id="legend" aria-label="Plant communities"></div>
+      <div class="row" style="justify-content:space-between">
+        <p class="hint" id="toolHint">Click or drag on the map to move the coring site. Switch to Paint to change the vegetation.</p>
+        <div class="row">
+          <label class="hint" for="brush" id="brushLbl" hidden>Brush</label>
+          <input type="range" id="brush" min="1" max="14" value="4" style="width:90px;accent-color:var(--accent)" hidden>
+        </div>
+      </div>
+      <div class="row" style="justify-content:space-between">
+        <label class="row hint" style="gap:6px"><input type="checkbox" id="partToggle"> Show airborne grains</label>
+        <span class="caught" id="caught"></span>
+      </div>
+    </div>
+
+    <div class="panel controls">
+      <div class="group">
+        <h3>Landscape</h3>
+        <div class="row">
+          <select id="preset" aria-label="Landscape preset">
+            <option value="lake">Lake in a mixed lowland</option>
+            <option value="hollow">Small hollow in closed forest</option>
+            <option value="farm">Oxbow lake in a farmed valley</option>
+            <option value="upland">Bog pool in heath and pine</option>
+            <option value="blank">Open pasture (paint your own)</option>
+          </select>
+          <button class="btn" id="regen">New landscape</button>
+          <button class="btn" id="mystery">Hide landscape</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3>Sampling site</h3>
+        <div class="ctl"><label for="R">Basin radius</label><output id="Rout"></output>
+          <input type="range" id="R" min="0" max="100" step="1"><div class="sub" id="Rsub"></div></div>
+      </div>
+
+      <div class="group">
+        <h3>Air and canopy</h3>
+        <div class="ctl"><label for="wdir">Prevailing wind from</label><output id="wdirOut"></output>
+          <input type="range" id="wdir" min="0" max="359" step="1"></div>
+        <div class="ctl"><label for="wu">Wind speed</label><output id="wuOut"></output>
+          <input type="range" id="wu" min="0.5" max="10" step="0.5"></div>
+        <div class="ctl"><label for="steady">Wind steadiness</label><output id="steadyOut"></output>
+          <input type="range" id="steady" min="0" max="0.9" step="0.05"><div class="sub">0 = wind from all directions equally over the year.</div></div>
+        <div class="ctl"><label for="canopy">Canopy closure</label><output id="canopyOut"></output>
+          <input type="range" id="canopy" min="0" max="1" step="0.05"><div class="sub">Slows trunk-space wind in forests and filters pollen from afar at sites under trees.</div></div>
+        <details>
+          <summary>Atmospheric parameters</summary>
+          <div class="group">
+            <div class="ctl"><label for="nn">Turbulence exponent <i>n</i></label><output id="nnOut"></output>
+              <input type="range" id="nn" min="0.15" max="0.5" step="0.01"></div>
+            <div class="ctl"><label for="cz">Vertical diffusion <i>C<sub>z</sub></i></label><output id="czOut"></output>
+              <input type="range" id="cz" min="0.05" max="0.3" step="0.01"><div class="sub">Sutton's parameters, as used by Prentice and Sugita. Defaults: n = 0.25, C<sub>z</sub> = 0.12 (neutral conditions).</div></div>
+          </div>
+        </details>
+      </div>
+
+      <div class="group">
+        <h3>Sediment and time</h3>
+        <div class="row">
+          <select id="env" aria-label="Depositional environment">
+            <option value="0">Anoxic lake mud</option>
+            <option value="1">Peat, stable water table</option>
+            <option value="2">Fluctuating water table, alluvium</option>
+            <option value="3">Aerated soil or cave sediment</option>
+          </select>
+        </div>
+        <div class="ctl"><label for="age">Age of the sample</label><output id="ageOut"></output>
+          <input type="range" id="age" min="0" max="100" step="1"></div>
+      </div>
+
+      <div class="group">
+        <h3>The count</h3>
+        <div class="row">
+          <label class="hint" for="sum">Count to a land-pollen sum of</label>
+          <select id="sum"><option>150</option><option selected>300</option><option>500</option><option>1000</option></select>
+          <button class="btn" id="recount">Count a new slide</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Summary">
+    <div class="stat"><b id="sHalf">–</b><span>radius supplying half the land pollen</span></div>
+    <div class="stat"><b id="s80">–</b><span>radius supplying 80%</span></div>
+    <div class="stat"><b id="sBg">–</b><span>of land pollen from beyond the 10 km map</span></div>
+    <div class="stat"><b id="sLost">–</b><span>of deposited grains destroyed or unidentifiable</span></div>
+  </section>
+
+  <section class="results">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2>Vegetation versus the count</h2>
+        <span class="pill" id="trackPill">Tracking: all land pollen</span>
+      </div>
+      <p class="note">Percentages of the total land pollen (trees, shrubs, herbs). Spores, aquatics and unidentifiable grains are given as % of land pollen plus that group, as on a standard diagram. Click a row to map where that taxon's grains came from.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr>
+            <th>Taxon</th>
+            <th>Cover within 1 km</th>
+            <th>Cover, whole map</th>
+            <th>Pollen deposited</th>
+            <th>Survives</th>
+            <th id="cntHead">Pollen counted</th>
+            <th>REVEALS-style estimate</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel chartbox">
+      <h2>Pollen source area</h2>
+      <p class="note">Cumulative share of the pollen reaching the core, by distance from the core. The far right step is pollen from beyond the map.</p>
+      <canvas id="srcC" aria-label="Cumulative pollen source curve"></canvas>
+      <div class="keyrow">
+        <span><i style="background:var(--ink)"></i>All land pollen</span>
+        <span id="keyTax"><i style="background:var(--accent)"></i><em id="keyTaxName"></em></span>
+      </div>
+      <p class="note" id="readout"></p>
+    </div>
+  </section>
+
+  </section>
+
+  <section class="scale" id="core">
+    <div class="scalehead">
+      <div class="eyebrow">Scale 4 · <b>millennia</b></div>
+      <h2 class="big">The core: eleven thousand years</h2>
+      <p class="lede">The same landscape model, run on a Holocene vegetation history: open steppe giving way to birch and pine, then hazel and mixed oak forest, alder on wet ground, beech late, and clearance for farming. Each level is counted under the site, wind and sediment settings above, and every level is as old as its depth. Solid silhouettes are the pollen count; the dashed line is the true land cover on the map.</p>
+    </div>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <div class="row">
+          <label class="row hint" style="gap:6px"><input type="checkbox" id="coreDry"> Lake level fell 5.0–4.0 ka (sediment exposed to air)</label>
+          <label class="row hint" style="gap:6px"><input type="checkbox" id="coreTruth" checked> Show true land cover</label>
+        </div>
+        <button class="btn" id="coreRecount">Count new slides</button>
+      </div>
+      <div class="corewrap"><canvas id="coreC" aria-label="Pollen diagram against age"></canvas></div>
+      <p class="note">Hollow outlines are ×10 exaggerations for minor taxa. Things to look for: <i>Tilia</i> forms far more of the forest than its pollen shows; <i>Alnus</i> and <i>Pinus</i> overshoot; cereal pollen hardly registers until fields reach the basin edge; and with the dry phase switched on, robust Lactuceae and fern spores spike with the indeterminable grains.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>What the model does</h2>
+    <div class="notes">
+      <div><h3>Production</h3><p>Each taxon releases pollen in proportion to its cover times a pollen productivity estimate (PPE) relative to Poaceae = 1. Tree values follow the European syntheses (Broström et al. 2008; Mazier et al. 2012). Values marked ° are illustrative guesses, mostly for spores, aquatics and <i>Populus</i>.</p></div>
+      <div><h3>Dispersal</h3><p>Sutton's plume as used by Prentice (1985) and Sugita (1993): the share still airborne at distance <i>z</i> is <span class="mono">g(z) = exp(−b·z<sup>n/2</sup>)</span> with <span class="mono">b = 4v<sub>g</sub> / (n·u·√π·C<sub>z</sub>)</span>. Deposition per m² is <span class="mono">−g′(z)/2πz</span>. Heavy grains with a high fall speed <i>v<sub>g</sub></i> (<i>Fagus</i>, cereals) drop close to the source.</p></div>
+      <div><h3>Wind and canopy</h3><p>A steady prevailing wind weights upwind cells by <span class="mono">1 + a·cos(θ)</span>. Under a canopy, understorey plants release into slow trunk-space air, and a site inside closed forest receives less pollen from beyond ~150 m (Tauber 1965's trunk-space, canopy and rain-out components).</p></div>
+      <div><h3>The basin</h3><p>A lake collects over its whole surface, so no source is counted closer than the basin radius. Small basins are dominated by the vegetation at their edge; large lakes average a wide region (Jacobson & Bradshaw 1981). Cells inside the basin become open water.</p></div>
+      <div><h3>Preservation</h3><p>Each taxon has a corrosion susceptibility based on Havinga's oxidation series. The surviving share is <span class="mono">exp(−3s⁶)·exp(−6E·s²·√t)</span>, where <i>E</i> is the environment's oxidation rate and <i>t</i> the age in thousands of years. Thin-walled grains (<i>Populus</i>, <i>Ceratophyllum</i>) are lost even in good conditions; robust ones (Lactuceae, fern spores) become over-represented as conditions worsen.</p></div>
+      <div><h3>Grain physics</h3><p>Fall speed <span class="mono">v = m·g / (3π·μ·d·χ)</span>, with mass from a body of density ρ plus two sacci at 0.1 g/cm³, d the diameter of a sphere of equal volume, μ the viscosity of air and a Schiller–Naumann correction when the Reynolds number nears 1. Densities and shape factors for the presets are set so the model matches measured fall speeds.</p></div>
+      <div><h3>Sources</h3><p>Prentice 1985 (Quat. Res.); Sugita 1993 (Quat. Res.), 2007 (Holocene); Broström et al. 2008 (Veg. Hist. Archaeobot.); Mazier et al. 2012 (Rev. Palaeobot. Palynol.); Tauber 1965; Jacobson & Bradshaw 1981 (Quat. Res.); Havinga 1967, 1984; Doyle 1945; Leslie 2010 (New Phytol.); Friedman 1987 on the <i>Ginkgo</i> pollen tube; Hirase 1896 on <i>Ginkgo</i> swimming sperm.</p></div>
+      <div><h3>Inference</h3><p>The REVEALS-style column divides each count by PPE × the deposition a uniform landscape would deliver to this basin (Sugita 2007). It assumes even vegetation, no directional wind and perfect preservation, so its error shows what the core cannot tell you on its own.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(()=>{
+'use strict';
+// ---------- Taxa ----------
+// ppe: productivity relative to Poaceae; vg: fall speed m/s; s: corrosion susceptibility 0-1; lit: 1 = literature-based, 0 = illustrative; under: released in trunk space when in forest
+const TAXA=[
+ {n:'Pinus',g:'tree',ppe:6.38,vg:0.031,s:0.35,lit:1},
+ {n:'Betula',g:'tree',ppe:3.09,vg:0.024,s:0.45,lit:1},
+ {n:'Alnus',g:'tree',ppe:9.07,vg:0.021,s:0.35,lit:1},
+ {n:'Quercus',g:'tree',ppe:5.83,vg:0.035,s:0.55,lit:1},
+ {n:'Tilia',g:'tree',ppe:0.80,vg:0.032,s:0.20,lit:1,note:'insect-pollinated'},
+ {n:'Fagus',g:'tree',ppe:6.67,vg:0.057,s:0.60,lit:1},
+ {n:'Populus',g:'tree',ppe:1.0,vg:0.025,s:0.95,lit:0,note:'thin exine'},
+ {n:'Corylus',g:'shrub',ppe:1.99,vg:0.025,s:0.30,lit:1,under:1},
+ {n:'Salix',g:'shrub',ppe:1.22,vg:0.022,s:0.65,lit:1,under:1},
+ {n:'Calluna',g:'shrub',ppe:0.82,vg:0.038,s:0.30,lit:1,under:1},
+ {n:'Poaceae',g:'herb',ppe:1.00,vg:0.035,s:0.50,lit:1,under:1},
+ {n:'Cyperaceae',g:'herb',ppe:0.87,vg:0.035,s:0.55,lit:1,under:1},
+ {n:'Artemisia',g:'herb',ppe:3.48,vg:0.025,s:0.45,lit:1},
+ {n:'Plantago lanceolata',g:'herb',ppe:1.04,vg:0.029,s:0.45,lit:1},
+ {n:'Cerealia-type',g:'herb',ppe:1.85,vg:0.060,s:0.50,lit:1},
+ {n:'Lactuceae',g:'herb',ppe:0.16,vg:0.051,s:0.08,lit:1,note:'very robust'},
+ {n:'Pteridium',g:'spore',ppe:1.2,vg:0.019,s:0.12,lit:0,under:1},
+ {n:'Sphagnum',g:'spore',ppe:0.6,vg:0.020,s:0.25,lit:0},
+ {n:'Typha latifolia',g:'aquatic',ppe:0.8,vg:0.040,s:0.40,lit:0},
+ {n:'Potamogeton',g:'aquatic',ppe:0.3,vg:0.035,s:0.60,lit:0},
+ {n:'Nymphaea',g:'aquatic',ppe:0.05,vg:0.060,s:0.50,lit:0,note:'insect-pollinated'},
+ {n:'Ceratophyllum',g:'aquatic',ppe:0.05,vg:0.050,s:0.97,lit:0,note:'pollinated under water'},
+];
+const NT=TAXA.length, IDX={}; TAXA.forEach((t,i)=>IDX[t.n]=i);
+const TLP=TAXA.map(t=>t.g==='tree'||t.g==='shrub'||t.g==='herb');
+const GROUPS=[['tree','Trees'],['shrub','Shrubs'],['herb','Herbs'],['spore','Spores'],['aquatic','Aquatics']];
+
+// ---------- Communities ----------
+const COMM=[
+ {name:'Open water',col:[61,110,143],cov:{Nymphaea:.12,Potamogeton:.2,Ceratophyllum:.25}},
+ {name:'Reed fen',col:[138,163,123],cov:{'Typha latifolia':.25,Cyperaceae:.35,Poaceae:.25,Salix:.1}},
+ {name:'Alder carr',col:[79,122,90],forest:1,cov:{Alnus:.6,Salix:.12,Betula:.08,Cyperaceae:.15}},
+ {name:'Poplar–willow floodplain',col:[110,154,107],forest:1,cov:{Populus:.35,Salix:.3,Alnus:.15,Poaceae:.15}},
+ {name:'Oak–lime woodland',col:[63,107,58],forest:1,cov:{Quercus:.4,Tilia:.25,Corylus:.2,Poaceae:.05,Pteridium:.05}},
+ {name:'Beech forest',col:[38,80,58],forest:1,cov:{Fagus:.8,Quercus:.08,Pteridium:.04}},
+ {name:'Pine–birch forest',col:[96,110,58],forest:1,cov:{Pinus:.55,Betula:.3,Calluna:.08,Pteridium:.05}},
+ {name:'Heath',col:[138,104,134],cov:{Calluna:.6,Poaceae:.15,Betula:.04,Pteridium:.1}},
+ {name:'Raised bog',col:[160,138,90],cov:{Sphagnum:.5,Cyperaceae:.22,Calluna:.2,Pinus:.03}},
+ {name:'Pasture',col:[183,194,122],cov:{Poaceae:.6,'Plantago lanceolata':.1,Lactuceae:.1,Cyperaceae:.04}},
+ {name:'Arable fields',col:[214,178,94],cov:{'Cerealia-type':.5,Poaceae:.1,Artemisia:.06,'Plantago lanceolata':.02,Lactuceae:.04}},
+ {name:'Steppe grassland',col:[196,178,150],cov:{Poaceae:.4,Artemisia:.2,Cyperaceae:.15,Salix:.05,Lactuceae:.04}},
+];
+COMM.forEach(c=>{c.list=Object.entries(c.cov).map(([k,v])=>[IDX[k],v]);});
+const C={water:0,fen:1,carr:2,flood:3,oak:4,beech:5,pine:6,heath:7,bog:8,pasture:9,arable:10,steppe:11};
+
+// ---------- Grid ----------
+const N=160, CELL=62.5, AREA=CELL*CELL;
+const comm=new Uint8Array(N*N), eff=new Uint8Array(N*N);
+const cellContrib=new Float32Array(N*N);
+const NB=60, LMIN=1, LMAX=Math.log10(20000);
+const ENV=[0.02,0.08,0.4,1.6];
+const ENVNAME=['anoxic lake mud','stable peat','fluctuating water table','aerated soil'];
+
+const S={preset:'lake',seed:11,site:{x:80,y:80},R:300,wdir:250,u:3,steady:0.5,canopy:0.6,n:0.25,Cz:0.12,
+  env:0,age:42,sum:300,countSeed:1,layer:'veg',tool:'site',paint:C.oak,brush:4,mystery:false,track:-1,particles:false};
+let M=null; // model output
+
+// ---------- RNG / noise ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function noiseField(seed,scale){
+  const r=mulberry32(seed),G=32,g=new Float32Array(G*G);for(let i=0;i<g.length;i++)g[i]=r();
+  const sm=t=>t*t*(3-2*t);
+  const vn=(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),fx=sm(x-xi),fy=sm(y-yi);
+    const a=g[((yi%G+G)%G)*G+((xi%G+G)%G)],b=g[((yi%G+G)%G)*G+(((xi+1)%G+G)%G)],
+          c=g[(((yi+1)%G+G)%G)*G+((xi%G+G)%G)],d=g[(((yi+1)%G+G)%G)*G+(((xi+1)%G+G)%G)];
+    return a+(b-a)*fx+(c-a)*fy+(a-b-c+d)*fx*fy;};
+  const out=new Float32Array(N*N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){let s=0,amp=.5,f=scale/N;for(let o=0;o<4;o++){s+=amp*vn(x*f+o*7.3,y*f+o*3.1);amp*=.5;f*=2}out[y*N+x]=s;}
+  // rank-normalise to percentiles so thresholds read as shares of the map
+  const idx=Array.from(out.keys()).sort((a,b)=>out[a]-out[b]);const pr=new Float32Array(N*N);idx.forEach((k,i)=>pr[k]=i/(N*N-1));return pr;
+}
+
+// ---------- Presets ----------
+function applyPreset(name,seed){
+  const m=noiseField(seed,5),u=noiseField(seed+101,4),f=noiseField(seed+202,6);
+  const P={lake:{R:300,canopy:0.6,site:[80,80]},hollow:{R:10,canopy:0.85,site:[80,80]},farm:{R:350,canopy:0.5,site:[80,0]},
+    upland:{R:60,canopy:0.4,site:[80,80]},blank:{R:200,canopy:0.5,site:[80,80]}}[name];
+  const river=x=>0.5+0.12*Math.sin(x*6.2+seed*.7)+0.04*Math.sin(x*17+seed);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const i=y*N+x,X=x/N,Y=y/N,mm=m[i],uu=u[i],ff=f[i];let k;
+    if(name==='lake'){
+      if(mm>0.975)k=C.water;else if(mm>0.93)k=C.carr;else if(mm>0.9)k=C.fen;
+      else if(uu>0.82)k=C.arable;else if(uu>0.66)k=C.pasture;
+      else k=ff<0.35?C.pine:ff<0.68?C.oak:C.beech;
+    }else if(name==='hollow'){
+      if(mm>0.97)k=C.carr;else if(uu>0.93)k=C.pasture;
+      else k=ff<0.15?C.pine:ff<0.55?C.beech:C.oak;
+    }else if(name==='farm'){
+      const dr=Math.abs(Y-river(X));
+      if(dr<0.012)k=C.water;else if(dr<0.05)k=(mm>0.5?C.flood:C.carr);else if(dr<0.075)k=(uu>0.5?C.pasture:C.fen);
+      else if(uu>0.5)k=C.arable;else if(uu>0.22)k=C.pasture;else k=ff<0.5?C.oak:C.beech;
+    }else if(name==='upland'){
+      if(mm>0.72)k=C.bog;else if(mm>0.66)k=C.fen;else if(uu>0.55)k=C.heath;else if(uu>0.48)k=C.pasture;
+      else k=ff<0.75?C.pine:C.oak;
+    }else k=C.pasture;
+    comm[i]=k;
+  }
+  let sx=P.site[0],sy=P.site[1];
+  if(name==='farm'){sx=78;sy=Math.round((river(78/N)+0.1)*N);
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x-sx,y-sy)*CELL;if(d<P.R+250&&comm[y*N+x]!==C.water)comm[y*N+x]=d<P.R+120?C.fen:C.flood;}}
+  if(name==='lake'){for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x+.5-sx,y+.5-sy)*CELL;if(d<P.R+110)comm[y*N+x]=d<P.R+60?C.fen:C.carr;}}
+  if(name==='upland'){for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x+.5-sx,y+.5-sy)*CELL;if(d<P.R+500)comm[y*N+x]=C.bog;}}
+  if(name==='hollow'){for(let y=0;y<N;y++)for(let x=0;x<N;x++){const d=Math.hypot(x+.5-sx,y+.5-sy)*CELL;if(d<300)comm[y*N+x]=d<160?C.beech:C.oak;}}
+  S.site={x:sx,y:sy};S.R=P.R;S.canopy=P.canopy;
+}
+
+// ---------- Model ----------
+const airborne=(b,g,d)=>Math.exp(-b*Math.pow(d,g));
+function survival(t,envE,ageKyr){return Math.exp(-3*Math.pow(t.s,6))*Math.exp(-6*envE*t.s*t.s*Math.sqrt(ageKyr));}
+const ageKyr=()=>Math.pow(10,-2+S.age/25);
+
+function compute(src,light){
+  src=src||comm;
+  const {n,Cz,u}=S,gam=n/2,sqpi=Math.sqrt(Math.PI);
+  const uU=u*Math.max(0.15,1-0.85*S.canopy);
+  const bO=TAXA.map(t=>4*t.vg/(n*u*sqpi*Cz)), bU=TAXA.map(t=>4*t.vg/(n*uU*sqpi*Cz));
+  const sx=S.site.x,sy=S.site.y,R=S.R;
+  const a=S.steady, th=S.wdir*Math.PI/180;
+  // basin override
+  let forestNear=0,cellsNear=0;
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const i=y*N+x;const d=Math.hypot(x+.5-sx,y+.5-sy)*CELL;
+    eff[i]=(R>=CELL*0.5&&d<R)?C.water:src[i];
+    if(d<=150){cellsNear++;if(COMM[eff[i]].forest)forestNear++;}}
+  const Fsite=cellsNear?forestNear/cellsNear:0;
+  const filFar=1-0.85*S.canopy*Fsite;
+  const L=new Float64Array(NT), bins=Array.from({length:NT},()=>new Float64Array(NB));
+  const covMap=new Float64Array(NT), cov1k=new Float64Array(NT);let n1k=0;
+  if(!light)cellContrib.fill(0);
+  const dmin=Math.max(R,20);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+    const i=y*N+x,k=eff[i],cm=COMM[k];
+    const dx=(x+.5-sx)*CELL,dy=(y+.5-sy)*CELL,d=Math.hypot(dx,dy);
+    const de=Math.max(d,dmin);
+    const dg=Math.pow(de,gam);
+    const bearing=Math.atan2(dx,-dy);
+    const dir=1+a*Math.cos(bearing-th)*Math.min(1,d/300);
+    const fil=d<50?1:d>200?filFar:1+(filFar-1)*(d-50)/150;
+    const base=AREA*gam*dg/(de*de)/(2*Math.PI)*dir*fil;
+    let bi=Math.floor((Math.log10(de)-LMIN)/(LMAX-LMIN)*NB);bi=bi<0?0:bi>=NB?NB-1:bi;
+    if(d<=1000)n1k++;
+    let cc=0;
+    for(const [j,cv] of cm.list){
+      covMap[j]+=cv; if(d<=1000)cov1k[j]+=cv;
+      const t=TAXA[j], b=(cm.forest&&t.under)?bU[j]:bO[j];
+      const v=t.ppe*cv*b*base*Math.exp(-b*dg);
+      L[j]+=v;bins[j][bi]+=v;
+      if(S.track===-1?TLP[j]:S.track===j)cc+=v;
+    }
+    if(!light)cellContrib[i]=cc;
+  }
+  for(let j=0;j<NT;j++){covMap[j]/=N*N;cov1k[j]/=Math.max(1,n1k);}
+  // pollen from beyond the map, assuming the same mean composition
+  const Ze=((sx)+(N-sx)+(sy)+(N-sy))/4*CELL;
+  const bg=new Float64Array(NT);
+  for(let j=0;j<NT;j++){bg[j]=TAXA[j].ppe*covMap[j]*airborne(bO[j],gam,Math.max(Ze,dmin))*filFar;L[j]+=bg[j];}
+  // preservation
+  const E=ENV[S.env],ak=ageKyr();
+  const surv=TAXA.map(t=>survival(t,E,ak));
+  const post=new Float64Array(NT);let lost=0,totL=0,indet=0;
+  for(let j=0;j<NT;j++){post[j]=L[j]*surv[j];lost+=L[j]*(1-surv[j]);totL+=L[j];}
+  indet=0.4*lost;
+  // REVEALS-style K factors (uniform landscape, isotropic, open air)
+  const K=TAXA.map((t,j)=>airborne(bO[j],gam,dmin));
+  const res={L,bins,bg,covMap,cov1k,surv,post,indet,lostFrac:lost/totL,K,Ze,Fsite,bO,bU,gam};
+  if(light)return res;
+  M=res;count();
+}
+
+function poisson(lam,r){if(lam<=0)return 0;if(lam>40){let u1=r(),u2=r();const z=Math.sqrt(-2*Math.log(u1||1e-12))*Math.cos(2*Math.PI*u2);return Math.max(0,Math.round(lam+Math.sqrt(lam)*z));}
+  let Lm=Math.exp(-lam),k=0,p=1;do{k++;p*=r();}while(p>Lm);return k-1;}
+function count(){
+  const r=mulberry32(S.countSeed*9973+17);
+  const post=M.post;let pT=0;for(let j=0;j<NT;j++)if(TLP[j])pT+=post[j];
+  const cum=[];let acc=0;const ids=[];for(let j=0;j<NT;j++)if(TLP[j]){acc+=post[j]/pT;cum.push(acc);ids.push(j);}
+  const cnt=new Float64Array(NT);
+  for(let k=0;k<S.sum;k++){const x=r();let lo=0;while(lo<cum.length-1&&cum[lo]<x)lo++;cnt[ids[lo]]++;}
+  for(let j=0;j<NT;j++)if(!TLP[j])cnt[j]=poisson(S.sum*post[j]/pT,r);
+  M.cnt=cnt;M.cntIndet=poisson(S.sum*M.indet/pT,r);
+  // REVEALS-style
+  const est=new Float64Array(NT);let es=0;
+  for(let j=0;j<NT;j++)if(TLP[j]){est[j]=cnt[j]/(TAXA[j].ppe*M.K[j]);es+=est[j];}
+  for(let j=0;j<NT;j++)est[j]=es?est[j]/es*100:0;M.est=est;
+}
+
+// percentages by diagram convention
+function pct(arr,extraIndet){
+  let T=0;for(let j=0;j<NT;j++)if(TLP[j])T+=arr[j];
+  const gsum={spore:0,aquatic:0};for(let j=0;j<NT;j++)if(!TLP[j])gsum[TAXA[j].g]+=arr[j];
+  const out=new Float64Array(NT);
+  for(let j=0;j<NT;j++){const g=TAXA[j].g;out[j]=TLP[j]?(T?arr[j]/T*100:0):((T+gsum[g])?arr[j]/(T+gsum[g])*100:0);}
+  out.indet=extraIndet==null?null:(T+extraIndet?extraIndet/(T+extraIndet)*100:0);
+  return out;
+}
+
+// ---------- Rendering: map ----------
+const mapC=document.getElementById('mapC'),mctx=mapC.getContext('2d');
+const off=document.createElement('canvas');off.width=N;off.height=N;const octx=off.getContext('2d');const img=octx.createImageData(N,N);
+const RAMP=[[0,[22,20,30]],[.35,[84,32,92]],[.62,[176,40,108]],[.84,[232,132,62]],[1,[252,232,128]]];
+function ramp(t){for(let k=1;k<RAMP.length;k++){if(t<=RAMP[k][0]){const[a,ca]=RAMP[k-1],[b,cb]=RAMP[k];const f=(t-a)/(b-a);return ca.map((v,i)=>v+(cb[i]-v)*f);}}return RAMP[RAMP.length-1][1];}
+function drawMap(){
+  const W=mapC.width,sc=W/N,d=img.data;
+  if(S.mystery){
+    for(let i=0;i<N*N;i++){const x=i%N,y=(i/N)|0;const v=((x+y)%6<3)?46:40;d[i*4]=v;d[i*4+1]=v+3;d[i*4+2]=v-2;d[i*4+3]=255;}
+  }else if(S.layer==='veg'){
+    for(let i=0;i<N*N;i++){const c=COMM[eff[i]].col;const x=i%N,y=(i/N)|0;const j=((x*7+y*13)%5)-2;d[i*4]=c[0]+j;d[i*4+1]=c[1]+j;d[i*4+2]=c[2]+j;d[i*4+3]=255;}
+  }else{
+    let mx=0;for(let i=0;i<N*N;i++)if(cellContrib[i]>mx)mx=cellContrib[i];
+    for(let i=0;i<N*N;i++){const v=cellContrib[i];let t=v>0&&mx>0?1+Math.log10(v/mx)/4.5:0;t=t<0?0:t;const c=ramp(t);d[i*4]=c[0];d[i*4+1]=c[1];d[i*4+2]=c[2];d[i*4+3]=255;}
+  }
+  octx.putImageData(img,0,0);
+  mctx.imageSmoothingEnabled=false;mctx.drawImage(off,0,0,W,W);
+  // site
+  const px=S.site.x*sc,py=S.site.y*sc,rp=S.R/CELL*sc;
+  mctx.save();
+  if(rp>3){mctx.beginPath();mctx.arc(px,py,rp,0,Math.PI*2);mctx.strokeStyle='rgba(255,255,255,.9)';mctx.lineWidth=2;mctx.setLineDash([6,4]);mctx.stroke();mctx.setLineDash([]);}
+  mctx.strokeStyle='#fff';mctx.lineWidth=2.5;mctx.beginPath();
+  mctx.moveTo(px-12,py);mctx.lineTo(px-4,py);mctx.moveTo(px+4,py);mctx.lineTo(px+12,py);mctx.moveTo(px,py-12);mctx.lineTo(px,py-4);mctx.moveTo(px,py+4);mctx.lineTo(px,py+12);mctx.stroke();
+  mctx.fillStyle='#fff';mctx.beginPath();mctx.arc(px,py,2.5,0,Math.PI*2);mctx.fill();
+  // 1 km and 5 km rings, faint
+  if(!S.mystery&&S.layer==='prov'){[1000,5000].forEach(r=>{mctx.beginPath();mctx.arc(px,py,r/CELL*sc,0,Math.PI*2);mctx.strokeStyle='rgba(255,255,255,.35)';mctx.lineWidth=1;mctx.stroke();
+    mctx.fillStyle='rgba(255,255,255,.7)';mctx.font='500 12px "IBM Plex Mono", monospace';mctx.fillText(r/1000+' km',px+r/CELL*sc*0.71+4,py-r/CELL*sc*0.71-4);});}
+  // wind rose
+  const cx=W-56,cy=56;mctx.fillStyle='rgba(15,18,14,.62)';mctx.beginPath();mctx.arc(cx,cy,42,0,Math.PI*2);mctx.fill();
+  const th=S.wdir*Math.PI/180;const fx=Math.sin(th),fy=-Math.cos(th);
+  mctx.strokeStyle='#f1e7c4';mctx.fillStyle='#f1e7c4';mctx.lineWidth=3;
+  mctx.beginPath();mctx.moveTo(cx+fx*30,cy+fy*30);mctx.lineTo(cx-fx*22,cy-fy*22);mctx.stroke();
+  mctx.beginPath();const hx=cx-fx*32,hy=cy-fy*32,pxp=-fy,pyp=fx;
+  mctx.moveTo(hx,hy);mctx.lineTo(hx+fx*12+pxp*8,hy+fy*12+pyp*8);mctx.lineTo(hx+fx*12-pxp*8,hy+fy*12-pyp*8);mctx.closePath();mctx.fill();
+  mctx.font='600 11px "IBM Plex Mono", monospace';mctx.textAlign='center';mctx.fillText('N',cx,cy-30+4);
+  // scale bar
+  const kb=1000/CELL*sc;mctx.fillStyle='rgba(15,18,14,.62)';mctx.fillRect(14,W-40,kb+24,28);
+  mctx.fillStyle='#fff';mctx.fillRect(26,W-22,kb,4);mctx.textAlign='left';mctx.font='500 12px "IBM Plex Mono", monospace';mctx.fillText('1 km',26,W-27);
+  mctx.restore();
+}
+
+// ---------- Rendering: table ----------
+const tbody=document.getElementById('tbody');
+function fmt(v){if(v===0)return'0';if(v<0.1)return'<0.1';if(v<10)return v.toFixed(1);return Math.round(v)+'';}
+function cellBar(v,scale,g,ghost){const w=Math.min(100,v/scale*100);return `<div class="bar" style="--g:var(--${g})"><span class="${v===0?'zero':''}">${fmt(v)}</span><i class="${ghost?'ghost':''}" style="width:${w}%"></i></div>`;}
+function drawTable(){
+  const pv1=pct(M.cov1k),pvM=pct(M.covMap),pd=pct(M.L),pc=pct(M.cnt,M.cntIndet);
+  let scale=10;for(let j=0;j<NT;j++)scale=Math.max(scale,pv1[j],pvM[j],pd[j],pc[j],M.est[j]);
+  document.getElementById('cntHead').textContent=`Pollen counted (n = ${S.sum})`;
+  let h='';
+  for(const [g,label] of GROUPS){
+    h+=`<tr class="grp"><td colspan="7">${label}${g==='spore'||g==='aquatic'?' · % of land pollen + group':''}</td></tr>`;
+    for(let j=0;j<NT;j++){if(TAXA[j].g!==g)continue;const t=TAXA[j];
+      const hide=S.mystery;
+      h+=`<tr class="taxon${S.track===j?' sel':''}" data-j="${j}" tabindex="0">
+        <td class="name">${t.n}${t.lit?'':'°'}${t.note?`<small>${t.note}</small>`:''}</td>
+        <td class="v">${hide?'<span class="hint">?</span>':cellBar(pv1[j],scale,g,1)}</td>
+        <td class="v">${hide?'<span class="hint">?</span>':cellBar(pvM[j],scale,g,1)}</td>
+        <td class="v">${hide?'<span class="hint">?</span>':cellBar(pd[j],scale,g)}</td>
+        <td class="surv">${Math.round(M.surv[j]*100)}%</td>
+        <td class="v">${cellBar(pc[j],scale,g)}</td>
+        <td class="v">${TLP[j]?cellBar(M.est[j],scale,g):'<span class="hint">–</span>'}</td></tr>`;}
+  }
+  h+=`<tr class="grp"><td colspan="7">Degraded</td></tr><tr><td class="name" style="font-style:normal">Indeterminable grains</td><td></td><td></td><td></td><td></td><td class="v">${cellBar(pc.indet,scale,'indet')}</td><td></td></tr>`;
+  tbody.innerHTML=h;
+}
+tbody.addEventListener('click',e=>{const tr=e.target.closest('tr.taxon');if(!tr)return;const j=+tr.dataset.j;S.track=S.track===j?-1:j;if(S.track!==-1&&S.layer==='veg'&&!S.mystery)setLayer('prov');schedule();});
+tbody.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tr=e.target.closest('tr.taxon');if(tr){e.preventDefault();tr.click();}}});
+
+// ---------- Source-area chart ----------
+const srcC=document.getElementById('srcC');
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function cumCurve(js){const c=new Float64Array(NB);let tot=0,bgs=0;for(const j of js){for(let b=0;b<NB;b++)c[b]+=M.bins[j][b];bgs+=M.bg[j];}
+  for(let b=0;b<NB;b++)tot+=c[b];
+  // bins include background in L but not in bins; L = sum(bins)+bg
+  const T=tot+bgs;let a=0;const out=new Float64Array(NB);for(let b=0;b<NB;b++){a+=c[b];out[b]=T?a/T:0;}return{out,bgFrac:T?bgs/T:0};}
+function binEdge(b){return Math.pow(10,LMIN+(b+1)/NB*(LMAX-LMIN));}
+function radiusAt(curve,q){for(let b=0;b<NB;b++)if(curve[b]>=q)return binEdge(b);return null;}
+function drawChart(){
+  const dpr=window.devicePixelRatio||1,W=srcC.clientWidth,H=srcC.clientHeight;srcC.width=W*dpr;srcC.height=H*dpr;
+  const c=srcC.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  const pl=40,pr=14,pt=10,pb=30,w=W-pl-pr,h=H-pt-pb;
+  const ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),acc=cssv('--accent');
+  const xmax=Math.log10(M.Ze*1.6);
+  const X=d=>pl+(Math.log10(d)-1)/(xmax-1)*w, Y=p=>pt+h-(p*h);
+  c.font='11px "IBM Plex Mono", monospace';c.fillStyle=muted;c.strokeStyle=line;c.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(p=>{c.beginPath();c.moveTo(pl,Y(p));c.lineTo(pl+w,Y(p));c.stroke();c.textAlign='right';c.fillText(Math.round(p*100)+'%',pl-6,Y(p)+4);});
+  [10,100,1000,10000].forEach(d=>{if(Math.log10(d)>xmax)return;c.beginPath();c.moveTo(X(d),pt);c.lineTo(X(d),pt+h);c.stroke();c.textAlign='center';c.fillText(d>=1000?d/1000+' km':d+' m',X(d),H-10);});
+  // basin + map edge
+  c.fillStyle=cssv('--chip');const xr=X(Math.max(S.R,20));c.fillRect(pl,pt,Math.max(0,xr-pl),h);
+  c.fillStyle=muted;c.textAlign='left';if(xr-pl>40)c.fillText('basin',pl+4,pt+12);
+  c.setLineDash([3,3]);c.strokeStyle=muted;c.beginPath();c.moveTo(X(M.Ze),pt);c.lineTo(X(M.Ze),pt+h);c.stroke();c.setLineDash([]);
+  c.textAlign='right';c.fillText('map edge',X(M.Ze)-4,pt+12);
+  const plot=(js,col,lw)=>{const {out,bgFrac}=cumCurve(js);c.strokeStyle=col;c.lineWidth=lw;c.beginPath();
+    let started=false;for(let b=0;b<NB;b++){const d=binEdge(b);if(d>M.Ze)break;const x=X(d),y=Y(out[b]);if(!started){c.moveTo(X(Math.max(S.R,20)),Y(0));started=true;}c.lineTo(x,y);}
+    c.lineTo(X(M.Ze),Y(1-bgFrac));c.lineTo(X(M.Ze*1.5),Y(1));c.stroke();return out;};
+  const all=[];for(let j=0;j<NT;j++)if(TLP[j])all.push(j);
+  const curveAll=plot(all,ink,2);
+  if(S.track>=0)plot([S.track],acc,2);
+  return curveAll;
+}
+
+// ---------- Summary ----------
+function fmtDist(d){if(d==null)return'> map';return d>=1000?(d/1000).toFixed(d>=10000?0:1)+' km':Math.round(d/10)*10+' m';}
+function drawStats(){
+  const all=[];for(let j=0;j<NT;j++)if(TLP[j])all.push(j);
+  const {out,bgFrac}=cumCurve(all);
+  document.getElementById('sHalf').textContent=fmtDist(radiusAt(out,.5));
+  document.getElementById('s80').textContent=fmtDist(radiusAt(out,.8));
+  document.getElementById('sBg').textContent=Math.round(bgFrac*100)+'%';
+  document.getElementById('sLost').textContent=Math.round(M.lostFrac*100)+'%';
+  const tn=S.track>=0?TAXA[S.track].n:null;
+  document.getElementById('trackPill').textContent='Tracking: '+(tn||'all land pollen');
+  document.getElementById('keyTax').hidden=!tn;document.getElementById('keyTaxName').textContent=tn||'';
+  // readout
+  let txt='';
+  if(tn){const {out:o,bgFrac:b}=cumCurve([S.track]);txt=`${tn}: half its grains come from within ${fmtDist(radiusAt(o,.5))}, ${Math.round(b*100)}% from beyond the map. `;}
+  const pc=pct(M.cnt),pv=pct(M.covMap);let worst=-1,wr=0;
+  for(let j=0;j<NT;j++)if(TLP[j]&&pv[j]>2){const r=Math.max((pc[j]+.5)/(pv[j]+.5),(pv[j]+.5)/(pc[j]+.5));if(r>wr){wr=r;worst=j;}}
+  if(worst>=0&&!S.mystery){const over=pc[worst]>pv[worst];txt+=`Most misrepresented taxon: ${TAXA[worst].n}, ${fmt(pv[worst])}% of the map's land cover but ${fmt(pc[worst])}% of the count (${over?'over':'under'}-represented about ${wr.toFixed(1)}×).`;}
+  if(M.Fsite>0.3&&S.canopy>0.3)txt+=` The core is under ${Math.round(M.Fsite*100)}% tree cover, so pollen from afar is filtered.`;
+  document.getElementById('readout').textContent=txt;
+}
+
+// ---------- Particles ----------
+const partC=document.getElementById('partC'),pctx=partC.getContext('2d');
+let parts=[],pcum=null,pent=null,caught=0,released=0,rafP=null;
+function buildSpawn(){
+  const ents=[],w=[];
+  for(let i=0;i<N*N;i++){const cm=COMM[eff[i]];for(const [j,cv] of cm.list){if(S.track===-1?!TLP[j]&&TAXA[j].g!=='spore':S.track!==j)continue;ents.push(i*32+j);w.push(TAXA[j].ppe*cv);}}
+  pcum=new Float64Array(w.length);let a=0;for(let k=0;k<w.length;k++){a+=w[k];pcum[k]=a;}pent=ents;
+}
+function spawn(){
+  if(!pcum||!pcum.length)return;const x=Math.random()*pcum[pcum.length-1];let lo=0,hi=pcum.length-1;
+  while(lo<hi){const m=(lo+hi)>>1;if(pcum[m]<x)lo=m+1;else hi=m;}
+  const e=pent[lo],i=(e/32)|0,j=e%32;const cm=COMM[eff[i]];const under=cm.forest&&TAXA[j].under;
+  const th=(S.wdir+180)*Math.PI/180+(Math.random()-.5)*2*(1-S.steady)*Math.PI*0.95;
+  parts.push({x:i%N+Math.random(),y:((i/N)|0)+Math.random(),h:under?1+Math.random()*4:6+Math.random()*24,j,th,under});released++;
+}
+const GCOL={};function gcol(g){return GCOL[g]||(GCOL[g]=cssv('--'+g));}
+function stepParticles(){
+  const W=partC.width,sc=W/N,dt=6;
+  pctx.globalCompositeOperation='destination-out';pctx.fillStyle='rgba(0,0,0,.14)';pctx.fillRect(0,0,W,W);pctx.globalCompositeOperation='source-over';
+  for(let k=0;k<22;k++)if(parts.length<1400)spawn();
+  const uU=S.u*Math.max(0.15,1-0.85*S.canopy);
+  const keep=[];
+  for(const p of parts){
+    const t=TAXA[p.j];
+    const inCanopy=p.under&&p.h<18;
+    const ub=inCanopy?uU:S.u;
+    const prof=Math.min(2.2,Math.max(0.15,Math.log(Math.max(p.h,0.6)/0.5)/Math.log(10/0.5)));
+    const sp=ub*prof*dt/CELL;
+    p.th+=(Math.random()-.5)*0.08;
+    p.x+=Math.sin(p.th)*sp;p.y-=Math.cos(p.th)*sp;
+    const sw=0.45*ub*Math.sqrt(dt);
+    p.h+=((Math.random()+Math.random()+Math.random()-1.5)*1.4)*sw-t.vg*dt;
+    if(p.h>900)p.h=1800-p.h;
+    if(p.x<0||p.y<0||p.x>=N||p.y>=N)continue;
+    if(p.h<=0){
+      const d=Math.hypot(p.x-S.site.x,p.y-S.site.y)*CELL;
+      if(d<Math.max(S.R,40)){caught++;pctx.strokeStyle='#fff';pctx.lineWidth=1.5;pctx.beginPath();pctx.arc(p.x*sc,p.y*sc,4,0,Math.PI*2);pctx.stroke();}
+      continue;}
+    pctx.fillStyle=gcol(t.g);pctx.fillRect(p.x*sc-1.2,p.y*sc-1.2,2.4,2.4);
+    keep.push(p);
+  }
+  parts=keep;
+  document.getElementById('caught').textContent=`${released.toLocaleString()} released · ${caught.toLocaleString()} landed in the basin`;
+  rafP=requestAnimationFrame(stepParticles);
+}
+function setParticles(on){S.particles=on;cancelAnimationFrame(rafP);pctx.clearRect(0,0,partC.width,partC.height);parts=[];caught=0;released=0;
+  document.getElementById('caught').textContent='';if(on){buildSpawn();rafP=requestAnimationFrame(stepParticles);}}
+
+// ---------- Controls ----------
+const $=id=>document.getElementById(id);
+const compass=d=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(d/22.5)%16];
+const R2v=R=>Math.round(Math.log10(R/5)/Math.log10(300)*100), v2R=v=>Math.round(5*Math.pow(300,v/100));
+function basinLabel(R){return R<20?'moss polster or tiny hollow: almost all pollen is local':R<100?'forest hollow or small pond: local to extra-local':R<500?'small lake: extra-local to regional':'large lake: mostly regional';}
+function syncControls(){
+  $('R').value=R2v(S.R);$('Rout').textContent=S.R>=1000?(S.R/1000).toFixed(2)+' km':S.R+' m';$('Rsub').textContent=basinLabel(S.R);
+  $('wdir').value=S.wdir;$('wdirOut').textContent=`${compass(S.wdir)} · ${S.wdir}°`;
+  $('wu').value=S.u;$('wuOut').textContent=S.u.toFixed(1)+' m/s';
+  $('steady').value=S.steady;$('steadyOut').textContent=S.steady.toFixed(2);
+  $('canopy').value=S.canopy;$('canopyOut').textContent=Math.round(S.canopy*100)+'%';
+  $('nn').value=S.n;$('nnOut').textContent=S.n.toFixed(2);
+  $('cz').value=S.Cz;$('czOut').textContent=S.Cz.toFixed(2);
+  $('env').value=S.env;$('age').value=S.age;
+  const ak=ageKyr();$('ageOut').textContent=ak<1?Math.round(ak*1000)+' years':ak<10?ak.toFixed(1)+' kyr':Math.round(ak)+' kyr';
+  $('preset').value=S.preset;
+  $('mystery').textContent=S.mystery?'Reveal landscape':'Hide landscape';$('mystery').classList.toggle('primary',S.mystery);
+  $('veil').hidden=!S.mystery;
+}
+function bindRange(id,key,parse,after){$(id).addEventListener('input',e=>{S[key]=parse(e.target.value);after&&after();syncControls();schedule();});}
+bindRange('R','R',v=>v2R(+v));
+bindRange('wdir','wdir',v=>+v);bindRange('wu','u',v=>+v);bindRange('steady','steady',v=>+v);bindRange('canopy','canopy',v=>+v);
+bindRange('nn','n',v=>+v);bindRange('cz','Cz',v=>+v);bindRange('age','age',v=>+v);
+$('env').addEventListener('change',e=>{S.env=+e.target.value;schedule();});
+$('sum').addEventListener('change',e=>{S.sum=+e.target.value;count();drawTable();drawStats();if(CORE.levels)countCore();});
+$('recount').addEventListener('click',()=>{S.countSeed++;count();drawTable();drawStats();});
+$('preset').addEventListener('change',e=>{S.preset=e.target.value;applyPreset(S.preset,S.seed);syncControls();schedule();});
+$('regen').addEventListener('click',()=>{S.seed=Math.floor(Math.random()*1e6);applyPreset(S.preset,S.seed);syncControls();schedule();});
+$('mystery').addEventListener('click',()=>{S.mystery=!S.mystery;syncControls();schedule();});
+$('partToggle').addEventListener('change',e=>setParticles(e.target.checked));
+function setLayer(l){S.layer=l;$('lyrVeg').setAttribute('aria-pressed',l==='veg');$('lyrProv').setAttribute('aria-pressed',l==='prov');schedule();}
+$('lyrVeg').addEventListener('click',()=>setLayer('veg'));$('lyrProv').addEventListener('click',()=>setLayer('prov'));
+function setTool(t){S.tool=t;$('toolSite').setAttribute('aria-pressed',t==='site');$('toolPaint').setAttribute('aria-pressed',t==='paint');
+  $('brush').hidden=$('brushLbl').hidden=t!=='paint';$('legend').classList.toggle('paintoff',t!=='paint');
+  $('toolHint').textContent=t==='site'?'Click or drag on the map to move the coring site. Switch to Paint to change the vegetation.':`Painting ${COMM[S.paint].name.toLowerCase()}. Pick a community below, then drag on the map.`;drawLegend();}
+$('toolSite').addEventListener('click',()=>setTool('site'));$('toolPaint').addEventListener('click',()=>setTool('paint'));
+$('brush').addEventListener('input',e=>S.brush=+e.target.value);
+function drawLegend(){
+  $('legend').innerHTML=COMM.map((c,k)=>`<button data-k="${k}" aria-pressed="${S.tool==='paint'&&S.paint===k}"><i style="background:rgb(${c.col})"></i>${c.name}</button>`).join('');
+}
+$('legend').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.paint=+b.dataset.k;if(S.tool!=='paint')setTool('paint');else{setTool('paint');}});
+
+// map pointer
+let dragging=false;
+function mapPt(e){const r=mapC.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*N,y:(e.clientY-r.top)/r.height*N};}
+function act(e){const p=mapPt(e);
+  if(S.tool==='site'){S.site={x:Math.min(N-.5,Math.max(.5,p.x)),y:Math.min(N-.5,Math.max(.5,p.y))};}
+  else{const r=S.brush;for(let y=Math.floor(p.y-r);y<=p.y+r;y++)for(let x=Math.floor(p.x-r);x<=p.x+r;x++){if(x<0||y<0||x>=N||y>=N)continue;if(Math.hypot(x+.5-p.x,y+.5-p.y)<=r)comm[y*N+x]=S.paint;}}
+  schedule();}
+mapC.addEventListener('pointerdown',e=>{dragging=true;mapC.setPointerCapture(e.pointerId);act(e);});
+mapC.addEventListener('pointermove',e=>{if(dragging)act(e);});
+mapC.addEventListener('pointerup',()=>{dragging=false;schedule();});mapC.addEventListener('pointercancel',()=>{dragging=false;});
+
+let pending=false;
+function schedule(){if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;compute();drawMap();drawTable();drawChart();drawStats();if(S.particles)buildSpawn();if(typeof coreDirty==='function'&&!dragging)coreDirty();});}
+window.addEventListener('resize',()=>{if(M)drawChart();});
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{for(const k in GCOL)delete GCOL[k];if(M)drawChart();});
+
+
+// =================== Scale 1: grain settling ===================
+const MU=1.81e-5, RHOA=1.2, GRAV=9.81, RHOSAC=100;
+const GRAINS=[
+ {n:'Pinus sylvestris',d:40,s:0.75,r:1.0,x:1.4,meas:'3.1 cm/s'},
+ {n:'Picea abies',d:70,s:0.6,r:0.75,x:1.7,meas:'5.6 cm/s'},
+ {n:'Ginkgo biloba',d:26,s:0,r:1.0,x:1.25,meas:'no value used'},
+ {n:'Quercus',d:30,s:0,r:1.35,x:1.05,meas:'3.5 cm/s'},
+ {n:'Fagus',d:45,s:0,r:1.0,x:1.1,meas:'5.7 cm/s'},
+ {n:'Zea mays',d:90,s:0,r:1.0,x:1.05,meas:'≈20–30 cm/s'},
+ {n:'Lycopodium spore',d:32,s:0,r:1.0,x:1.75,meas:'1.8 cm/s'},
+];
+const G={d:40,s:0.75,r:1.0,x:1.4,H:20,u:3,pre:0};
+function fallSpeed(d,s,r,x){
+  const db=d*1e-6,Vb=Math.PI/6*db**3,ds=s*db,Vs=2*Math.PI/6*ds**3;
+  const m=r*1000*Vb+RHOSAC*Vs, deq=Math.cbrt(6*(Vb+Vs)/Math.PI);
+  let v=m*GRAV/(3*Math.PI*MU*deq*x),v0=v,Re=0;
+  for(let k=0;k<6;k++){Re=RHOA*v*deq/MU;v=v0/(1+0.15*Math.pow(Re,0.687));}
+  return{v,Re,deq};
+}
+const gSel=$('gPreset');gSel.innerHTML=GRAINS.map((g,i)=>`<option value="${i}">${g.n}</option>`).join('');
+function loadGrain(i){const g=GRAINS[i];Object.assign(G,{d:g.d,s:g.s,r:g.r,x:g.x,pre:i});syncGrain();}
+function syncGrain(){
+  $('gD').value=G.d;$('gDout').textContent=G.d+' µm';$('gS').value=G.s;$('gSout').textContent=G.s?'×'+G.s.toFixed(2):'none';
+  $('gR').value=G.r;$('gRout').textContent=G.r.toFixed(2)+' g/cm³';$('gX').value=G.x;$('gXout').textContent=G.x.toFixed(2);
+  $('gH').value=G.H;$('gHout').textContent=G.H+' m';$('gU').value=G.u;$('gUout').textContent=G.u.toFixed(1)+' m/s';
+  gSel.value=G.pre;
+  const f=fallSpeed(G.d,G.s,G.r,G.x),f0=fallSpeed(G.d,0,G.r,G.x);
+  $('gV').textContent=(f.v*100).toFixed(1)+' cm/s';$('gM').textContent=GRAINS[G.pre].meas;
+  $('gRe').textContent=f.Re.toFixed(2);$('gNoS').textContent=G.s?(f0.v*100).toFixed(1)+' cm/s':'–';
+  const x=G.H*G.u/f.v;
+  const n=0.25,Cz=0.12,b=4*f.v/(n*G.u*Math.sqrt(Math.PI)*Cz),a1=Math.exp(-b*Math.pow(1000,n/2)),a10=Math.exp(-b*Math.pow(10000,n/2));
+  $('gTravel').innerHTML=`In smooth air, a grain released at ${G.H} m in a ${G.u} m/s wind would land <b>${x>=1000?(x/1000).toFixed(1)+' km':Math.round(x)+' m'}</b> downwind. Real air is turbulent: eddies lift some grains far higher than the release point and drop others at once. In Sutton's turbulent model (used on the landscape below) <b>${Math.round(a1*100)}%</b> of these grains are still airborne after 1 km and <b>${Math.round(a10*100)}%</b> after 10 km.`;
+}
+[['gD','d'],['gS','s'],['gR','r'],['gX','x'],['gH','H'],['gU','u']].forEach(([id,k])=>$(id).addEventListener('input',e=>{G[k]=+e.target.value;syncGrain();}));
+gSel.addEventListener('change',e=>loadGrain(+e.target.value));
+
+const fallC=$('fallC');let fallT0=performance.now();
+function drawGrainGlyph(c,x,y,sc,s,col,ink){
+  c.fillStyle=col;c.strokeStyle=ink;c.lineWidth=1;
+  if(s>0){const rs=sc*s*0.55;[-1,1].forEach(k=>{c.beginPath();c.ellipse(x+k*sc*0.55,y-sc*0.15,rs,rs*0.9,0,0,Math.PI*2);c.globalAlpha=.55;c.fill();c.globalAlpha=1;c.stroke();});}
+  c.beginPath();c.ellipse(x,y,sc*0.5,sc*0.42,0,0,Math.PI*2);c.fill();c.stroke();
+}
+function drawFall(now){
+  const dpr=window.devicePixelRatio||1,W=fallC.clientWidth,H=fallC.clientHeight;
+  if(fallC.width!==W*dpr){fallC.width=W*dpr;fallC.height=H*dpr;}
+  const c=fallC.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  const ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line'),pol=cssv('--pollen'),acc=cssv('--accent');
+  const cols=GRAINS.map((g,i)=>({n:g.n,v:fallSpeed(g.d,g.s,g.r,g.x).v,d:g.d,s:g.s,mine:false}));
+  const me=fallSpeed(G.d,G.s,G.r,G.x);cols.push({n:'Your grain',v:me.v,d:G.d,s:G.s,mine:true});
+  const top=78,bot=H-26,h=bot-top,cw=W/cols.length;
+  c.strokeStyle=line;c.lineWidth=1;c.font='10.5px "IBM Plex Mono", monospace';c.fillStyle=muted;c.textAlign='left';
+  for(let k=0;k<=4;k++){const y=top+h*k/4;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();c.fillText((k*25)+' cm',4,y-3);}
+  const t=(now-fallT0)/1000;
+  cols.forEach((col,i)=>{
+    const x=cw*(i+.5);
+    if(col.mine){c.fillStyle=cssv('--surface');c.fillRect(cw*i+2,top,cw-4,h);}
+    // label
+    c.save();c.fillStyle=col.mine?acc:ink;c.font=(col.mine?'600 ':'italic ')+'11px "IBM Plex Sans", sans-serif';c.textAlign='center';
+    const words=col.n.split(' ');c.fillText(words[0],x,14);if(words[1])c.fillText(words.slice(1).join(' '),x,27);
+    c.font='500 11px "IBM Plex Mono", monospace';c.fillStyle=muted;c.fillText((col.v*100).toFixed(1)+' cm/s',x,H-8);c.restore();
+    drawGrainGlyph(c,x,52,Math.max(6,col.d*0.28),col.s,col.mine?acc:pol,ink);
+    // falling grains: 4 staggered
+    for(let k=0;k<4;k++){const per=1/col.v;const ph=((t+k*per/4)%per)/per;const y=top+ph*h;
+      c.globalAlpha=1-ph*0.3;drawGrainGlyph(c,x,y,Math.max(4,col.d*0.12),col.s,col.mine?acc:pol,ink);c.globalAlpha=1;}
+  });
+  if(!reduceMotion)requestAnimationFrame(drawFall);
+}
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// =================== Scale 2: ovule & pollination drop ===================
+const ovC=$('ovC'),oc=ovC.getContext('2d');
+const OV={ori:'down',mix:1,ret:240,grains:[],frame:0,running:false,pre:'Pinus'};
+const LC=120,CW=34,R0=72,DROPC=LC+R0*0.72,EXPO=360,NGR=44;
+function oriAngle(){return OV.ori==='down'?Math.PI/2:OV.ori==='up'?-Math.PI/2:0;}
+function ovState(f){ // drop radius & fluid level
+  const t1=EXPO,t2=EXPO+OV.ret,t3=t2+Math.round(OV.ret*0.7);
+  if(f<t1)return{r:R0,lev:LC+12,phase:0};
+  if(f<t2)return{r:R0*(1-(f-t1)/(t2-t1)),lev:LC+12,phase:1};
+  if(f<t3)return{r:0,lev:(LC+12)*(1-(f-t2)/(t3-t2)),phase:2};
+  return{r:0,lev:0,phase:3};
+}
+function inFluid(a,p,st){
+  if(a>=2&&a<=st.lev&&Math.abs(p)<=CW/2-4)return true;
+  if(st.r>4&&Math.hypot(a-DROPC,p)<=st.r-4)return true;return false;}
+function projFluid(a,p,st){
+  let best=null,bd=1e9;
+  if(st.lev>4){const pa=Math.min(st.lev,Math.max(4,a)),pp=Math.min(CW/2-4,Math.max(-CW/2+4,p));const d=Math.hypot(pa-a,pp-p);if(d<bd){bd=d;best=[pa,pp];}}
+  if(st.r>6){const dx=a-DROPC,dy=p,L=Math.hypot(dx,dy)||1,rr=st.r-4;const pa=DROPC+dx/L*rr,pp=dy/L*rr;const d=Math.hypot(pa-a,pp-p);if(d<bd){bd=d;best=[pa,pp];}}
+  return best?{a:best[0],p:best[1],d:bd}:null;}
+function ovReset(){
+  OV.grains=[];OV.frame=0;OV.running=true;
+  const r=Math.random;
+  for(let k=0;k<NGR;k++){const sac=r()<OV.mix;const th=(r()-.5)*2*2.0;const R=330;
+    const tx=DROPC+(r()-.5)*R0*1.6,tp=(r()-.5)*R0*2.2;
+    OV.grains.push({sac,a:DROPC+Math.cos(th)*R,p:Math.sin(th)*R,tx,tp,st:'wait',t0:Math.floor(r()*EXPO*0.8)});}
+}
+function ovStep(){
+  const f=OV.frame,st=ovState(f),th=oriAngle();const ga=Math.sin(th),gp=Math.cos(th);
+  const prev=ovState(Math.max(0,f-1));
+  for(const g of OV.grains){
+    if(g.st==='wait'){if(f>=g.t0)g.st='air';else continue;}
+    if(g.st==='air'){const dx=g.tx-g.a,dy=g.tp-g.p,L=Math.hypot(dx,dy);const sp=4;
+      if(L<sp){g.st='missed';continue;}g.a+=dx/L*sp;g.p+=dy/L*sp;
+      if(st.r>6&&Math.hypot(g.a-DROPC,g.p)<=st.r){g.st='fluid';}
+      else if(g.a<LC+30&&g.a>LC-2&&Math.abs(g.p)>CW/2){g.st='missed';}
+      continue;}
+    if(g.st==='fluid'){
+      const sgn=g.sac?-1:1; // saccate rises against gravity
+      g.a+=sgn*ga*0.9+(Math.random()-.5)*0.6;g.p+=sgn*gp*0.9+(Math.random()-.5)*0.6;
+      if(!inFluid(g.a,g.p,st)){const q=projFluid(g.a,g.p,st);
+        if(!q){g.st='stranded';continue;}
+        const surfaceMoved=st.phase>0&&(prev.r!==st.r||prev.lev!==st.lev);
+        if(surfaceMoved&&g.a>LC){const shrink=Math.abs(prev.r-st.r)+Math.abs(prev.lev-st.lev);if(Math.random()<Math.min(.5,0.1*shrink*shrink)){g.st='stranded';continue;}}
+        g.a=q.a;g.p=q.p;}
+      if(g.a<9){g.st='chamber';g.a=3+Math.random()*4;g.p=(Math.random()-.5)*(CW-12);}
+    }
+  }
+  if(st.phase===3){for(const g of OV.grains)if(g.st==='fluid'||g.st==='air'||g.st==='wait')g.st=g.st==='fluid'?'stranded':'missed';OV.running=false;}
+  OV.frame++;
+}
+function ovToWorld(a,p){const th=oriAngle(),cx=320,cy=320,off=-(DROPC)/2-10;const A=a+off;return[cx+A*Math.cos(th)-p*Math.sin(th),cy+A*Math.sin(th)+p*Math.cos(th)];}
+function ovDraw(){
+  const W=ovC.width,c=oc;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,W);
+  const ink=cssv('--ink'),muted=cssv('--muted'),surf=cssv('--surface'),aq=cssv('--aquatic'),pol=cssv('--pollen'),acc=cssv('--accent'),tree=cssv('--tree'),chip=cssv('--chip');
+  const th=oriAngle(),off=-(DROPC)/2-10;
+  c.save();c.translate(320,320);c.rotate(th);c.translate(off,0);
+  // integument
+  c.fillStyle=tree;c.globalAlpha=.35;c.beginPath();c.roundRect(-190,-88,190+LC,176,[60,0,0,60]);c.fill();c.globalAlpha=1;
+  c.strokeStyle=tree;c.lineWidth=2;c.stroke();
+  // micropylar arms (pine-like flare)
+  c.beginPath();c.moveTo(LC,-CW/2);c.quadraticCurveTo(LC+22,-CW/2-6,LC+30,-CW/2-22);c.moveTo(LC,CW/2);c.quadraticCurveTo(LC+22,CW/2+6,LC+30,CW/2+22);c.stroke();
+  // nucellus
+  c.fillStyle=pol;c.globalAlpha=.25;c.beginPath();c.ellipse(-70,0,70,60,0,0,Math.PI*2);c.fill();c.globalAlpha=1;c.strokeStyle=muted;c.lineWidth=1.2;c.stroke();
+  // channel
+  c.fillStyle=chip;c.fillRect(0,-CW/2,LC,CW);c.strokeStyle=tree;c.beginPath();c.moveTo(0,-CW/2);c.lineTo(LC,-CW/2);c.moveTo(0,CW/2);c.lineTo(LC,CW/2);c.stroke();
+  // fluid
+  const st=ovState(OV.frame);c.fillStyle=aq;c.globalAlpha=.32;
+  if(st.lev>0)c.fillRect(0,-CW/2+1,Math.min(st.lev,LC),CW-2);
+  if(st.r>1){c.beginPath();c.arc(DROPC,0,st.r,0,Math.PI*2);c.fill();c.globalAlpha=.8;c.strokeStyle=aq;c.lineWidth=1.5;c.stroke();}
+  c.globalAlpha=1;c.restore();
+  // labels (world space)
+  c.font='12px "IBM Plex Sans", sans-serif';c.fillStyle=muted;c.textAlign='center';
+  const lab=(a,p,t)=>{const[x,y]=ovToWorld(a,p);c.fillText(t,x,y);};
+  lab(-70,0,'nucellus');lab(-150,0,'');lab(LC*0.5,OV.ori==='side'?-58:0,OV.ori==='side'?'micropyle':'');
+  if(OV.ori!=='side'){const[x,y]=ovToWorld(LC*0.5,0);c.textAlign='left';c.fillText('micropyle',x+28,y+4);c.textAlign='center';}
+  if(st.r>20){const[x,y]=ovToWorld(DROPC,0);c.fillText('pollination drop',x,y+(OV.ori==='down'?st.r+18:OV.ori==='up'?-st.r-10:st.r+18));}
+  // gravity arrow
+  c.strokeStyle=muted;c.fillStyle=muted;c.lineWidth=2;c.beginPath();c.moveTo(30,24);c.lineTo(30,74);c.stroke();c.beginPath();c.moveTo(24,66);c.lineTo(30,78);c.lineTo(36,66);c.fill();
+  c.textAlign='left';c.fillText('gravity',40,54);
+  // phase label
+  const ph=['Drop exposed: pollen arriving','Drop being withdrawn','Fluid retreating into the micropyle','Season over'][st.phase];
+  c.font='600 13px "Spline Sans", sans-serif';c.fillStyle=ink;c.textAlign='right';c.fillText(ph,620,30);
+  // grains
+  for(const g of OV.grains){if(g.st==='wait'||g.st==='missed')continue;const[x,y]=ovToWorld(g.a,g.p);
+    const col=g.sac?pol:acc;c.globalAlpha=g.st==='stranded'?.4:1;
+    if(g.sac){c.fillStyle=col;c.globalAlpha*=.6;c.beginPath();c.arc(x-5,y-3,4.2,0,7);c.arc(x+5,y-3,4.2,0,7);c.fill();c.globalAlpha=g.st==='stranded'?.4:1;}
+    c.fillStyle=col;c.strokeStyle=ink;c.lineWidth=.8;c.beginPath();c.ellipse(x,y,g.sac?4.6:4.2,g.sac?3.8:3.2,0,0,7);c.fill();c.stroke();
+    if(g.st==='stranded'){c.strokeStyle=muted;c.beginPath();c.moveTo(x-4,y-4);c.lineTo(x+4,y+4);c.stroke();}
+    c.globalAlpha=1;}
+  // result
+  const cnt=(sac,s)=>OV.grains.filter(g=>g.sac===sac&&g.st===s).length;
+  const tot=sac=>OV.grains.filter(g=>g.sac===sac&&g.st!=='missed'&&g.st!=='wait'&&g.st!=='air').length;
+  const parts=[];if(OV.mix>0)parts.push(`<span><i style="background:var(--pollen)"></i>Saccate: ${cnt(true,'chamber')} of ${tot(true)} caught reached the nucellus</span>`);
+  if(OV.mix<1)parts.push(`<span><i style="background:var(--accent)"></i>Non-saccate: ${cnt(false,'chamber')} of ${tot(false)}</span>`);
+  $('ovResult').innerHTML=parts.join('');
+}
+function ovLoop(){if(OV.running){ovStep();if(!reduceMotion)ovStep();}ovDraw();requestAnimationFrame(ovLoop);}
+function ovSync(){$('ovOri').value=OV.ori;$('ovMix').value=OV.mix;$('ovMixOut').textContent=Math.round(OV.mix*100)+'%';$('ovRet').value=OV.ret;$('ovRetOut').textContent=OV.ret<160?'fast':OV.ret<380?'moderate':'slow';
+  $('ovPresetNote').innerHTML={Pinus:'<i>Pinus</i>: micropyle down, all grains saccate. Flotation carries grains up through the hanging drop before it is withdrawn.',Ginkgo:'<i>Ginkgo</i>: non-saccate grains and slow resorption of the drop. Orientation is set to sideways here as a simplification; capture rests on the drop pulling grains in, not on buoyancy.',Leslie:'Equal mix of saccate and non-saccate grains on a downward-facing ovule, the set-up of Leslie’s (2010) flotation experiments. Compare how many of each type get in.',custom:'Custom set-up.'}[OV.pre];}
+$('ovPinus').onclick=()=>{Object.assign(OV,{ori:'down',mix:1,ret:200,pre:'Pinus'});ovSync();ovReset();};
+$('ovGinkgo').onclick=()=>{Object.assign(OV,{ori:'side',mix:0,ret:520,pre:'Ginkgo'});ovSync();ovReset();};
+$('ovLeslie').onclick=()=>{Object.assign(OV,{ori:'down',mix:0.5,ret:200,pre:'Leslie'});ovSync();ovReset();};
+$('ovOri').onchange=e=>{OV.ori=e.target.value;OV.pre='custom';ovSync();ovReset();};
+$('ovMix').oninput=e=>{OV.mix=+e.target.value;OV.pre='custom';ovSync();};
+$('ovRet').oninput=e=>{OV.ret=+e.target.value;OV.pre='custom';ovSync();};
+$('ovRun').onclick=()=>ovReset();
+
+// =================== Scale 4: the core ===================
+const CORE={dry:false,truth:true,seed:3,levels:null};
+const CORE_TAXA=['Pinus','Betula','Corylus','Quercus','Tilia','Alnus','Fagus','Poaceae','Artemisia','Cerealia-type','Plantago lanceolata','Lactuceae','Pteridium'].map(n=>IDX[n]);
+function holoceneMap(t,m,u,f,out){
+  const sx=S.site.x,sy=S.site.y;
+  for(let i=0;i<N*N;i++){const x=i%N,y=(i/N)|0;const d=Math.hypot(x+.5-sx,y+.5-sy)*CELL;const mm=m[i],uu=u[i],ff=f[i];let k;
+    if(d<S.R+70)k=C.fen;
+    else if(mm>0.93)k=t>7.5?C.fen:C.carr;
+    else if(t>10.3)k=ff<0.78?C.steppe:C.pine;
+    else if(t>9.6)k=ff<0.3?C.steppe:C.pine;
+    else if(t>8.6)k=ff>0.62?C.oak:C.pine;
+    else{k=ff<0.28?C.pine:C.oak;
+      if(t<4.5&&ff>0.86)k=C.beech;if(t<3&&ff>0.7)k=C.beech;}
+    if(d>=S.R+70&&mm<=0.93){
+      const cl=t<0.3?[0.55,0.72]:t<1.5?[0.68,0.82]:t<3.5?[0.84,0.93]:t<5.8?[0.95,2]:[2,2];
+      if(uu>cl[1])k=C.arable;else if(uu>cl[0])k=C.pasture;}
+    out[i]=k;}
+}
+function buildCore(){
+  const m=noiseField(S.seed,5),u=noiseField(S.seed+101,4),f=noiseField(S.seed+202,6);
+  const arr=new Uint8Array(N*N),levels=[];
+  for(let k=0;k<46;k++){const t=11-k*0.24;holoceneMap(t,m,u,f,arr);const r=compute(arr,true);
+    const envE=(CORE.dry&&t<=5.0&&t>=4.0)?ENV[3]:ENV[S.env];
+    const surv=TAXA.map(tx=>survival(tx,envE,Math.max(0.01,t)));
+    let lost=0;const post=new Float64Array(NT);for(let j=0;j<NT;j++){post[j]=r.L[j]*surv[j];lost+=r.L[j]*(1-surv[j]);}
+    levels.push({t,post,indet:0.4*lost,cov:r.covMap});}
+  CORE.levels=levels;countCore();
+}
+function countCore(){
+  const rng=mulberry32(CORE.seed*7919+S.countSeed);
+  for(const L of CORE.levels){
+    let pT=0;for(let j=0;j<NT;j++)if(TLP[j])pT+=L.post[j];
+    const ids=[],cum=[];let acc=0;for(let j=0;j<NT;j++)if(TLP[j]){acc+=L.post[j]/pT;cum.push(acc);ids.push(j);}
+    const cnt=new Float64Array(NT);for(let k=0;k<S.sum;k++){const x=rng();let lo=0;while(lo<cum.length-1&&cum[lo]<x)lo++;cnt[ids[lo]]++;}
+    for(let j=0;j<NT;j++)if(!TLP[j])cnt[j]=poisson(S.sum*L.post[j]/pT,rng);
+    const ind=poisson(S.sum*L.indet/pT,rng);
+    L.pc=pct(cnt,ind);L.pv=pct(L.cov);}
+  drawCore();
+}
+function drawCore(){
+  const cv=$('coreC'),dpr=window.devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;
+  const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);
+  if(!CORE.levels)return;
+  const ink=cssv('--ink'),muted=cssv('--muted'),line=cssv('--line');
+  const cols=CORE_TAXA.map(j=>({j,g:TAXA[j].g,name:TAXA[j].n,get:L=>L.pc[j],truth:TLP[j]?L=>L.pv[j]:null}));
+  cols.push({j:-1,g:'indet',name:'Indeterminable',get:L=>L.pc.indet,truth:null});
+  cols.forEach(cl=>{let mx=0;for(const L of CORE.levels){mx=Math.max(mx,cl.get(L));if(cl.truth&&CORE.truth)mx=Math.max(mx,cl.truth(L));}cl.max=Math.max(8,Math.ceil(mx/10)*10);});
+  const pl=58,pr=10,pt=112,pb=30,w=W-pl-pr,h=H-pt-pb,gap=10;
+  const totMax=cols.reduce((s,c2)=>s+c2.max,0),pxPer=(w-gap*(cols.length-1))/totMax;
+  const Y=t=>pt+t/11*h;
+  // age axis
+  c.font='11px "IBM Plex Mono", monospace';c.fillStyle=muted;c.textAlign='right';c.strokeStyle=line;c.lineWidth=1;
+  for(let a=0;a<=11;a++){const y=pt+(a)/11*h;c.fillText(a+'',pl-10,y+4);c.beginPath();c.moveTo(pl-6,y);c.lineTo(pl-2,y);c.stroke();}
+  c.save();c.translate(14,pt+h/2);c.rotate(-Math.PI/2);c.textAlign='center';c.fillText('age, thousand years before present',0,0);c.restore();
+  if(CORE.dry){c.fillStyle=cssv('--chip');c.fillRect(pl,pt+4/11*h,w,(1/11)*h);c.fillStyle=muted;c.textAlign='left';c.fillText('exposed',pl+2,pt+4/11*h+12);}
+  let x0=pl;
+  cols.forEach(cl=>{
+    const cw=cl.max*pxPer,col=cssv('--'+cl.g);
+    // header
+    c.save();c.translate(x0+4,pt-8);c.rotate(-Math.PI/3);c.textAlign='left';c.fillStyle=ink;c.font=(cl.j>=0?'italic ':'')+'12px "IBM Plex Sans", sans-serif';c.fillText(cl.name,0,0);c.restore();
+    // baseline & ticks
+    c.strokeStyle=line;c.beginPath();c.moveTo(x0,pt);c.lineTo(x0,pt+h);c.stroke();
+    c.fillStyle=muted;c.font='10px "IBM Plex Mono", monospace';c.textAlign='left';
+    for(let v=0;v<=cl.max;v+=cl.max>40?20:10){if(v===0)continue;const x=x0+v*pxPer;c.beginPath();c.moveTo(x,pt+h);c.lineTo(x,pt+h+4);c.stroke();if(v===cl.max||cl.max<=20)c.fillText(v,x-4,pt+h+15);}
+    const pts=CORE.levels.map(L=>[x0+cl.get(L)*pxPer,Y(L.t)]);
+    // exaggeration
+    if(cl.max<=20){c.strokeStyle=col;c.lineWidth=1;c.globalAlpha=.6;c.beginPath();c.moveTo(x0,Y(11));CORE.levels.forEach(L=>c.lineTo(Math.min(x0+cw,x0+cl.get(L)*10*pxPer),Y(L.t)));c.lineTo(x0,Y(CORE.levels[CORE.levels.length-1].t));c.stroke();c.globalAlpha=1;}
+    c.fillStyle=col;c.beginPath();c.moveTo(x0,Y(11));pts.forEach(p=>c.lineTo(p[0],p[1]));c.lineTo(x0,pts[pts.length-1][1]);c.closePath();c.fill();
+    if(cl.truth&&CORE.truth){c.strokeStyle=ink;c.lineWidth=1.4;c.setLineDash([4,3]);c.beginPath();CORE.levels.forEach((L,k)=>{const x=x0+cl.truth(L)*pxPer,y=Y(L.t);k?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();c.setLineDash([]);}
+    x0+=cw+gap;});
+  c.fillStyle=muted;c.font='10.5px "IBM Plex Mono", monospace';c.textAlign='right';c.fillText('% of land pollen (spores and indeterminable: % of land pollen + group)',W-pr,H-4);
+}
+let coreTimer=null;function coreDirty(){clearTimeout(coreTimer);coreTimer=setTimeout(buildCore,450);}
+$('coreDry').onchange=e=>{CORE.dry=e.target.checked;buildCore();};
+$('coreTruth').onchange=e=>{CORE.truth=e.target.checked;drawCore();};
+$('coreRecount').onclick=()=>{CORE.seed++;countCore();};
+window.addEventListener('resize',()=>{if(CORE.levels)drawCore();});
+
+applyPreset(S.preset,S.seed);syncControls();setTool('site');schedule();
+loadGrain(0);requestAnimationFrame(drawFall);ovSync();ovReset();requestAnimationFrame(ovLoop);setTimeout(buildCore,60);
+})();
+</script>
+
+<!-- uc-banner: remove this block when the page is finished -->
+<a id="uc-banner" href="https://songbird-soundscape.github.io/" title="This page is still being built. Click to visit Stephen C. Caird's main site."
+ style="position:fixed;left:12px;bottom:12px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:repeating-linear-gradient(-45deg,#f2c230 0 10px,#1f1f1f 10px 20px);box-shadow:0 2px 8px rgba(0,0,0,.35);text-decoration:none;font:600 13px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+ <span style="background:#fffbe6;color:#1f1f1f;padding:3px 9px;border-radius:999px;letter-spacing:.02em">&#128679; Under construction</span></a>
+<style>@media print{#uc-banner{display:none!important}}</style>
+<!-- /uc-banner -->
+</body></html>
