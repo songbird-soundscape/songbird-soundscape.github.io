@@ -4,657 +4,771 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>iPortfolio Bootstrap Template - Index</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <title>Stephen C. Caird | Ecology &amp; Evolutionary Biology, Texas A&amp;M University</title>
+  <meta content="Stephen C. Caird carries out doctoral research in Ecology and Evolutionary Biology at Texas A&amp;M University on paleobotany, palynology, coal-ball peat, and coastal mangrove ecology." name="description">
+  <meta content="Stephen Caird, palynology, paleobotany, coal balls, Pennsylvanian, mangrove ecology, Texas A&amp;M, Ecology and Evolutionary Biology" name="keywords">
 
   <!-- Favicons -->
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: iPortfolio
-  * Updated: Nov 17 2023 with Bootstrap v5.3.2
   * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
+  * Updated: Jun 29 2024 with Bootstrap v5.3.3
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
 </head>
 
-<body>
+<body class="index-page">
 
-  <!-- ======= Mobile nav toggle button ======= -->
-  <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
 
-  <!-- ======= Header ======= -->
-  <header id="header">
-    <div class="d-flex flex-column">
+    <div class="profile-img">
+      <!-- TO USE YOUR OWN PHOTO: save a square headshot as assets/img/profile-img.jpg (same name) -->
+      <img src="assets/img/profile-img.jpg" alt="Stephen C. Caird" class="img-fluid rounded-circle">
+    </div>
 
-      <div class="profile">
-        <img src="assets/img/profile-img.jpg" alt="" class="img-fluid rounded-circle">
-        <h1 class="text-light"><a href="index.html">Caird Lab</a></h1>
-        <div class="social-links mt-3 text-center">
-          <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-          <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-          <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-          <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-          <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-        </div>
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Stephen C. Caird</h1>
+    </a>
+
+    <div class="social-links text-center">
+      <a href="mailto:stephen.caird@tamu.edu" class="email" title="Email Stephen"><i class="bi bi-envelope"></i></a>
+    </div>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+        <li><a href="#research"><i class="bi bi-search navicon"></i> Research</a></li>
+        <li><a href="#methods"><i class="bi bi-tools navicon"></i> Methods</a></li>
+        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> CV</a></li>
+        <li><a href="#teaching"><i class="bi bi-mortarboard navicon"></i> Teaching</a></li>
+        <li><a href="#portfolio"><i class="bi bi-images navicon"></i> Gallery</a></li>
+        <li><a href="#contact"><i class="bi bi-envelope navicon"></i> Contact</a></li>
+      </ul>
+    </nav>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+
+      <img src="assets/img/hero-bg.jpg" alt="" data-aos="fade-in" class="">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <h2>Stephen C. Caird</h2>
+        <p>Researching <span class="typed" data-typed-items="fossil spores in coal balls, Pennsylvanian peat-swamp ecology, detritivores in mangrove peat, how plant communities fossilize">fossil spores in coal balls</span></p>
+        <p class="hero-tagline"><span>Graduate research in Ecology &amp; Evolutionary Biology at Texas A&amp;M University, connecting ancient coal swamps with living mangrove coasts, one spore at a time.</span></p>
+        <a href="#research" class="btn-explore">Explore my research</a>
       </div>
 
-      <nav id="navbar" class="nav-menu navbar">
-        <ul>
-          <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a></li>
-          <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About</span></a></li>
-          <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
-          <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a></li>
-          <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Services</span></a></li>
-          <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Contact</span></a></li>
-        </ul>
-      </nav><!-- .nav-menu -->
-    </div>
-  </header><!-- End Header -->
+    </section><!-- /Hero Section -->
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
-    <div class="hero-container" data-aos="fade-in">
-      <h1>Caird Lab</h1>
-      <p>I'm <span class="typed" data-typed-items="Designer, Developer, Freelancer, Photographer"></span></p>
-    </div>
-  </section><!-- End Hero -->
+    <!-- About Section -->
+    <section id="about" class="about section">
 
-  <main id="main">
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>About</h2>
+        <p>I study how plant communities are assembled and preserved &mdash; from the peat of 300-million-year-old coal swamps to the mangrove coasts of southern Florida.</p>
+      </div><!-- End Section Title -->
 
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about">
-      <div class="container">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="section-title">
-          <h2>About</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-4" data-aos="fade-right">
-            <img src="assets/img/profile-img.jpg" class="img-fluid" alt="">
+        <div class="row gy-4 justify-content-center">
+          <div class="col-lg-4 about-photo">
+            <figure>
+              <img src="assets/img/gallery/poster-fig-6.jpg" class="img-fluid" alt="A Pennsylvanian spore extracted from coal-ball peat, seen under the microscope">
+              <figcaption>A Pennsylvanian miospore freed from coal-ball peat and photographed under the microscope.</figcaption>
+            </figure>
           </div>
-          <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
-            <h3>UI/UX Designer &amp; Web Developer.</h3>
-            <p class="fst-italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+          <div class="col-lg-8 content">
+            <h2>Doctoral research in Ecology &amp; Evolutionary Biology</h2>
+            <p class="fst-italic py-3 lead-question">
+              Did the great coal-forming swamps of the late Paleozoic stop at the water's edge, or did they reach into brackish, mangrove-like settings along the sea?
             </p>
             <div class="row">
               <div class="col-lg-6">
                 <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>1 May 1995</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.example.com</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+123 456 7890</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>City:</strong> <span>New York, USA</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Program:</strong> <span>Ph.D., Ecology &amp; Evolutionary Biology</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>University:</strong> <span>Texas A&amp;M University</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Location:</strong> <span>College Station, TX</span></li>
                 </ul>
               </div>
               <div class="col-lg-6">
                 <ul>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Age:</strong> <span>30</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>PhEmailone:</strong> <span>email@example.com</span></li>
-                  <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Advisor:</strong> <span>Dr. Anne Raymond</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>M.S.:</strong> <span>Biology (Ecology), Northern Michigan University</span></li>
+                  <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span><a href="mailto:stephen.caird@tamu.edu">stephen.caird@tamu.edu</a></span></li>
                 </ul>
               </div>
             </div>
+            <p class="py-3">
+              My dissertation brings together paleobotany, palynology, and community ecology. Working with Dr. Anne Raymond in the Department of Geology and Geophysics, I extract fossil spores from coal balls &mdash; calcite-permineralized peat from Pennsylvanian coals &mdash; to ask which plants grew where, how their spores and pollen reached the peat, and whether some of these ancient wetlands bordered the sea. Alongside the fossils, I study living detritivore communities in peat-forming mangroves of southern peninsular Florida.
+            </p>
             <p>
-              Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt adipisci omnis et ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis.
-              Cupiditate ut dicta maxime officiis quidem quia. Sed et consectetur qui quia repellendus itaque neque. Aliquid amet quidem ut quaerat cupiditate. Ab et eum qui repellendus omnis culpa magni laudantium dolores.
+              I came to the microscope by way of the field. Since 2006 I have banded owls and songbirds, searched for warbler nests, recorded bats across the Great Plains, surveyed rare plants in Michigan's Upper Peninsula, and worked as a NOAA Fisheries Observer in the Bering Sea and Gulf of Alaska. Those seasons outdoors still shape the questions I ask &mdash; and the way I teach.
             </p>
           </div>
         </div>
 
       </div>
-    </section><!-- End About Section -->
 
-    <!-- ======= Facts Section ======= -->
-    <section id="facts" class="facts">
-      <div class="container">
+    </section><!-- /About Section -->
 
-        <div class="section-title">
-          <h2>Facts</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
+    <!-- Stats Section -->
+    <section id="stats" class="stats section">
 
-        <div class="row no-gutters">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up">
-            <div class="count-box">
-              <i class="bi bi-emoji-smile"></i>
-              <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-              <p><strong>Happy Clients</strong> consequuntur quae</p>
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-geo-alt"></i>
+              <span data-purecounter-start="0" data-purecounter-end="13" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>U.S. states</strong> <span>where I have done field or lab work</span></p>
             </div>
-          </div>
+          </div><!-- End Stats Item -->
 
-          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="100">
-            <div class="count-box">
-              <i class="bi bi-journal-richtext"></i>
-              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-              <p><strong>Projects</strong> adipisci atque cum quia aut</p>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-mortarboard"></i>
+              <span data-purecounter-start="0" data-purecounter-end="11" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>University courses</strong> <span>taught as a lab or field instructor</span></p>
             </div>
-          </div>
+          </div><!-- End Stats Item -->
 
-          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="200">
-            <div class="count-box">
-              <i class="bi bi-headset"></i>
-              <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
-              <p><strong>Hours Of Support</strong> aut commodi quaerat</p>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-award"></i>
+              <span data-purecounter-start="0" data-purecounter-end="3" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Research grants</strong> <span>from Texas A&amp;M and Northern Michigan University</span></p>
             </div>
-          </div>
+          </div><!-- End Stats Item -->
 
-          <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="300">
-            <div class="count-box">
-              <i class="bi bi-people"></i>
-              <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
-              <p><strong>Hard Workers</strong> rerum asperiores dolor</p>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item">
+              <i class="bi bi-feather"></i>
+              <span data-purecounter-start="0" data-purecounter-end="40" data-purecounter-duration="1" class="purecounter"></span>
+              <p><strong>Northern Saw-whet Owls</strong> <span>(about) banded on fall migration</span></p>
             </div>
-          </div>
+          </div><!-- End Stats Item -->
 
         </div>
 
       </div>
-    </section><!-- End Facts Section -->
 
-    <!-- ======= Skills Section ======= -->
-    <section id="skills" class="skills section-bg">
+    </section><!-- /Stats Section -->
+
+    <!-- Research Section -->
+    <section id="research" class="research section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Research</h2>
+        <p>Fossil spores, permineralized peat, and living wetlands &mdash; using the present and the deep past to understand each other.</p>
+      </div><!-- End Section Title -->
+
       <div class="container">
 
-        <div class="section-title">
-          <h2>Skills</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
+        <div class="row gy-4">
 
-        <div class="row skills-content">
-
-          <div class="col-lg-6" data-aos="fade-up">
-
-            <div class="progress">
-              <span class="skill">HTML <i class="val">100%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">CSS <i class="val">90%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">JavaScript <i class="val">75%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-
-            <div class="progress">
-              <span class="skill">PHP <i class="val">80%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">WordPress/CMS <i class="val">90%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-            <div class="progress">
-              <span class="skill">Photoshop <i class="val">55%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section><!-- End Skills Section -->
-
-    <!-- ======= Resume Section ======= -->
-    <section id="resume" class="resume">
-      <div class="container">
-
-        <div class="section-title">
-          <h2>Resume</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-6" data-aos="fade-up">
-            <h3 class="resume-title">Sumary</h3>
-            <div class="resume-item pb-0">
-              <h4>Caird Lab</h4>
-              <p><em>Innovative and deadline-driven Graphic Designer with 3+ years of experience designing and developing user-centered digital/print marketing material from initial concept to final, polished deliverable.</em></p>
-              <ul>
-                <li>Portland par 127,Orlando, FL</li>
-                <li>(123) 456-7891</li>
-                <li>alice.barkley@example.com</li>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+            <div class="research-card featured">
+              <span class="label">Dissertation in progress</span>
+              <h3>Peat, spores, and the edges of ancient swamps</h3>
+              <p class="meta">Texas A&amp;M University &middot; Advisor: Dr. Anne Raymond, Dept. of Geology &amp; Geophysics</p>
+              <p>My dissertation weaves together fossil and living systems to understand how peat-forming plant communities are organized across space and time, and how faithfully the fossil record captures them.</p>
+              <ul class="theme-list mt-3">
+                <li>Paleobotany</li>
+                <li>Palynology</li>
+                <li>Peat- &amp; coal-forming environments</li>
+                <li>Coastal mangrove community ecology</li>
+                <li>Arthropod evolution</li>
+                <li>Detritivory</li>
+                <li>Palynivory</li>
+                <li>Estuarine plant diversity through space &amp; time</li>
               </ul>
             </div>
+          </div>
+
+          <div class="col-lg-5" data-aos="fade-up" data-aos-delay="200">
+            <div class="research-card">
+              <span class="label">Research poster</span>
+              <h3>Toward a landscape-ecological interpretation of miospore assemblage variants in Pennsylvanian coal and permineralized peat</h3>
+              <p class="meta">S. C. Caird &amp; A. L. Raymond &middot; Texas A&amp;M University</p>
+              <ul>
+                <li>Uses coal balls from the Herrin No. 6 coal (Carbondale Formation, Illinois) and the Kalo Formation (Iowa), roughly 307&ndash;315 million years old.</li>
+                <li>Shows that spores trapped in fallen <em>Scolecopteris</em> sporangia can inflate counts &mdash; a bias that coal palynology alone cannot detect, but coal balls can.</li>
+                <li>Spores from coal balls appear to keep more of their original shape than those extracted from coal.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="research-card">
+              <span class="label">Field ecology &middot; funded 2025</span>
+              <h3>Detritivores in peat-forming mangroves</h3>
+              <p class="meta">Southern peninsular Florida</p>
+              <p>Ecological studies of the detritivore communities living in modern peat-forming mangroves, supported by an EEB Research Grant from Texas A&amp;M. Living mangroves offer a window onto how ancient coastal peats may have worked.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="research-card">
+              <span class="label">Research assistantship &middot; 2026</span>
+              <h3>Palynology &amp; isotope geochemistry</h3>
+              <p class="meta">Department of Anthropology, Texas A&amp;M University</p>
+              <p>Preparing palynological samples from sediment and honey, and reviewing the literature for georeferenced isotopic measurements to support a regional isoscape-mapping project in development.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="research-card">
+              <span class="label">M.S. thesis &middot; 2015</span>
+              <h3>White spruce, moose, and Isle Royale</h3>
+              <p class="meta">Northern Michigan University &middot; Advisor: Dr. Alan Rebertus</p>
+              <p>&ldquo;White spruce (<em>Picea glauca</em>), moose (<em>Alces alces</em>), and the origin of a zootic disclimax community on Isle Royale&rdquo; &mdash; a dendrochronological study in Isle Royale National Park.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Research Section -->
+
+    <!-- Methods Section -->
+    <section id="methods" class="methods section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Methods</h2>
+        <p>Skills gathered in labs, forests, prairies, and at sea.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-6">
+            <div class="method-group">
+              <h3><i class="bi bi-eyedropper"></i> Laboratory &amp; microscopy</h3>
+              <ul>
+                <li>Palynological preparation of sediment, honey, and coal-ball peat</li>
+                <li>Cellulose-acetate peels of coal balls</li>
+                <li>Identification and counting of Pennsylvanian miospores</li>
+                <li>DNA-based population structure (Indiana Bat, museum and live-caught specimens)</li>
+                <li>Dendrochronology</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="method-group">
+              <h3><i class="bi bi-binoculars"></i> Wildlife field methods</h3>
+              <ul>
+                <li>Mist-netting and banding, including molt and body-condition assessment</li>
+                <li>Nest searching, monitoring, and territory mapping of color-banded birds</li>
+                <li>Radio telemetry of birds and bats</li>
+                <li>Line-transect and distance sampling</li>
+                <li>Drift fences, pitfall traps, and mark-recapture for herpetofauna</li>
+                <li>Biological sampling and seabird / marine mammal monitoring at sea</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="method-group">
+              <h3><i class="bi bi-soundwave"></i> Bioacoustics</h3>
+              <ul>
+                <li>Stationary and mobile bat acoustic surveys following NABat protocol</li>
+                <li>SM4, SM3, and ANABAT recording units</li>
+                <li>Audio voucher recordings for bird inventories</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="method-group">
+              <h3><i class="bi bi-tree"></i> Botany &amp; vegetation</h3>
+              <ul>
+                <li>Meander surveys for rare and invasive plant species</li>
+                <li>Tree species composition and vegetation structure</li>
+                <li>Species-level plant composition and floristic inventories</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Methods Section -->
+
+    <!-- Resume Section -->
+    <section id="resume" class="resume section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Curriculum Vitae</h2>
+        <p>Education, grants, service, and two decades of research and field experience.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
 
             <h3 class="resume-title">Education</h3>
             <div class="resume-item">
-              <h4>Master of Fine Arts &amp; Graphic Design</h4>
-              <h5>2015 - 2016</h5>
-              <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
-              <p>Qui deserunt veniam. Et sed aliquam labore tempore sed quisquam iusto autem sit. Ea vero voluptatum qui ut dignissimos deleniti nerada porti sand markend</p>
-            </div>
+              <h4>Ph.D., Ecology &amp; Evolutionary Biology (in progress)</h4>
+              <h5>2023 - Present</h5>
+              <p><em>Texas A&amp;M University, College Station, TX</em></p>
+              <p>Advisor: Dr. Anne Raymond, Department of Geology and Geophysics.</p>
+            </div><!-- End Resume Item -->
+
             <div class="resume-item">
-              <h4>Bachelor of Fine Arts &amp; Graphic Design</h4>
-              <h5>2010 - 2014</h5>
-              <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
-              <p>Quia nobis sequi est occaecati aut. Repudiandae et iusto quae reiciendis et quis Eius vel ratione eius unde vitae rerum voluptates asperiores voluptatem Earum molestiae consequatur neque etlon sader mart dila</p>
-            </div>
-          </div>
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <h3 class="resume-title">Professional Experience</h3>
+              <h4>M.S., Biology (Ecology)</h4>
+              <h5>2011 - 2015</h5>
+              <p><em>Northern Michigan University, Marquette, MI</em></p>
+              <p>Advisor: Dr. Alan Rebertus. Thesis: &ldquo;White spruce (<em>Picea glauca</em>), moose (<em>Alces alces</em>), and the origin of a zootic disclimax community on Isle Royale.&rdquo;</p>
+            </div><!-- End Resume Item -->
+
             <div class="resume-item">
-              <h4>Senior graphic design specialist</h4>
-              <h5>2019 - Present</h5>
-              <p><em>Experion, New York, NY </em></p>
+              <h4>B.S., Biology (Physiology), Chemistry minor</h4>
+              <h5>2002 - 2006</h5>
+              <p><em>Northern Michigan University, Marquette, MI</em></p>
+            </div><!-- End Resume Item -->
+
+            <h3 class="resume-title">Grants &amp; Awards</h3>
+            <div class="resume-item">
+              <h4>EEB Research Grant</h4>
+              <h5>2025</h5>
+              <p><em>Ecology &amp; Evolutionary Biology Interdisciplinary Program, Texas A&amp;M University</em></p>
+              <p>$1,500 to support ecological studies of detritivore communities in peat-forming mangroves of southern peninsular Florida.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>College of Graduate Studies Excellence in Education Grant</h4>
+              <h5>2012 &amp; 2013</h5>
+              <p><em>Northern Michigan University</em></p>
+              <p>$1,500 (awarded twice) to support dendrochronological research in Isle Royale National Park.</p>
+            </div><!-- End Resume Item -->
+
+            <h3 class="resume-title">Service</h3>
+            <div class="resume-item">
               <ul>
-                <li>Lead in the design, development, and implementation of the graphic, layout, and production communication materials</li>
-                <li>Delegate tasks to the 7 members of the design team and provide counsel on all aspects of the project. </li>
-                <li>Supervise the assessment of all graphic materials in order to ensure quality and accuracy of the design</li>
-                <li>Oversee the efficient use of production project budgets ranging from $2,000 - $25,000</li>
+                <li>Treasurer, Texas A&amp;M Ecological Integration Symposium Planning Committee (2024&ndash;2025)</li>
+                <li>Treasurer, Texas A&amp;M EEB Interdisciplinary Student Organization (2024&ndash;2025)</li>
+                <li>Member, Texas A&amp;M EEB Annual Darwin Day Planning Committee (2023&ndash;2024)</li>
+                <li>Stream macroinvertebrate monitoring volunteer, Yellow Dog Watershed Preserve (2014&ndash;2016)</li>
+              </ul>
+            </div><!-- End Resume Item -->
+
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+            <h3 class="resume-title">Research &amp; Professional Experience</h3>
+
+            <div class="resume-item">
+              <h4>Graduate Research Assistant &ndash; Palynology &amp; Isotope Geochemistry</h4>
+              <h5>Spring 2026</h5>
+              <p><em>Department of Anthropology, Texas A&amp;M University</em></p>
+              <p>Prepared palynological samples from sediment and honey; reviewed literature for georeferenced isotopic measurements for a regional isoscape-mapping project.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>Graduate Teaching Assistant</h4>
+              <h5>Fall 2023 - Fall 2025</h5>
+              <p><em>Texas A&amp;M University</em></p>
+              <p>Laboratory teaching in General Entomology, Evolution and Diversity of Vertebrates, and Forensic Entomology.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>Bat Monitoring Technician (Acoustic)</h4>
+              <h5>Summers 2021 - 2025</h5>
+              <p><em>University of Wyoming / Wyoming Natural Diversity Database</em></p>
+              <p>Stationary and mobile acoustic surveys with SM4 units under NABat protocol across Nebraska, South Dakota, and North Dakota.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>NOAA Fisheries Observer (North Pacific)</h4>
+              <h5>2019, 2020, 2022, 2023</h5>
+              <p><em>AIS, Inc. &amp; Saltwater, Inc.</em></p>
+              <p>Sampled catch, collected biological specimens, and monitored seabird and marine mammal interactions aboard fishing vessels in the Aleutian Islands, Gulf of Alaska, and Bering Sea.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>Graduate Teaching Assistant / Adjunct Faculty</h4>
+              <h5>2006-2007, 2011-2015, 2018, 2022</h5>
+              <p><em>Northern Michigan University</em></p>
+              <p>Laboratory and field teaching in introductory biology, anatomy and physiology, cell and molecular biology, northern forest ecology, and boreal flora.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>Biological Science Technician (GS-07)</h4>
+              <h5>2008 - 2010</h5>
+              <p><em>USDA Forest Service, North Central Research Station, Columbia, MO</em></p>
+              <p>Indiana Bat (<em>Myotis sodalis</em>) population genetics, ANABAT acoustic monitoring, bat radio-tracking, forest composition surveys, and songbird nest monitoring.</p>
+            </div><!-- End Resume Item -->
+
+            <div class="resume-item">
+              <h4>Selected Field Positions</h4>
+              <h5>2006 - 2019</h5>
+              <ul>
+                <li>Golden-cheeked Warbler Nest Searcher (2015) / Crew Lead (2019) &mdash; University of Missouri, Balcones Canyonlands, TX</li>
+                <li>Contract Botanist / Field Ornithologist &mdash; Yellow Dog Watershed Preserve, MI (2018)</li>
+                <li>Contract Botanist, Rare &amp; Invasive Species &mdash; Biophilia LLC, Ottawa National Forest, MI (2018)</li>
+                <li>Bachman's Sparrow Habitat Vegetation Monitor &mdash; Tall Timbers Research Station, FL (2018)</li>
+                <li>Assistant Owl Bander &mdash; Michigan Audubon / Whitefish Point Bird Observatory, MI (2017)</li>
+                <li>Greater Sage-Grouse Habitat Survey Technician &mdash; Colorado Parks and Wildlife (2017)</li>
+                <li>Kirtland's Warbler Mist-net, Telemetry &amp; Nest Searching Intern &mdash; Smithsonian Migratory Bird Center; Bahamas &amp; Michigan (2017)</li>
+                <li>Avian Nest Searcher &amp; Video Technician &mdash; University of Montana, Mogollon Rim, AZ (2016)</li>
+                <li>Bat Acoustic &amp; Mist-net Technician &mdash; Wyoming Natural Diversity Database (2015)</li>
+                <li>Avian Nest Searcher / Site Leader &mdash; University of Missouri (2011)</li>
+                <li>Avian Field Biologist &mdash; Missouri Department of Natural Resources (2008)</li>
+                <li>Herpetological Survey Technician &mdash; University of Missouri, Missouri Ozarks (2008)</li>
+                <li>Fall Migration Songbird Banding Technician &mdash; Atlantic Bird Observatory, Nova Scotia (2007)</li>
+                <li>Avian Survey Technician &mdash; Northern Michigan University, Pictured Rocks National Lakeshore (2007)</li>
+                <li>Aquaculture / Backcountry Weir Technician &mdash; Cook Inlet Aquaculture Association, AK (2006)</li>
+                <li>Golden-winged Warbler Field Technician &mdash; Ithaca College, Orange County, NY (2006)</li>
+              </ul>
+            </div><!-- End Resume Item -->
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- /Resume Section -->
+
+    <!-- Teaching Section (uses the template's "services" styling) -->
+    <section id="teaching" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Teaching</h2>
+        <p>Laboratory and field teaching at Texas A&amp;M University and Northern Michigan University &mdash; helping students look closely at living things.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="icon flex-shrink-0"><i class="bi bi-bug"></i></div>
+            <div>
+              <h4 class="title">General Entomology</h4>
+              <p class="description">ENTO 201 &middot; Texas A&amp;M University &middot; laboratory sections, 2023&ndash;2025</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon flex-shrink-0"><i class="bi bi-feather"></i></div>
+            <div>
+              <h4 class="title">Evolution &amp; Diversity of Vertebrates</h4>
+              <p class="description">ECCB 302 &middot; Texas A&amp;M University &middot; laboratory sections, 2023&ndash;2025</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="icon flex-shrink-0"><i class="bi bi-search"></i></div>
+            <div>
+              <h4 class="title">Forensic Entomology</h4>
+              <p class="description">FIVS/ENTO 432 &middot; Texas A&amp;M University &middot; laboratory sections, 2023&ndash;2025</p>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+            <div class="icon flex-shrink-0"><i class="bi bi-flower1"></i></div>
+            <div>
+              <h4 class="title">Foundations of Biology</h4>
+              <p class="description">Northern Michigan University</p>
+              <ul class="course-list">
+                <li>Introductory Biology: Principles (BI 111)</li>
+                <li>Introductory Biology: Diversity (BI 112)</li>
+                <li>Introductory Cell &amp; Molecular Biology (BI 218)</li>
               </ul>
             </div>
-            <div class="resume-item">
-              <h4>Graphic design specialist</h4>
-              <h5>2017 - 2018</h5>
-              <p><em>Stepping Stone Advertising, New York, NY</em></p>
-              <ul>
-                <li>Developed numerous marketing programs (logos, brochures,infographics, presentations, and advertisements).</li>
-                <li>Managed up to 5 projects or tasks at a given time while under pressure</li>
-                <li>Recommended and consulted with clients on the most appropriate graphic design</li>
-                <li>Created 4+ design presentations and proposals a month for clients and account managers</li>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
+            <div class="icon flex-shrink-0"><i class="bi bi-heart-pulse"></i></div>
+            <div>
+              <h4 class="title">Anatomy &amp; Physiology</h4>
+              <p class="description">Northern Michigan University</p>
+              <ul class="course-list">
+                <li>Anatomy (BI 107, BI 201)</li>
+                <li>Physiology (BI 202)</li>
               </ul>
             </div>
-          </div>
-        </div>
+          </div><!-- End Service Item -->
 
-      </div>
-    </section><!-- End Resume Section -->
-
-    <!-- ======= Portfolio Section ======= -->
-    <section id="portfolio" class="portfolio section-bg">
-      <div class="container">
-
-        <div class="section-title">
-          <h2>Portfolio</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
-
-        <div class="row" data-aos="fade-up">
-          <div class="col-lg-12 d-flex justify-content-center">
-            <ul id="portfolio-flters">
-              <li data-filter="*" class="filter-active">All</li>
-              <li data-filter=".filter-app">App</li>
-              <li data-filter=".filter-card">Card</li>
-              <li data-filter=".filter-web">Web</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
+          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
+            <div class="icon flex-shrink-0"><i class="bi bi-tree"></i></div>
+            <div>
+              <h4 class="title">Field Ecology &amp; Botany</h4>
+              <p class="description">Northern Michigan University</p>
+              <ul class="course-list">
+                <li>Ecology of the Northern Forest (BI 305)</li>
+                <li>Boreal Flora (BI 433)</li>
+              </ul>
             </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-4.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-4.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-5.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-6.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-7.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-7.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 1"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-8.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-8.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Card 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-            <div class="portfolio-wrap">
-              <img src="assets/img/portfolio/portfolio-9.jpg" class="img-fluid" alt="">
-              <div class="portfolio-links">
-                <a href="assets/img/portfolio/portfolio-9.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Web 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
+          </div><!-- End Service Item -->
 
         </div>
 
       </div>
-    </section><!-- End Portfolio Section -->
 
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
+    </section><!-- /Teaching Section -->
+
+    <!-- Gallery Section (uses the template's "portfolio" styling) -->
+    <section id="portfolio" class="portfolio section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Gallery</h2>
+        <p>A closer look: microfossils from coal-ball peat, research figures, and sounds from the field. Click any image to enlarge it.</p>
+      </div><!-- End Section Title -->
+
       <div class="container">
 
-        <div class="section-title">
-          <h2>Services</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
-        <div class="row">
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
-            <div class="icon"><i class="bi bi-briefcase"></i></div>
-            <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-            <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
-          </div>
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon"><i class="bi bi-card-checklist"></i></div>
-            <h4 class="title"><a href="">Dolor Sitema</a></h4>
-            <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
-          </div>
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
-            <div class="icon"><i class="bi bi-bar-chart"></i></div>
-            <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-          </div>
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
-            <div class="icon"><i class="bi bi-binoculars"></i></div>
-            <h4 class="title"><a href="">Magni Dolores</a></h4>
-            <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-          </div>
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
-            <div class="icon"><i class="bi bi-brightness-high"></i></div>
-            <h4 class="title"><a href="">Nemo Enim</a></h4>
-            <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
-          </div>
-          <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="500">
-            <div class="icon"><i class="bi bi-calendar4-week"></i></div>
-            <h4 class="title"><a href="">Eiusmod Tempor</a></h4>
-            <p class="description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
-          </div>
-        </div>
+          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-spores">Fossil spores</li>
+            <li data-filter=".filter-peat">Coal balls &amp; data</li>
+            <li data-filter=".filter-sound">Field sound</li>
+          </ul><!-- End Gallery Filters -->
 
-      </div>
-    </section><!-- End Services Section -->
+          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
-    <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials section-bg">
-      <div class="container">
-
-        <div class="section-title">
-          <h2>Testimonials</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
-
-        <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
-          <div class="swiper-wrapper">
-
-            <div class="swiper-slide">
-              <div class="testimonial-item" data-aos="fade-up">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-                <h3>Saul Goodman</h3>
-                <h4>Ceo &amp; Founder</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="100">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                <h3>Sara Wilsson</h3>
-                <h4>Designer</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="200">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                <h3>Jena Karlis</h3>
-                <h4>Store Owner</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="300">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                <h3>Matt Brandon</h3>
-                <h4>Freelancer</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item" data-aos="fade-up" data-aos-delay="400">
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                <h3>John Larson</h3>
-                <h4>Entrepreneur</h4>
-              </div>
-            </div><!-- End testimonial item -->
-
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
-
-      </div>
-    </section><!-- End Testimonials Section -->
-
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
-      <div class="container">
-
-        <div class="section-title">
-          <h2>Contact</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-        </div>
-
-        <div class="row" data-aos="fade-in">
-
-          <div class="col-lg-5 d-flex align-items-stretch">
-            <div class="info">
-              <div class="address">
-                <i class="bi bi-geo-alt"></i>
-                <h4>Location:</h4>
-                <p>A108 Adam Street, New York, NY 535022</p>
-              </div>
-
-              <div class="email">
-                <i class="bi bi-envelope"></i>
-                <h4>Email:</h4>
-                <p>info@example.com</p>
-              </div>
-
-              <div class="phone">
-                <i class="bi bi-phone"></i>
-                <h4>Call:</h4>
-                <p>+1 5589 55488 55s</p>
-              </div>
-
-              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
-            </div>
-
-          </div>
-
-          <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-              <div class="row">
-                <div class="form-group col-md-6">
-                  <label for="name">Your Name</label>
-                  <input type="text" name="name" class="form-control" id="name" required>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="name">Your Email</label>
-                  <input type="email" class="form-control" name="email" id="email" required>
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-6.jpg" class="img-fluid" alt="Fossil spore under the microscope">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Pennsylvanian miospore from coal-ball peat</p>
+                  <a href="assets/img/gallery/poster-fig-6.jpg" title="Pennsylvanian miospore extracted from coal-ball peat" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="name">Subject</label>
-                <input type="text" class="form-control" name="subject" id="subject" required>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-26.jpg" class="img-fluid" alt="Fossil spore among plant debris under the microscope">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Miospore among peat debris</p>
+                  <a href="assets/img/gallery/poster-fig-26.jpg" title="Pennsylvanian miospore among peat debris" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="name">Message</label>
-                <textarea class="form-control" name="message" rows="10" required></textarea>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-sound">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/spectrogram.jpg" class="img-fluid" alt="Spectrogram of a field sound recording, showing frequency in kilohertz over about two seconds">
+                <div class="portfolio-info">
+                  <h4>Field sound</h4>
+                  <p>Spectrogram of a field recording</p>
+                  <a href="assets/img/gallery/spectrogram.jpg" title="Spectrogram of a field sound recording" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
               </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-16.jpg" class="img-fluid" alt="Fossil spore surrounded by amber-colored plant fragments">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Palynomorphs from permineralized peat</p>
+                  <a href="assets/img/gallery/poster-fig-16.jpg" title="Palynomorphs extracted from Pennsylvanian permineralized peat" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
               </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
-            </form>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-peat">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-28.jpg" class="img-fluid" alt="Coal-ball peat viewed under the microscope with a 200 micron scale">
+                <div class="portfolio-info">
+                  <h4>Coal balls</h4>
+                  <p>Coal-ball peat under the microscope</p>
+                  <a href="assets/img/gallery/poster-fig-28.jpg" title="Coal-ball peat under the microscope (scale: 200 microns)" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
+              </div>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-9.jpg" class="img-fluid" alt="Rounded fossil spore on a pale background">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Pennsylvanian palynomorph</p>
+                  <a href="assets/img/gallery/poster-fig-9.jpg" title="Pennsylvanian palynomorph from permineralized peat" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
+              </div>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-peat">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-2.jpg" class="img-fluid" alt="Bar chart of ranked abundance of palynomorphs in one coal-ball sample">
+                <div class="portfolio-info">
+                  <h4>Data</h4>
+                  <p>Ranked abundance of palynomorphs in a coal ball</p>
+                  <a href="assets/img/gallery/poster-fig-2.jpg" title="Ranked abundance of palynomorphs from a coal ball, Herrin No. 6 coal, Illinois" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
+              </div>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-24.jpg" class="img-fluid" alt="Small oval fossil spore on a pale blue background">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Pennsylvanian palynomorph</p>
+                  <a href="assets/img/gallery/poster-fig-24.jpg" title="Pennsylvanian palynomorph from permineralized peat" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
+              </div>
+            </div><!-- End Gallery Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-spores">
+              <div class="portfolio-content h-100">
+                <img src="assets/img/gallery/poster-fig-33.jpg" class="img-fluid" alt="Fossil spore with a scale bar under the microscope">
+                <div class="portfolio-info">
+                  <h4>Fossil spores</h4>
+                  <p>Pennsylvanian palynomorph</p>
+                  <a href="assets/img/gallery/poster-fig-33.jpg" title="Pennsylvanian palynomorph from permineralized peat" data-gallery="gallery" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                </div>
+              </div>
+            </div><!-- End Gallery Item -->
+
+          </div><!-- End Gallery Container -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Gallery Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Contact</h2>
+        <p>Questions, collaborations, or curiosity about coal balls and spores are always welcome.</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-5">
+
+            <div class="info-wrap">
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+                <i class="bi bi-envelope flex-shrink-0"></i>
+                <div>
+                  <h3>Email</h3>
+                  <p><a href="mailto:stephen.caird@tamu.edu">stephen.caird@tamu.edu</a></p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+                <i class="bi bi-building flex-shrink-0"></i>
+                <div>
+                  <h3>Program</h3>
+                  <p>Ecology &amp; Evolutionary Biology Interdisciplinary Program<br>Texas A&amp;M University</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+                <i class="bi bi-geo-alt flex-shrink-0"></i>
+                <div>
+                  <h3>Location</h3>
+                  <p>College Station, Texas, USA</p>
+                </div>
+              </div><!-- End Info Item -->
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="welcome-card" data-aos="fade-up" data-aos-delay="200">
+              <h3>Let's talk</h3>
+              <p>I enjoy hearing from fellow students, researchers, educators, and anyone who has ever wondered what an ancient swamp looked like. If you are interested in palynology, coal-ball paleobotany, mangrove ecology, or field biology, please reach out &mdash; email is the best way to reach me.</p>
+              <a class="btn-email" href="mailto:stephen.caird@tamu.edu"><i class="bi bi-envelope me-2"></i>Send me an email</a>
+            </div>
           </div>
 
         </div>
 
       </div>
-    </section><!-- End Contact Section -->
 
-  </main><!-- End #main -->
+    </section><!-- /Contact Section -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
+  </main>
+
+  <footer id="footer" class="footer position-relative light-background">
+
     <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span>iPortfolio</span></strong>
+      <div class="copyright text-center ">
+        <p>&copy; <span>2026</span> <strong class="px-1 sitename">Stephen C. Caird</strong> <span>All Rights Reserved</span></p>
       </div>
       <div class="credits">
         <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> | <a href="https://bootstrapmade.com/tools/">DevTools</a>
       </div>
     </div>
-  </footer><!-- End  Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/typed.js/typed.umd.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
 
-  <!-- Template Main JS File -->
+  <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
 </body>
