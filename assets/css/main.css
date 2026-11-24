@@ -1283,7 +1283,11 @@ section,
 
 /* Hero: darker forest-green veil so white text stays readable over the micrograph */
 .hero:before {
-  background: rgba(18, 36, 26, 0.78);
+  /* dark behind the words, then the slide shows through in its own colours */
+  background: linear-gradient(90deg, rgba(18, 36, 26, 0.86) 0%, rgba(18, 36, 26, 0.72) 38%, rgba(18, 36, 26, 0.25) 62%, rgba(18, 36, 26, 0) 80%);
+}
+@media (max-width: 760px) {
+  .hero:before { background: linear-gradient(180deg, rgba(18, 36, 26, 0.35) 0%, rgba(18, 36, 26, 0.8) 30%, rgba(18, 36, 26, 0.8) 75%, rgba(18, 36, 26, 0.35) 100%); }
 }
 
 .hero .hero-tagline {
