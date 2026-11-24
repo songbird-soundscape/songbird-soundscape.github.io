@@ -98,7 +98,7 @@
 .lang-offer button{font:inherit; border:1px solid #2f6b4f; background:#2f6b4f; color:#fff; border-radius:999px; padding:4px 10px; cursor:pointer}
 .lang-offer button[data-no]{background:none; color:#5b6459; border-color:transparent}
 /* Google's own toolbar and hover tooltips are hidden; the page stays where it is */
-.goog-te-banner-frame, iframe.skiptranslate, #goog-gt-tt, .goog-te-balloon-frame{display:none !important}
+.goog-te-banner-frame, iframe.skiptranslate, #goog-gt-tt, .goog-te-balloon-frame, [class*="VIpgJd-ZVi9od-aZ2wEe"], [class*="VIpgJd-ZVi9od-ORHb"], [class*="VIpgJd-yAWNEb"]{display:none !important}
 body{top:0 !important} .goog-text-highlight{background:none !important; box-shadow:none !important}
 @media print{.lang, .lang-offer{display:none}}`;
   document.head.appendChild(css);
