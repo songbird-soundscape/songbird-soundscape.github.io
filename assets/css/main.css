@@ -1504,3 +1504,17 @@ section,
 .contact .welcome-card .btn-email:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
+
+/* The spore slide runs behind the whole page; each section is a pale wash over it so the text stays easy to read */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #bdb688 url(../img/hero-lycospora.jpg) center / cover no-repeat;
+}
+section:not(.hero),
+.section:not(.hero),
+.footer {
+  background-color: color-mix(in srgb, var(--background-color) 85%, transparent);
+}
