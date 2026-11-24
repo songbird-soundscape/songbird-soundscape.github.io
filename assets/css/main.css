@@ -1569,3 +1569,6 @@ details.fold > section:first-of-type { padding-top: 10px; }
 @media (prefers-reduced-motion: reduce) { .proj-slide { animation: none; } }
 @media (max-width: 860px) { .proj-slide { grid-template-columns: 1fr; } .proj-carousel { padding: 0 0 40px; } .proj-nav { top: auto; bottom: -8px; transform: none; } .proj-nav.prev { left: calc(50% - 110px); } .proj-nav.next { right: calc(50% - 110px); } .proj-dots { bottom: 8px; } }
 .proj-shot.dark { object-fit: contain; background: #0b0f13; }
+.updates-note { display: inline-flex; gap: 10px; align-items: center; margin: 14px 0 4px; padding: 10px 16px; border-left: 4px solid var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color), transparent 90%); border-radius: 0 8px 8px 0; font-size: 16px; }
+.updates-note i { color: var(--accent-color); }
