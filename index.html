@@ -154,35 +154,60 @@
 
       <div class="container">
 
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon flex-shrink-0"><i class="bi bi-diagram-3"></i></div>
-            <div>
-              <h4 class="title"><a href="/open-commons/" class="stretched-link">The Open Commons of Learning</a> <span class="uc-badge">Under construction</span></h4>
-              <p class="description">An open network of scholars and knowledge hubs for teaching, education, and research. Make a hub, join a hub, or link your lab.</p>
+        <div class="proj-carousel" aria-roledescription="carousel" aria-label="Projects" tabindex="0">
+          <button type="button" class="proj-nav prev" aria-label="Previous project"><i class="bi bi-chevron-left"></i></button>
+          <div class="proj-track">
+          <article class="proj-slide is-current" id="proj-sporae" role="group" aria-roledescription="slide" aria-label="1 of 4">
+            <a class="proj-art" href="/spores/" tabindex="-1" aria-hidden="true"><img class="proj-shot" src="assets/img/sporae-dispersae.jpg" alt="Network of fossil spores linked to the plant organs and whole plants they came from"></a>
+            <div class="proj-text service-item">
+              <div class="d-flex align-items-start">
+                <div class="icon flex-shrink-0 icon-glyph"><img src="assets/img/sporae-icon.png" alt=""></div>
+                <div>
+                  <h4 class="title"><a href="/spores/">Sporae Dispersae</a> <span class="uc-badge">Under construction</span></h4>
+                  <p class="description">Fossil spores and pollen linked to the plants that made them, from the Silurian to today: a network you can watch grow from the first descriptions in the 1820s to now, maps of where each genus has been found, a time tree, and a game for putting plants back together from their parts.</p>
+                </div>
+              </div>
             </div>
-          </div><!-- End Project Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
-            <div class="icon flex-shrink-0"><i class="bi bi-globe-americas"></i></div>
-            <div>
-              <h4 class="title"><a href="/drifting-through-deep-time/" class="stretched-link">Drifting Through Deep Time</a> <span class="uc-badge">Under construction</span></h4>
-              <p class="description">A knowledge hub layering moving continents, ancient plants, climate, and human migration on one globe across 540 million years.</p>
+          </article>
+          <article class="proj-slide" id="proj-commons" role="group" aria-roledescription="slide" aria-label="2 of 4" hidden>
+            <a class="proj-art" href="/open-commons/" tabindex="-1" aria-hidden="true"><div class="proj-bigicon"><i class="bi bi-diagram-3"></i></div></a>
+            <div class="proj-text service-item">
+              <div class="d-flex align-items-start">
+                <div class="icon flex-shrink-0"><i class="bi bi-diagram-3"></i></div>
+                <div>
+                  <h4 class="title"><a href="/open-commons/">The Open Commons of Learning</a> <span class="uc-badge">Under construction</span></h4>
+                  <p class="description">An open network of scholars and knowledge hubs for teaching, education, and research. Make a hub, join a hub, or link your lab.</p>
+                </div>
+              </div>
             </div>
-          </div><!-- End Project Item -->
-
-
-
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
-            <div class="icon flex-shrink-0"><i class="bi bi-tv"></i></div>
-            <div>
-              <h4 class="title"><a href="/coal-talk/" class="stretched-link">Coal Talk</a> <span class="uc-badge">Under construction</span></h4>
-              <p class="description">&ldquo;If you don&rsquo;t talk to your kids about coal&hellip; who will?&rdquo; A retro public-service announcement about coal and its history.</p>
+          </article>
+          <article class="proj-slide" id="proj-drifting" role="group" aria-roledescription="slide" aria-label="3 of 4" hidden>
+            <a class="proj-art" href="/drifting-through-deep-time/" tabindex="-1" aria-hidden="true"><div class="proj-bigicon"><i class="bi bi-globe-americas"></i></div></a>
+            <div class="proj-text service-item">
+              <div class="d-flex align-items-start">
+                <div class="icon flex-shrink-0"><i class="bi bi-globe-americas"></i></div>
+                <div>
+                  <h4 class="title"><a href="/drifting-through-deep-time/">Drifting Through Deep Time</a> <span class="uc-badge">Under construction</span></h4>
+                  <p class="description">A knowledge hub layering moving continents, ancient plants, climate, and human migration on one globe across 540 million years.</p>
+                </div>
+              </div>
             </div>
-          </div><!-- End Project Item -->
-
+          </article>
+          <article class="proj-slide" id="proj-coal" role="group" aria-roledescription="slide" aria-label="4 of 4" hidden>
+            <a class="proj-art" href="/coal-talk/" tabindex="-1" aria-hidden="true"><div class="proj-bigicon"><i class="bi bi-tv"></i></div></a>
+            <div class="proj-text service-item">
+              <div class="d-flex align-items-start">
+                <div class="icon flex-shrink-0"><i class="bi bi-tv"></i></div>
+                <div>
+                  <h4 class="title"><a href="/coal-talk/">Coal Talk</a> <span class="uc-badge">Under construction</span></h4>
+                  <p class="description">&ldquo;If you don&rsquo;t talk to your kids about coal&hellip; who will?&rdquo; A retro public-service announcement about coal and its history.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+          </div>
+          <button type="button" class="proj-nav next" aria-label="Next project"><i class="bi bi-chevron-right"></i></button>
+          <div class="proj-dots" role="tablist" aria-label="Choose a project"></div>
         </div>
 
       </div>
@@ -200,14 +225,6 @@
       <div class="container">
 
         <div class="row gy-4">
-
-          <div class="col-12 service-item feature-item" data-aos="fade-up">
-            <a href="/spores/" class="feature-img"><img src="assets/img/sporae-dispersae.jpg" alt="Network of fossil spores linked to the plant organs and whole plants they came from"></a>
-            <div>
-              <h4 class="title"><a href="/spores/" class="stretched-link">Sporae Dispersae</a> <span class="uc-badge">Under construction</span></h4>
-              <p class="description">Fossil spores and pollen linked to the plants that made them, from the Silurian to today: a network you can watch grow from the first descriptions in the 1820s to now, maps of where each genus has been found, a time tree, and a game for putting plants back together from their parts.</p>
-            </div>
-          </div><!-- End Lab Item -->
 
           <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
             <div class="icon flex-shrink-0"><i class="bi bi-hourglass-split"></i></div>
@@ -826,6 +843,23 @@
   document.querySelectorAll("details.fold").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) d.querySelectorAll("[data-aos]").forEach(el => el.classList.add("aos-animate"));
     window.AOS && AOS.refresh(); }));
+})();
+</script>
+<script>
+/* projects: one at a time, with arrows, dots, the arrow keys and a swipe */
+(function(){
+  const c = document.querySelector(".proj-carousel"); if (!c) return;
+  const slides = [...c.querySelectorAll(".proj-slide")], dots = c.querySelector(".proj-dots"); let cur = 0;
+  slides.forEach((sl, i) => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("role", "tab");
+    b.setAttribute("aria-label", sl.querySelector("h4 a").textContent); b.onclick = () => go(i); dots.appendChild(b); });
+  function go(i){ cur = (i + slides.length) % slides.length;
+    slides.forEach((sl, k) => { sl.hidden = k !== cur; sl.classList.toggle("is-current", k === cur); });
+    [...dots.children].forEach((d, k) => d.setAttribute("aria-selected", k === cur)); }
+  c.querySelector(".prev").onclick = () => go(cur - 1); c.querySelector(".next").onclick = () => go(cur + 1);
+  c.addEventListener("keydown", e => { if (e.target.closest("a")) return; if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); } if (e.key === "ArrowRight") { e.preventDefault(); go(cur + 1); } });
+  let x0 = null; c.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, {passive: true});
+  c.addEventListener("touchend", e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 45) go(cur + (dx < 0 ? 1 : -1)); x0 = null; });
+  go(0);
 })();
 </script>
 <script src="/assets/js/translate.js" defer></script>
