@@ -1568,3 +1568,4 @@ details.fold > section:first-of-type { padding-top: 10px; }
 @keyframes projIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .proj-slide { animation: none; } }
 @media (max-width: 860px) { .proj-slide { grid-template-columns: 1fr; } .proj-carousel { padding: 0 0 40px; } .proj-nav { top: auto; bottom: -8px; transform: none; } .proj-nav.prev { left: calc(50% - 110px); } .proj-nav.next { right: calc(50% - 110px); } .proj-dots { bottom: 8px; } }
+.proj-shot.dark { object-fit: contain; background: #0b0f13; }
