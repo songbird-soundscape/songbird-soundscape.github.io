@@ -1518,3 +1518,27 @@ section:not(.hero),
 .footer {
   background-color: color-mix(in srgb, var(--background-color) 85%, transparent);
 }
+
+/* Collapsible groups: Projects, Research, CV, Contact */
+details.fold { border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 82%); }
+details.fold:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 82%); }
+.fold-head { list-style: none; cursor: pointer; padding: 26px 0 24px; background: color-mix(in srgb, #fbfaf6 90%, transparent); }
+.fold-head::-webkit-details-marker { display: none; }
+.fold-head .container { display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: baseline; position: relative; padding-right: 48px; }
+.fold-title { font-family: var(--heading-font); font-size: 32px; font-weight: 700; color: var(--heading-color); }
+.fold-sub { color: color-mix(in srgb, var(--default-color), transparent 30%); font-size: 15px; }
+.fold-head .container::after { content: ""; position: absolute; right: 16px; top: 50%; width: 12px; height: 12px; margin-top: -9px;
+  border-right: 2.5px solid var(--accent-color); border-bottom: 2.5px solid var(--accent-color); transform: rotate(45deg); transition: transform .2s; }
+details.fold[open] > .fold-head .container::after { transform: rotate(-135deg); margin-top: -3px; }
+.fold-head:hover .fold-title { color: var(--accent-color); }
+.fold-head:focus-visible { outline: 3px solid var(--accent-color); outline-offset: -3px; }
+@media (max-width: 640px) { .fold-head .container { grid-template-columns: 1fr; } .fold-title { font-size: 26px; } }
+@media (prefers-reduced-motion: reduce) { .fold-head .container::after { transition: none; } }
+/* the group heading names the first section, so its own title is not repeated */
+details.fold > section:first-of-type > .section-title h2 { display: none; }
+details.fold > section:first-of-type > .section-title { padding-bottom: 20px; }
+details.fold > section:first-of-type { padding-top: 10px; }
+/* featured lab item */
+.feature-item { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; align-items: center; position: relative; }
+.feature-item .feature-img img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 30% 40%; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--default-color), transparent 85%); display: block; }
+@media (max-width: 760px) { .feature-item { grid-template-columns: 1fr; } }
