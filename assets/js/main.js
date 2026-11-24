@@ -108,7 +108,7 @@
   /**
    * Initiate Pure Counter
    */
-  new PureCounter();
+  if (window.PureCounter) new PureCounter();
 
   /**
    * Animate the skills items on reveal
