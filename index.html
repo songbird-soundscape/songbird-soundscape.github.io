@@ -161,13 +161,13 @@
             </div>
           </article>
           <article class="proj-slide" id="proj-ordination" role="group" aria-roledescription="slide" aria-label="4 of 4" hidden>
-            <a class="proj-art" href="/ordination-field-course/" tabindex="-1" aria-hidden="true"><img class="proj-shot" src="assets/img/ordination-course.jpg" alt="One environmental gradient seen through PCA, correspondence analysis, PCoA and NMDS: the horseshoe, the arch and the recovered order"></a>
+            <a class="proj-art" href="/pocket-guide-quantitative-ecology/" tabindex="-1" aria-hidden="true"><img class="proj-shot" src="assets/img/ordination-course.jpg" alt="One environmental gradient seen through PCA, correspondence analysis, PCoA and NMDS: the horseshoe, the arch and the recovered order"></a>
             <div class="proj-text service-item">
               <div class="d-flex align-items-start">
                 <div class="icon flex-shrink-0"><i class="bi bi-bezier2"></i></div>
                 <div>
-                  <h4 class="title"><a href="/ordination-field-course/">Ordination Field Course</a></h4>
-                  <p class="description">A slow, hands-on course from a table of counts to an NMDS plot and the tests read from it: shapes of curves, Hill numbers, rarefaction, plots and transects, distance measures, PCA, PCoA, NMDS, PERMANOVA and more. Every equation can be taken apart term by term, and every figure responds as you turn its knobs.</p>
+                  <h4 class="title"><a href="/pocket-guide-quantitative-ecology/">A Pocket Guide to Quantitative Ecology</a></h4>
+                  <p class="description">A slow, hands-on guide from the shapes of curves to ordination and the tests read from it: curve families, Hill numbers, rarefaction, plots and transects, distance measures, PCA, PCoA, NMDS, PERMANOVA, regression and chaos. Every equation can be taken apart term by term, every figure responds as you turn its knobs, and classic studies load straight into the figures.</p>
                 </div>
               </div>
             </div>
@@ -479,7 +479,7 @@
 document.addEventListener("click", e => {
   const a = e.target.closest && e.target.closest("a[href]"); if (!a || a.target || a.hasAttribute("download")) return;
   let u; try { u = new URL(a.href, location.href); } catch (x) { return; } if (!/^https?:$/.test(u.protocol)) return;
-  const S = ["spores", "community-paleoecology", "drifting-through-deep-time", "open-commons", "ordination-field-course"], key = v => { const s = v.pathname.split("/")[1]; return v.origin + "|" + (S.includes(s) ? s : ""); };
+  const S = ["spores", "community-paleoecology", "drifting-through-deep-time", "open-commons", "ordination-field-course", "pocket-guide-quantitative-ecology"], key = v => { const s = v.pathname.split("/")[1]; return v.origin + "|" + (S.includes(s) ? s : ""); };
   if (key(u) !== key(location)) { a.target = "_blank"; a.rel = (a.rel + " noopener").trim(); }
 }, true);
 </script>
