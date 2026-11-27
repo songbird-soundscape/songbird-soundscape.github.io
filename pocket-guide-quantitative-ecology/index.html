@@ -122,6 +122,7 @@ dl.parts dd{margin:0;font-size:15px}
 .koanpop{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 50px);z-index:50;width:min(340px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.22)}
 .koanpop .kq{font-size:17px;line-height:1.45;margin:0 0 6px;font-style:italic}.koanpop .kmeta{font-size:12px;color:var(--mute);margin:0 0 8px}.koanpop .krow{display:flex;gap:6px;justify-content:flex-end}
 @media print{.koanbtn,.koanpop{display:none}}
+ul.tour li{margin:6px 0}
 </style></head><body>
 <header class="top">
 <h1>A Pocket Guide to Quantitative Ecology</h1>
@@ -161,6 +162,7 @@ dl.parts dd{margin:0;font-size:15px}
 <div class="shell">
 <nav class="toc" id="toc">
 <span>Start here</span>
+<a href="#c-tour">A quick tour</a>
 <a href="#c-curves">Shapes of curves</a>
 <span class="arc">One survey: a snapshot</span>
 <span>Part one: the table</span>
@@ -192,6 +194,18 @@ dl.parts dd{margin:0;font-size:15px}
 </nav>
 <main>
 
+<section class="ch" id="c-tour"><h2>A quick tour</h2>
+<p>This guide is meant to be read slowly, with your hands on the controls. A few things work the same way in every chapter:</p>
+<ul class="tour">
+<li><strong>Turn the knobs.</strong> Every chapter has a working figure. Move a slider and everything downstream (the curve, the table, the arithmetic underneath) is recomputed in front of you.</li>
+<li><strong>Tap an equation to take it apart.</strong> Any equation marked "tap to dissect" opens an exploded view: each term in its own colour, what it means, how to read the whole thing aloud, a familiar relative, and a worked example with numbers.</li>
+<li><strong>Load a study.</strong> Case-study cards set a figure to match a published paper. Change the settings from there to ask how much the paper's conclusion depends on them. Each card says whether its values were reported in the paper, computed here from the paper's data, or only illustrate the shape.</li>
+<li><strong>See it in action.</strong> The ordination chapters show the same four published datasets under each method, so you can compare one dataset's PCA, PCoA, correspondence analysis and NMDS.</li>
+<li><strong>Follow the references.</strong> Every paper mentioned links to a free full text where one exists, otherwise to a Google Scholar search.</li>
+<li><strong>Ask for a koan.</strong> The "Tell me a koan" button in the corner follows you down the page. Tap it for a short riddle about whatever chapter you are reading; tap "Another" for the next one. Koans don't come with answers: they are there to make you stop and think about what the chapter just showed.</li>
+</ul>
+<p>The guide runs in two arcs: first a single survey (one table of counts and everything read from it), then surveys repeated through time. The contents on the left follow that order.</p>
+</section>
 <section class="ch" id="c-curves"><h2>Before we start: shapes of curves and their families</h2><div class="two"><div>
 <p>Almost every figure in this guide is a curve, and most of them belong to a handful of <strong>families</strong>. A family is one formula with knobs (parameters) you can turn. Turning a knob stretches, shifts or bends the curve, but it stays recognizably the same shape. Learn to recognize the family and you know a lot before reading a single number.</p>
 <p>Three questions place almost any curve in its family:</p>
@@ -1357,14 +1371,15 @@ const KOANS={
 'c-glm':['A species is missing from a plot: gone, never arrived, or not counted?','The model is 90% sure, and wrong. Was it a bad model, or an honest one?','To halve the counting error you must count four times as many. What is precision worth?'],
 'c-chaos':['The rule never changes and the future never repeats. Which one is the cause?','Measure a hundred times more precisely and see a few steps further. How far is worth seeing?','One slice of mud holds five generations. Which one is speaking?','A population that flickers before it switches: warning, or coincidence?'],
 'c-family':['Every index is a question someone once asked. Which question are you asking?','The same formula appears in genetics, ecology and polling. Is it about the world, or about counting?'],
+'c-tour':['A map is not the land. Why read the map slowly?','Every knob here was turned by someone before you. What did they hope to see?'],
 'c-cheat':['A number on one page, a forest on another. Which one should you trust when they disagree?']};
 const KDEF=['Every figure here is a model of a model. Where does the forest begin?'];
 (()=>{const b=document.createElement('button');b.type='button';b.className='koanbtn';b.textContent='Tell me a koan';
   const pop=document.createElement('div');pop.className='koanpop';pop.hidden=true;pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Koan');
   document.body.append(pop,b);const idx={};
   const cur=()=>{let id=null;document.querySelectorAll('section.ch').forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.45)id=s.id});return id};
-  const show=()=>{const id=cur(),L=KOANS[id]||KDEF,i=idx[id]=((idx[id]??-1)+1)%L.length,h=id?document.querySelector('#'+id+' h2'):null;
-    pop.innerHTML=`<p class="kq">${L[i]}</p><p class="kmeta">${h?esc(h.textContent):''}${L.length>1?` · ${i+1} of ${L.length}`:''}</p><div class="krow">${L.length>1?'<button type="button" class="btn g" data-k="next">Another</button>':''}<button type="button" class="btn g" data-k="close" aria-label="Close">Close</button></div>`;pop.hidden=false};
+  const show=()=>{const id=cur(),L=KOANS[id]||KDEF,i=idx[id]=((idx[id]??-1)+1)%L.length;
+    pop.innerHTML=`<p class="kq">${L[i]}</p><div class="krow">${L.length>1?'<button type="button" class="btn g" data-k="next">Another</button>':''}<button type="button" class="btn g" data-k="close" aria-label="Close">Close</button></div>`;pop.hidden=false};
   b.addEventListener('click',()=>{if(!pop.hidden){pop.hidden=true;return}show()});
   pop.addEventListener('click',e=>{const k=e.target.dataset.k;if(k==='next')show();if(k==='close')pop.hidden=true});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')pop.hidden=true})})();
