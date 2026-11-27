@@ -96,13 +96,14 @@ dl.parts div{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;ali
 dl.parts dt{font-weight:700;font-family:Archivo,sans-serif}
 dl.parts dd{margin:0;font-size:15px}
 .num{background:var(--bg);border-radius:6px;padding:8px 10px}
-.fam{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.fam{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.feq{transition:background .4s;border-radius:6px;min-height:3.2em}.feq.live{background:color-mix(in srgb,var(--gold) 10%,transparent)}
 .fam button{display:grid;justify-items:center;gap:2px;padding:6px 4px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:600 12.5px Inter,sans-serif;cursor:pointer;min-height:64px}
 .fam button svg{width:100%;max-width:64px;height:30px;color:var(--moss)}
 .fam button[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .famtext p{font-size:15px;margin:8px 0 0}
 .row label{display:flex;gap:6px;align-items:center;min-height:36px;font-size:15px}
-@media(max-width:480px){dl.parts div{grid-template-columns:minmax(0,1fr);gap:0}.fam{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){dl.parts div{grid-template-columns:minmax(0,1fr);gap:0}}
 </style></head><body>
 <header class="top">
 <h1>Ordination field course: diversity, distance and the plots they make</h1>
@@ -171,12 +172,14 @@ dl.parts dd{margin:0;font-size:15px}
 <p>Almost every figure in this course is a curve, and most of them belong to a handful of <strong>families</strong>. A family is one formula with knobs (parameters) you can turn. Turning a knob stretches, shifts or bends the curve, but it stays recognizably the same shape. Learn to recognize the family and you know a lot before reading a single number.</p>
 <p>Three questions place almost any curve in its family:</p>
 <ul><li><strong>Does it keep going, level off, or turn back?</strong> Straight lines and exponentials keep going. Saturating and S-shaped curves level off (they have an <em>asymptote</em>, a ceiling they approach but never pass). Bell curves rise and fall again (they are <em>unimodal</em>, with one peak).</li><li><strong>Does it bend up or down?</strong> Bending upward means it speeds up (convex); bending downward means it slows down (concave).</li><li><strong>What does it look like on log axes?</strong> A log scale turns "multiplying" into "adding". An exponential becomes a straight line on a log <em>y</em> axis, and a power law becomes straight when <em>both</em> axes are logged. This is the quickest test there is.</li></ul>
-<p>Pick a family below, turn its knobs, and try the log switches. Each card says where that shape turns up later in the course.</p>
+<p>Pick a family below and turn its knobs. The axes stay fixed and a dashed copy of the starting curve stays behind, so you can see exactly what each knob does. While you drag, the equation fills in with your numbers. Then try the log switches, and try "auto-fit axes" to see how software can hide a change. Each card says where that shape turns up later in the course.</p>
 </div><div class="tray st"><div class="fam" id="famgrid"></div>
-<h4 id="famtitle"></h4><div class="eq" id="fameq"></div>
+<h4 id="famtitle"></h4><div class="eq feq" id="fameq" aria-live="polite"></div><p class="notice" id="fameqnote" style="margin:-6px 0 6px"></p>
 <div class="ctl" id="famctl"></div>
-<div class="row"><label><input type="checkbox" id="logx"> log x axis</label><label><input type="checkbox" id="logy"> log y axis</label></div>
+<div class="row"><label><input type="checkbox" id="logx"> log x axis</label><label><input type="checkbox" id="logy"> log y axis</label><label><input type="checkbox" id="autofit"> auto-fit axes</label><button type="button" class="btn g" id="famreset">Reset knobs</button></div>
 <div class="fig" id="famfig"></div>
+<p class="notice" id="autonote" hidden><b>Auto-fit is on.</b> The axes now stretch to fit whatever curve you draw, so a steeper line or a taller bell can look exactly the same, with only the axis numbers changing. Most plotting software does this by default, which is why you should always read the axis numbers before comparing two published figures.</p>
+<div class="tiles" id="fammom" hidden></div>
 <div id="famtext" class="famtext"></div></div></div></section>
 
 <section class="ch" id="c-table"><h2>The community table</h2><div class="two"><div>
@@ -602,8 +605,10 @@ function lines(el,S,o={}){
   const yt=o.yt||[y0,(y0+y1)/2,y1];yt.forEach(t=>h+=`<line x1="${ml}" x2="${W-mr}" y1="${py(t)}" y2="${py(t)}" stroke="var(--line)"/><text x="${ml-5}" y="${py(t)+4}" text-anchor="end">${o.yf?o.yf(t):fx(t,y1<2?2:0)}</text>`);
   (o.xt||[x0,(x0+x1)/2,x1]).forEach((t,k,arr)=>h+=`<text x="${px(t)}" y="${H-7}" text-anchor="${k===0?'start':k===arr.length-1?'end':'middle'}">${o.xf?o.xf(t):fx(t,x1<5?1:0)}</text>`);
   (o.vline||[]).forEach(v=>h+=`<line x1="${px(v[0])}" x2="${px(v[0])}" y1="${mt}" y2="${H-mb}" stroke="${v[1]||'var(--ink)'}" stroke-width="1.5" stroke-dasharray="4 3"/>`);
+  if(o.clip)h+=`<defs><clipPath id="c_${el.id}"><rect x="${ml}" y="${mt}" width="${W-ml-mr}" height="${H-mt-mb}"/></clipPath></defs><g clip-path="url(#c_${el.id})">`;
   S.forEach(s=>{if(s.dots)h+=s.x.map((x,i)=>isFinite(s.y[i])?`<circle cx="${px(x).toFixed(1)}" cy="${py(s.y[i]).toFixed(1)}" r="${s.r||2}" fill="${s.col}" fill-opacity="${s.op??.5}"/>`:'').join('');
     else h+=`<path d="${s.x.map((x,i)=>(i?'L':'M')+px(x).toFixed(1)+','+py(s.y[i]).toFixed(1)).join('')}" fill="none" stroke="${s.col}" stroke-width="${s.w||2.5}" stroke-dasharray="${s.dash||''}"/>`});
+  if(o.clip)h+='</g>';
   (o.marks||[]).forEach(mk=>h+=`<circle cx="${px(mk[0])}" cy="${py(mk[1])}" r="5" fill="${mk[2]}" stroke="var(--panel)" stroke-width="1.5"/>`);
   if(o.xl)h+=`<text x="${W-mr}" y="${H-mb-6}" text-anchor="end">${o.xl}</text>`;if(o.yl)h+=`<text x="${ml+4}" y="${mt+12}">${o.yl}</text>`;
   el.innerHTML=`<svg role="img" aria-label="${esc(o.label||'line chart')}">${h}</svg>`}
@@ -811,34 +816,77 @@ eNz=bindSl('e_noise',v=>v.toFixed(2),deb(drawEnv));$('#e_var').addEventListener(
 
 
 /* ---------- curve families ---------- */
+const erf=x=>{const t=1/(1+.3275911*Math.abs(x)),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y};
+const Phi=z=>.5*(1+erf(z/Math.SQRT2));
+const tn=v=>{const s=Math.abs(v)>=10?v.toFixed(1):Math.abs(v)>=1?v.toFixed(2):v.toFixed(2);return s.replace(/\.?0+$/,'')||'0'};
+const hot=(k,K,v)=>k===K?`\\color{#c08f00}{${v}}`:v;
+const pm=(k,K,v,lead)=>(v<0?'-':lead?'':'+')+hot(k,K,tn(Math.abs(v)));
 const FAM=[
- {id:'lin',name:'Straight line',eq:'y=a+b\\,x',ps:[['a','intercept a',-2,4,.1,1],['b','slope b',-2,2,.1,.8]],f:(x,p)=>p.a+p.b*x,shape:'Keeps going at a constant rate. Each step in x adds the same amount to y.',straight:'Already straight on ordinary axes.',where:'Regression lines; the fitted plane behind the envfit arrow; the ideal Shepard plot, where plot distance is proportional to data distance.'},
- {id:'exp',name:'Exponential',eq:'y=a\\,e^{b x}',ps:[['a','starting value a',.2,3,.1,1],['b','rate b (negative = decay)',-1.5,1,.05,-.6]],f:(x,p)=>p.a*Math.exp(p.b*x),shape:'Changes by the same <em>factor</em> each step, like a doubling time or a half-life. Decay approaches zero but never reaches it.',straight:'Straight on a log y axis.',where:'The rank–abundance curves in the Hill and rarefaction chapters (a geometric series: each taxon a fixed fraction of the one before); the chance of a rare count in a Poisson distribution.'},
- {id:'log',name:'Logarithmic',eq:'y=a+b\\ln x',ps:[['a','a',-1,3,.1,0],['b','b',.1,3,.1,1]],f:(x,p)=>x>0?p.a+p.b*Math.log(x):NaN,shape:'Rises quickly, then ever more slowly, but never stops: no ceiling. Each doubling of x adds the same amount to y.',straight:'Straight on a log x axis.',where:'Shannon\'s −ln p, the "surprise"; species–area curves in some fits; diversity creeping up with sampling effort.'},
- {id:'pow',name:'Power law',eq:'y=a\\,x^{b}',ps:[['a','a',.2,3,.1,1],['b','exponent b',-1.5,2,.05,.5]],f:(x,p)=>x>0?p.a*Math.pow(x,p.b):NaN,shape:'The same shape at every scale. An exponent b below 1 bends down, above 1 bends up, and b = 1 is a straight line.',straight:'Straight when both axes are logged; the slope is then b.',where:'The species–area relationship S = cA<sup>z</sup> (Arrhenius), with z often between 0.15 and 0.35; the p<sup>q</sup> inside every Hill number.'},
- {id:'mm',name:'Saturating',eq:'y=\\frac{a\\,x}{b+x}',ps:[['a','ceiling a',.5,5,.1,3],['b','half-way point b',.1,5,.1,1.5]],f:(x,p)=>p.a*x/(p.b+x),shape:'Rises fast, then levels off toward a ceiling (asymptote) a, and is halfway there when x = b. Also called the Michaelis–Menten or Monod curve.',straight:'Not straight on any log scale; the plateau is its signature.',where:'Rarefaction and species-accumulation curves; Bray–Curtis distance saturating at 1 along a long gradient; light response of photosynthesis.'},
- {id:'logi',name:'S-curve (logistic)',eq:'y=\\frac{a}{1+e^{-b\\,(x-c)}}',ps:[['a','ceiling a',.5,5,.1,3],['b','steepness b',.2,6,.1,2],['c','midpoint c',0,5,.1,2.5]],f:(x,p)=>p.a/(1+Math.exp(-p.b*(x-p.c))),shape:'Slow start, rapid middle, slow finish, with a floor and a ceiling. Steepness sets how sudden the switch is.',straight:'Straight after the logit transform ln(y/(a − y)).',where:'Population growth toward carrying capacity; a species\' chance of presence across an environmental threshold; one swamp community giving way to the next.'},
- {id:'gau',name:'Bell (Gaussian)',eq:'y=a\\,e^{-\\frac{(x-c)^2}{2b^2}}',ps:[['a','height a',.5,4,.1,3],['b','width b (niche breadth)',.1,2,.05,.6],['c','optimum c',0,5,.1,2.5]],f:(x,p)=>p.a*Math.exp(-((x-p.c)**2)/(2*p.b*p.b)),shape:'Rises to a single peak and falls back symmetrically (unimodal). Height, position and width are separate knobs.',straight:'Becomes an upside-down U (a parabola) on a log y axis.',where:'Each species\' response along a gradient (the coenocline behind "One gradient, four lenses"); the normal distribution; correspondence analysis assumes this shape.'},
- {id:'step',name:'Monotone step',eq:'y\\ \\text{never decreases as}\\ x\\ \\text{grows}',ps:[['a','number of points a',3,30,1,12],['b','noise b',0,2,.05,.8]],f:null,shape:'Only goes up or stays flat, in steps of any size. There is no formula, only a rule about order.',straight:'Log axes stretch it but never change it: only the order counts.',where:'The NMDS Shepard fit (isotonic regression); cumulative curves; anything built from ranks.'}];
-let famI=6,famP={};
-const famPts=(F,p,lx)=>{if(F.f){const xs=[...Array(121)].map((_,i)=>lx?Math.exp(Math.log(.05)+i/120*Math.log(100)):.05+i/120*4.95);return xs.map(x=>[x,F.f(x,p)])}
-  const r=rng(77),n=p.a,xs=[...Array(n)].map((_,i)=>.2+i*(4.8/(n-1||1))),ys=xs.map(x=>x+p.b*gauss(r)),fit=pava(ys);return xs.map((x,i)=>[x,fit[i],ys[i]])};
+ {id:'lin',name:'Straight line',eq:'y=a+b\\,x',view:[0,5,-6,12],ps:[['a','intercept a',-4,6,.1,1],['b','slope b',-2,2.5,.1,.8]],f:(x,p)=>p.a+p.b*x,
+  live:(p,K)=>`y=${hot('a',K,tn(p.a))}${pm('b',K,p.b)}\\,x`,
+  shape:'Keeps going at a constant rate: every step of 1 in x adds b to y. The intercept a slides the whole line up or down without changing its tilt; the slope b tilts it about the point where x = 0.',straight:'Already straight on ordinary axes.',where:'Regression lines; the fitted plane behind the envfit arrow; the ideal Shepard plot, where plot distance is proportional to data distance.'},
+ {id:'exp',name:'Exponential',eq:'y=a\\,e^{b x}',view:[0,5,0,12],ps:[['a','starting value a',.2,4,.1,1],['b','rate b (negative = decay)',-1.5,.6,.05,-.6]],f:(x,p)=>p.a*Math.exp(p.b*x),
+  live:(p,K)=>`y=${hot('a',K,tn(p.a))}\\,e^{${hot('b',K,tn(p.b))}\\,x}`,
+  shape:'Changes by the same <em>factor</em> each step, like a doubling time or a half-life. Decay approaches zero but never reaches it. a sets where it starts at x = 0; b sets how fast it climbs or falls.',straight:'Straight on a log y axis, with slope b.',where:'The rank–abundance curves in the Hill and rarefaction chapters (a geometric series: each taxon a fixed fraction of the one before); the chance of a rare count in a Poisson distribution.'},
+ {id:'log',name:'Logarithmic',eq:'y=a+b\\ln x',view:[0,5,-6,6],ps:[['a','a',-2,3,.1,0],['b','b',-2,3,.1,1]],f:(x,p)=>x>0?p.a+p.b*Math.log(x):NaN,
+  live:(p,K)=>`y=${hot('a',K,tn(p.a))}${pm('b',K,p.b)}\\ln x`,
+  shape:'Rises quickly, then ever more slowly, but never stops: no ceiling. Each doubling of x adds the same amount (b × 0.69) to y. a is the value at x = 1.',straight:'Straight on a log x axis, with slope b.',where:'Shannon\'s −ln p, the "surprise"; species–area curves in some fits; diversity creeping up with sampling effort.'},
+ {id:'pow',name:'Power law',eq:'y=a\\,x^{b}',view:[0,5,0,10],ps:[['a','a',.2,3,.1,1],['b','exponent b',-1.5,2,.05,.5]],f:(x,p)=>x>0?p.a*Math.pow(x,p.b):NaN,
+  live:(p,K)=>`y=${hot('a',K,tn(p.a))}\\,x^{${hot('b',K,tn(p.b))}}`,
+  shape:'The same shape at every scale. An exponent b below 1 bends down, above 1 bends up, b = 1 is a straight line through the origin, and a negative b falls away. a is the value at x = 1.',straight:'Straight when both axes are logged; the slope is then b.',where:'The species–area relationship S = cA<sup>z</sup> (Arrhenius), with z often between 0.15 and 0.35; the p<sup>q</sup> inside every Hill number.'},
+ {id:'mm',name:'Saturating',eq:'y=\\frac{a\\,x}{b+x}',view:[0,5,0,5.5],ps:[['a','ceiling a',.5,5,.1,3],['b','half-way point b',.1,5,.1,1.5]],f:(x,p)=>p.a*x/(p.b+x),
+  live:(p,K)=>`y=\\frac{${hot('a',K,tn(p.a))}\\,x}{${hot('b',K,tn(p.b))}+x}`,
+  shape:'Rises fast, then levels off toward a ceiling (asymptote) a, and is halfway there when x = b. Also called the Michaelis–Menten or Monod curve.',straight:'Not straight on any log scale; the plateau is its signature.',where:'Rarefaction and species-accumulation curves; Bray–Curtis distance saturating at 1 along a long gradient; light response of photosynthesis.'},
+ {id:'logi',name:'S-curve (logistic)',eq:'y=\\frac{a}{1+e^{-b\\,(x-c)}}',view:[0,5,0,5.5],ps:[['a','ceiling a',.5,5,.1,3],['b','steepness b',.2,6,.1,2],['c','midpoint c',0,5,.1,2.5]],f:(x,p)=>p.a/(1+Math.exp(-p.b*(x-p.c))),
+  live:(p,K)=>`y=\\frac{${hot('a',K,tn(p.a))}}{1+e^{-${hot('b',K,tn(p.b))}\\,(x-${hot('c',K,tn(p.c))})}}`,
+  shape:'Slow start, rapid middle, slow finish, with a floor and a ceiling. a sets the ceiling, c the midpoint where it is half-way up, and b how sudden the switch is.',straight:'Straight after the logit transform ln(y/(a − y)).',where:'Population growth toward carrying capacity; a species\' chance of presence across an environmental threshold; one swamp community giving way to the next.'},
+ {id:'gau',name:'Bell (Gaussian)',eq:'y=a\\,e^{-\\frac{(x-c)^2}{2b^2}}',view:[0,5,0,4.5],ps:[['a','height a',.5,4,.1,3],['b','width b (niche breadth)',.1,2,.05,.6],['c','optimum c',0,5,.1,2.5]],f:(x,p)=>p.a*Math.exp(-((x-p.c)**2)/(2*p.b*p.b)),
+  live:(p,K)=>`y=${hot('a',K,tn(p.a))}\\,e^{-\\frac{(x-${hot('c',K,tn(p.c))})^2}{2\\cdot ${hot('b',K,tn(p.b))}^2}}`,
+  shape:'Rises to a single peak and falls back symmetrically (unimodal). Height a, position c and width b are separate knobs: changing the height stretches the curve upward without moving its peak or changing its width. A Gaussian is symmetric by definition, so it has no skew; for lopsided or sharper bells, see the next card.',straight:'Becomes an upside-down U (a parabola) on a log y axis.',where:'Each species\' response along a gradient (the coenocline behind "One gradient, four lenses"); the normal distribution; correspondence analysis assumes this shape.'},
+ {id:'skew',name:'Skewed or peaked bell',eq:'\\begin{gathered}y=a\\,e^{-\\lvert z\\rvert^{k}},\\quad z=\\frac{x-c}{b_L}\\ (x<c),\\ \\ \\frac{x-c}{b_R}\\ (x\\ge c)\\\\[4pt] b_L=b\\,e^{-0.35\\,s},\\quad b_R=b\\,e^{0.35\\,s}\\end{gathered}',view:[0,5,0,3.6],ps:[['s','skew s',-4,4,.1,1.5],['k','peakedness k (2 = Gaussian)',.8,8,.1,2],['b','width b',.2,1.5,.05,.6],['c','peak position c',.5,4.5,.1,2]],
+  f:(x,p)=>{const bl=p.b*Math.exp(-.35*p.s),br=p.b*Math.exp(.35*p.s),z=(x-p.c)/(x<p.c?bl:br);return 3*Math.exp(-Math.pow(Math.abs(z),p.k))},
+  live:(p,K)=>{const bl=p.b*Math.exp(-.35*p.s),br=p.b*Math.exp(.35*p.s);return `\\begin{gathered}y=3\\,e^{-\\lvert z\\rvert^{${hot('k',K,tn(p.k))}}},\\quad z=\\frac{x-${hot('c',K,tn(p.c))}}{${tn(bl)}}\\ (x<${tn(p.c)}),\\ \\ \\frac{x-${tn(p.c)}}{${tn(br)}}\\ (x\\ge ${tn(p.c)})\\\\[4pt] b_L=${hot('b',K,tn(p.b))}\\,e^{-0.35\\cdot ${hot('s',K,tn(p.s))}}=${tn(bl)},\\quad b_R=${tn(br)}\\end{gathered}`},
+  shape:'A bell built from two halves with different widths, plus a knob for the shape of its top. <b>Skew</b> s makes one half wider than the other: positive s gives a longer tail to the right, negative to the left, and 0 is symmetric. The peak (mode) stays where you put it, but the mean slides toward the long tail. <b>Peakedness</b> k changes the top and the tails: k = 2 is the Gaussian, below 2 a sharp spike with heavy tails (leptokurtic), above 2 a flat top with short tails (platykurtic).',straight:'No log scale straightens it. Read it by its moments instead (the tiles below).',where:'Real species responses are often skewed: a species may drop off sharply toward one end of a gradient and tail off slowly toward the other (Austin and others). Grain-size and pollen-size distributions are often skewed too.'},
+ {id:'step',name:'Monotone step',eq:'y\\ \\text{never decreases as}\\ x\\ \\text{grows}',view:[0,5,-2,8],ps:[['a','number of points a',3,30,1,12],['b','noise b',0,2,.05,.8]],f:null,live:null,
+  shape:'Only goes up or stays flat, in steps of any size. There is no formula, only a rule about order: the blue dots are noisy data, the line is the closest curve that never goes down.',straight:'Log axes stretch it but never change it: only the order counts.',where:'The NMDS Shepard fit (isotonic regression); cumulative curves; anything built from ranks.'}];
+let famI=6,famP={},famDef={},famK=null,famT=null;
+const famXs=(lx,x0,x1)=>[...Array(161)].map((_,i)=>lx?Math.exp(Math.log(Math.max(x0,.05))+i/160*(Math.log(x1)-Math.log(Math.max(x0,.05)))):x0+i/160*(x1-x0));
+const famPts=(F,p,lx)=>{const[x0,x1]=F.view;if(F.f)return famXs(lx,x0||.02,x1).map(x=>[x,F.f(x,p)]);
+  const r=rng(77),n=p.a,xs=[...Array(n)].map((_,i)=>.2+i*(4.6/(n-1||1))),ys=xs.map(x=>x+p.b*gauss(r)),fit=pava(ys);return xs.map((x,i)=>[x,fit[i],ys[i]])};
 $('#famgrid').innerHTML=FAM.map((F,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><svg viewBox="0 0 60 34" aria-hidden="true"><path d="${(()=>{const p={};F.ps.forEach(q=>p[q[0]]=q[5]);const P=famPts(F,p,false).filter(q=>isFinite(q[1]));const ys=P.map(q=>q[1]),y0=Math.min(...ys),y1=Math.max(...ys);return P.map((q,k)=>(k?'L':'M')+(3+q[0]/5*54).toFixed(1)+','+(31-(q[1]-y0)/((y1-y0)||1)*28).toFixed(1)).join('')})()}" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>${F.name}</span></button>`).join('');
-function famPick(i){famI=i;const F=FAM[i];famP={};F.ps.forEach(q=>famP[q[0]]=q[5]);
-  [...$('#famgrid').children].forEach((b,k)=>b.setAttribute('aria-pressed',k===i));$('#famtitle').textContent=F.name;
-  $('#fameq').innerHTML='\\['+F.eq+'\\]';if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([$('#fameq')]).catch(()=>{});
+function texInto(el,tex){if(window.MathJax&&MathJax.tex2svg){try{const n=MathJax.tex2svg(tex,{display:true});el.replaceChildren(n);return}catch(e){}}el.textContent=tex}
+function famEq(live){const F=FAM[famI],el=$('#fameq');el.classList.toggle('live',!!live);texInto(el,live&&F.live?F.live(famP,famK):F.eq);
+  $('#fameqnote').textContent=live&&F.live?'Live: the gold number is the knob you are turning.':'General form. Turn a knob to see it filled in with numbers.'}
+function famPick(i){famI=i;const F=FAM[i];famP={};F.ps.forEach(q=>famP[q[0]]=q[5]);famDef={...famP};famK=null;
+  [...$('#famgrid').children].forEach((b,k)=>b.setAttribute('aria-pressed',k===i));$('#famtitle').textContent=F.name;famEq(false);
   $('#famctl').innerHTML=F.ps.map(([k,l,mi,ma,st,v])=>`<div class="sl"><label for="fp_${k}">${l}</label><output id="o_fp_${k}">${v}</output><input type="range" id="fp_${k}" min="${mi}" max="${ma}" step="${st}" value="${v}"></div>`).join('');
   $('#famtext').innerHTML=`<p><b>Shape.</b> ${F.shape}</p><p><b>Log-axis test.</b> ${F.straight}</p><p><b>Where it appears in this course.</b> ${F.where}</p>`;drawFam()}
-function drawFam(){const F=FAM[famI],lx=$('#logx').checked,ly=$('#logy').checked,P=famPts(F,famP,lx);
-  const tx=v=>lx?Math.log(v):v,ty=v=>ly?(v>0?Math.log(v):NaN):v,ok=P.filter(q=>isFinite(tx(q[0]))&&isFinite(ty(q[1])));
-  const S=[{x:ok.map(q=>tx(q[0])),y:ok.map(q=>ty(q[1])),col:'var(--moss)',w:3}];
+function famMoments(P){const xs=P.map(q=>q[0]),w=P.map(q=>Math.max(0,q[1])),s=w.reduce((a,b)=>a+b,0)||1,m=xs.reduce((a,x,i)=>a+x*w[i],0)/s;
+  const c=k=>xs.reduce((a,x,i)=>a+((x-m)**k)*w[i],0)/s,sd=Math.sqrt(c(2));return{m,sd,sk:c(3)/sd**3,ku:c(4)/sd**4-3,mode:xs[w.indexOf(Math.max(...w))]}}
+function drawFam(){const F=FAM[famI],lx=$('#logx').checked,ly=$('#logy').checked,auto=$('#autofit').checked,P=famPts(F,famP,lx),G=F.f?famPts(F,famDef,lx):null;
+  const tx=v=>lx?Math.log(v):v,ty=v=>ly?(v>0?Math.log(v):NaN):v,clean=A=>A.filter(q=>isFinite(tx(q[0]))&&isFinite(ty(q[1])));
+  const ok=clean(P),S=[];
+  if(G&&!auto){const g=clean(G);S.push({x:g.map(q=>tx(q[0])),y:g.map(q=>ty(q[1])),col:'var(--mute)',w:1.5,dash:'5 4'})}
+  S.push({x:ok.map(q=>tx(q[0])),y:ok.map(q=>ty(q[1])),col:'var(--moss)',w:3});
   if(!F.f){const raw=P.filter(q=>isFinite(ty(q[2])));S.unshift({x:raw.map(q=>tx(q[0])),y:raw.map(q=>ty(q[2])),col:'var(--blue)',dots:true,r:3.5,op:.8})}
-  const back=(lg,t)=>{const v=lg?Math.exp(t):t;return Math.abs(v)>=100?v.toFixed(0):Math.abs(v)>=10?v.toFixed(1):v.toFixed(2)};
-  const ys=S.flatMap(s=>s.y).filter(isFinite),xs=S[0].x.concat(S[S.length-1].x);
-  lines($('#famfig'),S,{x0:Math.min(...xs),x1:Math.max(...xs),y0:Math.min(...ys),y1:Math.max(...ys)+1e-9,xf:t=>back(lx,t),yf:t=>back(ly,t),xl:lx?'x (log scale)':'x',yl:ly?'y (log scale)':'y',label:F.name+' curve'})}
+  let[x0,x1,y0,y1]=F.view;if(lx)x0=.05;
+  if(auto){const ys=S.flatMap(s=>s.y).filter(isFinite);y0=Math.min(...ys);y1=Math.max(...ys)+1e-9}
+  else if(ly){y0=Math.log(Math.max(y0,.01));y1=Math.log(y1)}
+  const X0=lx?Math.log(x0):x0,X1=lx?Math.log(x1):x1,back=(lg,t)=>{const v=lg?Math.exp(t):t;return Math.abs(v)>=100?v.toFixed(0):Math.abs(v)>=10?v.toFixed(1):v.toFixed(2)};
+  const marks=[];let extra='';
+  lines($('#famfig'),S,{x0:X0,x1:X1,y0,y1,clip:true,xf:t=>back(lx,t),yf:t=>back(ly,t),xl:lx?'x (log scale)':'x',yl:ly?'y (log scale)':'y',label:F.name+' curve',marks});
+  if(F.id==='lin'&&!lx&&!ly){const el=$('#famfig'),svg=el.querySelector('svg'),W=el.clientWidth,H=el.clientHeight,ml=38,mr=12,mt=10,mb=26,px=x=>ml+(x-X0)/(X1-X0)*(W-ml-mr),py=y=>mt+(1-(y-y0)/(y1-y0))*(H-mt-mb);
+    const xa=1.5,xb=2.5,ya=famP.a+famP.b*xa,yb=famP.a+famP.b*xb;
+    svg.insertAdjacentHTML('beforeend',`<path d="M${px(xa)},${py(ya)}H${px(xb)}V${py(yb)}" fill="none" stroke="var(--gold)" stroke-width="2"/><text x="${(px(xa)+px(xb))/2}" y="${py(ya)+(famP.b>=0?16:-6)}" text-anchor="middle" style="fill:var(--ink)">run 1</text><text x="${px(xb)+6}" y="${(py(ya)+py(yb))/2+4}" style="fill:var(--ink)">rise ${tn(famP.b)}</text><circle cx="${px(0)}" cy="${py(famP.a)}" r="5" fill="var(--gold)"/><text x="${px(0)+8}" y="${py(famP.a)-8}" style="fill:var(--ink)">a = ${tn(famP.a)}</text>`)}
+  const mo=$('#fammom');if(F.id==='skew'||F.id==='gau'){const lo=famP.c-14*famP.b*Math.exp(.35*Math.abs(famP.s||0)),hi=famP.c+14*famP.b*Math.exp(.35*Math.abs(famP.s||0)),M=famMoments([...Array(4001)].map((_,i)=>{const x=lo+(hi-lo)*i/4000;return[x,F.f(x,famP)]}));mo.hidden=false;
+    mo.innerHTML=[['Mode (peak)',tn(M.mode)],['Mean',tn(M.m)],['SD',tn(M.sd)],['Skewness',fx(M.sk,2)],['Excess kurtosis',fx(M.ku,2)]].map(q=>card(...q)).join('')+'<p class="notice" style="grid-column:1/-1;margin:2px 0 0">Treating the curve as a distribution. Skewness 0 = symmetric; excess kurtosis 0 = Gaussian, positive = sharper peak and heavier tails, negative = flatter. The mean is pulled toward the long tail, away from the peak.</p>'}
+  else mo.hidden=true;
+  $('#autonote').hidden=!auto}
 $('#famgrid').addEventListener('click',e=>{const b=e.target.closest('button');if(b)famPick(+b.dataset.i)});
-$('#famctl').addEventListener('input',e=>{const k=e.target.id.replace('fp_','');if(k in famP){famP[k]=+e.target.value;$('#o_fp_'+k).textContent=e.target.value;drawFam()}});
-$('#logx').addEventListener('change',drawFam);$('#logy').addEventListener('change',drawFam);
+$('#famctl').addEventListener('input',e=>{const k=e.target.id.replace('fp_','');if(!(k in famP))return;famP[k]=+e.target.value;$('#o_fp_'+k).textContent=e.target.value;famK=k;drawFam();famEq(true);
+  clearTimeout(famT);famT=setTimeout(()=>{famK=null;famEq(false)},1600)});
+$('#logx').addEventListener('change',drawFam);$('#logy').addEventListener('change',drawFam);$('#autofit').addEventListener('change',drawFam);
+$('#famreset').addEventListener('click',()=>famPick(famI));
 
 /* ---------- identity: variance from pairwise gaps ---------- */
 let idSeed=3,idN,idS,idO;
@@ -893,7 +941,7 @@ $('#sm_d').addEventListener('change',drawSamp);$('#sm_new').addEventListener('cl
 NARROW.addEventListener('change',()=>{buildGrid();drawTable()});
 if(matchMedia('(max-width:1000px)').matches)document.querySelectorAll('section.ch').forEach(sec=>{const t=sec.querySelector('.try'),tr=sec.querySelector('.tray');if(t&&tr){tr.after(t);t.style.marginTop='14px'}});
 document.querySelectorAll('table.stack').forEach(t=>{const hd=[...t.tHead.rows[0].cells].map(c=>c.textContent);[...t.tBodies[0].rows].forEach(r=>[...r.cells].forEach((c,i)=>c.dataset.l=hd[i]))});
-famPick(6);reg(drawFam);reg(drawId);reg(drawSamp);reg(drawTable);reg(drawHill);reg(drawABG);reg(drawRare);reg(drawDist);reg(drawMatrix);reg(drawPcoa);reg(drawLens);nmInit(true);reg(drawNm);reg(drawPca);reg(drawGroups);reg(drawProc);reg(drawEnv);
+famPick(0);reg(drawFam);reg(drawId);reg(drawSamp);reg(drawTable);reg(drawHill);reg(drawABG);reg(drawRare);reg(drawDist);reg(drawMatrix);reg(drawPcoa);reg(drawLens);nmInit(true);reg(drawNm);reg(drawPca);reg(drawGroups);reg(drawProc);reg(drawEnv);
 runStarts();ro.observe(document.body);
 const links=[...document.querySelectorAll('nav.toc a')],io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on){const nv=$('#toc');if(nv.scrollWidth>nv.clientWidth)nv.scrollTo({left:a.offsetLeft-nv.clientWidth/2+a.offsetWidth/2,behavior:'smooth'})}})}),{rootMargin:'-20% 0px -70% 0px'});
 document.querySelectorAll('section.ch').forEach(s=>io.observe(s));
