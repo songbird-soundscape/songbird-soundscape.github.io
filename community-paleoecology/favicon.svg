@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#f1ead8"/>
+  <!-- leaf, with a semicircular feeding notch in its upper margin -->
+  <path d="M7 50 C8 27 22 12 44 8 C47 26 40 42 20 52 Z" fill="#4f7d3a"/>
+  <circle cx="45.5" cy="21" r="6.5" fill="#f1ead8"/>
+  <path d="M9 50 L33 25" stroke="#2c5222" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M17 42 l-5 -6 M23 36 l-2 -8 M20 40 l9 1 M26 34 l8 1" stroke="#2c5222" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- a pair of insect mandibles, curved tips biting toward the notch -->
+  <path d="M58 6 C49 6 42 10 41 17 C45 14 49 13 53 14 C55 12 57 9 58 6 Z" fill="#2b1a0e"/>
+  <path d="M60 9 C61 18 58 25 51 27 C53 23 53 19 51 16 C54 14 57 12 60 9 Z" fill="#2b1a0e"/>
+  <!-- coprolite: a segmented dropping -->
+  <g transform="rotate(-20 46 49)">
+    <rect x="33" y="43" width="27" height="13" rx="6.5" fill="#8a5a2b" stroke="#5c3816" stroke-width="1.8"/>
+    <path d="M42 43.6 q-1.8 6 0 11.8 M51 43.6 q-1.8 6 0 11.8" stroke="#5c3816" stroke-width="1.6" fill="none"/>
+  </g>
+</svg>
