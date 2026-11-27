@@ -117,6 +117,11 @@ dl.parts dd{margin:0;font-size:15px}
 .toc .arc{display:block;margin:12px 0 2px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:.72em;color:var(--moss)}
 .eq.has-dis{cursor:zoom-in;position:relative}.eq.has-dis::after{content:"tap to dissect";position:absolute;right:4px;bottom:-2px;font-size:11px;color:var(--mute);font-family:Inter,sans-serif;pointer-events:none}
 .inaction{margin-top:28px;border-top:1px solid var(--line);padding-top:14px}.quadg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.galfig{margin:0;border:1px solid var(--line);border-radius:10px;padding:8px}.galfig figcaption{font-size:.86em;margin-top:4px}.gsize,.gcite{color:var(--mute)}.gstat{font-variant-numeric:tabular-nums;margin:2px 0}.gleg{margin:2px 0}.litcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.koanbtn{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:50;border:1px solid var(--gold);background:var(--panel);color:var(--ink);border-radius:999px;padding:9px 14px;font:600 14px Inter,system-ui,sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.18);cursor:pointer}
+.koanbtn:hover{background:color-mix(in srgb,var(--gold) 16%,var(--panel))}
+.koanpop{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 50px);z-index:50;width:min(340px,calc(100vw - 28px));background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:12px 14px;box-shadow:0 8px 26px rgba(0,0,0,.22)}
+.koanpop .kq{font-size:17px;line-height:1.45;margin:0 0 6px;font-style:italic}.koanpop .kmeta{font-size:12px;color:var(--mute);margin:0 0 8px}.koanpop .krow{display:flex;gap:6px;justify-content:flex-end}
+@media print{.koanbtn,.koanpop{display:none}}
 </style></head><body>
 <header class="top">
 <h1>A Pocket Guide to Quantitative Ecology</h1>
@@ -1330,6 +1335,39 @@ reg(()=>document.querySelectorAll('.gallery[data-done]').forEach(b=>{const m=b.d
 document.addEventListener('click',e=>{const b=e.target.closest('[data-regime]');if(!b)return;const v=b.dataset.regime;
   if(v==='sweep'){const t0=performance.now(),D=4000;const step=()=>{const f=Math.min(1,(performance.now()-t0)/D);setLgR((2.8+1.1*f).toFixed(3));if(f<1)requestAnimationFrame(step)};requestAnimationFrame(step)}else setLgR(v);
   $('#lgcob').scrollIntoView({behavior:'smooth',block:'center'})});
+
+/* ---------- floating koan button ---------- */
+const KOANS={
+'c-curves':['A straight line is only a curve seen from close up. How close are you standing?','The exponential multiplies; the logarithm counts the multiplications. Which one is keeping score?','A saturating curve rises forever and never arrives. Is the ceiling a wall or a horizon?','Log both axes and the power law confesses. What was it hiding?','A bell has two sides, and the cliff is only on one. Which way is the wind blowing?'],
+'c-table':['Most of the table is zeros. Is an absence something you saw, or something you didn\'t?','One sample counted to 300, another to 150. Divide each by its total: did you erase the difference, or the evidence?','A row is a place; a column is a species. Who is the table about?'],
+'c-hill':['Ten species, and one holds 91 of every hundred individuals. How many species does the place feel like?','Raise q and the rare species fall silent. Who decided they had nothing to say?','Shannon asks how surprised you would be; Simpson asks how often you would be bored. Are they describing the same place?'],
+'c-abg':['Every plot holds ten species; the valley holds forty. Where are the other thirty?','If alpha doubles and gamma doubles, has anything changed?','Beta counts communities. How many valleys fit inside one valley?'],
+'c-rare':['Count until nothing new turns up. Have you found everything, or only the end of your patience?','Rarefaction throws individuals away to make samples fair. Was the extra data a gift or a bias?','The species you did not see in 150 individuals: absent, or simply unlucky?'],
+'c-sample':['Make the plot bigger and diversity rises. Did the landscape change, or your eyes?','Two plots a metre apart are not two samples of the hillside. How far apart must they be to disagree honestly?','A transect follows the gradient; a grid ignores it. Which one is asking the question?'],
+'c-dist':['Two plots share no species. Are they far apart, or simply strangers?','Euclidean calls two empty plots twins. What do they have in common?','Bray–Curtis stops at 1. What lies beyond completely different?'],
+'c-matrix':['Every pair has a distance, yet no point has a place. Can you draw a map from a list of journeys?','Once everything is maximally different, more difference cannot be seen. How far is too far to compare?'],
+'c-pca':['PCA turns the axes until the cloud looks longest. Is the longest direction the most important one?','A long gradient bends into a horseshoe. Did the land curve, or the method?'],
+'c-pcoa':['PCoA trusts the distances more than the species. What did it forget when it forgot the species?','A negative eigenvalue is a distance that will not lie flat. Where does the leftover dimension go?'],
+'c-lens':['One gradient, four pictures. Which one is the gradient?','Each method bends the same line differently. Is the bend in the land or in the lens?'],
+'c-nmds':['NMDS keeps only the order of distances. If you know only who is closer, can you still draw the map?','Start the search somewhere else and the map comes back rotated, mirrored, bent. Which one is true?'],
+'c-stress':['Stress is low. Is the picture good, or were the data simple?','Add a dimension and stress falls. When does a better fit become a worse explanation?'],
+'c-groups':['Two groups share a centre but not a spread. Are they different groups?','The p-value is tiny and the clouds overlap. What, exactly, was significant?'],
+'c-proc':['Rotate, scale and slide, and the two maps agree. What was left that mattered?','Two methods saw the same sites. Which one was looking at the community, and which at itself?'],
+'c-env':['The arrow points toward wet. Did water arrange the plots, or did the arrow arrange the story?','A variable fits the plot perfectly by chance. How would you know?'],
+'c-glm':['A species is missing from a plot: gone, never arrived, or not counted?','The model is 90% sure, and wrong. Was it a bad model, or an honest one?','To halve the counting error you must count four times as many. What is precision worth?'],
+'c-chaos':['The rule never changes and the future never repeats. Which one is the cause?','Measure a hundred times more precisely and see a few steps further. How far is worth seeing?','One slice of mud holds five generations. Which one is speaking?','A population that flickers before it switches: warning, or coincidence?'],
+'c-family':['Every index is a question someone once asked. Which question are you asking?','The same formula appears in genetics, ecology and polling. Is it about the world, or about counting?'],
+'c-cheat':['A number on one page, a forest on another. Which one should you trust when they disagree?']};
+const KDEF=['Every figure here is a model of a model. Where does the forest begin?'];
+(()=>{const b=document.createElement('button');b.type='button';b.className='koanbtn';b.textContent='Tell me a koan';
+  const pop=document.createElement('div');pop.className='koanpop';pop.hidden=true;pop.setAttribute('role','dialog');pop.setAttribute('aria-label','Koan');
+  document.body.append(pop,b);const idx={};
+  const cur=()=>{let id=null;document.querySelectorAll('section.ch').forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.45)id=s.id});return id};
+  const show=()=>{const id=cur(),L=KOANS[id]||KDEF,i=idx[id]=((idx[id]??-1)+1)%L.length,h=id?document.querySelector('#'+id+' h2'):null;
+    pop.innerHTML=`<p class="kq">${L[i]}</p><p class="kmeta">${h?esc(h.textContent):''}${L.length>1?` · ${i+1} of ${L.length}`:''}</p><div class="krow">${L.length>1?'<button type="button" class="btn g" data-k="next">Another</button>':''}<button type="button" class="btn g" data-k="close" aria-label="Close">Close</button></div>`;pop.hidden=false};
+  b.addEventListener('click',()=>{if(!pop.hidden){pop.hidden=true;return}show()});
+  pop.addEventListener('click',e=>{const k=e.target.dataset.k;if(k==='next')show();if(k==='close')pop.hidden=true});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')pop.hidden=true})})();
 
 }
 </script>
