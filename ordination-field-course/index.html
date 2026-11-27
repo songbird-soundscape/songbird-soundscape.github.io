@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ordination Field Course</title>
-<link rel="icon" href="/favicon.ico"><meta name="description" content="A slow, hands-on course in community ordination: Hill numbers, distances, PCA, PCoA, NMDS, PERMANOVA and sampling design, with live figures and dissected equations.">
+<link rel="icon" href="/favicon.ico"><meta name="description" content="A slow, hands-on course in community ordination: Hill numbers, distances, PCA, PCoA, NMDS, PERMANOVA, regression and sampling design, with live figures and dissected equations.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* VOICE everyday learning, slow and exact: a field course textbook that you can touch
@@ -57,6 +57,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .tile small{font-size:13px;color:var(--mute)}
 .work{font-size:14.5px;font-variant-numeric:tabular-nums;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:8px;overflow-x:auto}
 .work div{white-space:nowrap}
+#bwork div{white-space:normal;margin-bottom:3px}
 table{border-collapse:collapse;width:100%;font-size:15px}
 th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
 .scroll{overflow-x:auto}
@@ -163,6 +164,7 @@ dl.parts dd{margin:0;font-size:15px}
 <a href="#c-groups">Do the groups differ?</a>
 <a href="#c-proc">Procrustes: comparing two plots</a>
 <a href="#c-env">Fitting a measured variable</a>
+<a href="#c-glm">Binomial and multinomial regression</a>
 <a href="#c-family">How the formulas are related</a>
 <a href="#c-cheat">Every index on one page</a>
 </nav>
@@ -351,6 +353,42 @@ dl.parts dd{margin:0;font-size:15px}
 <div class="ctl"><div class="sl"><label for="e_noise">Measurement noise</label><output id="o_e_noise"></output><input type="range" id="e_noise" min="0" max="1" step=".05" value=".1"></div></div>
 <div class="fig t" id="efig"></div><div class="tiles" id="etiles"></div></div></div></section>
 
+<section class="ch" id="c-glm"><h2>Modelling taxa and community types: binomial and multinomial regression</h2>
+<p>So far every question has been about distances. Regression asks a different kind of question: given where a sample sits, <em>how likely</em> is something? For example, how likely is a taxon to be present, or the sample to belong to a given community? The answers are probabilities between 0 and 1, so ordinary straight-line regression won't do. It would happily predict a probability of 1.3 or −0.2. These models fit a straight line on a different scale, the <strong>log-odds</strong>, and bend it back into the 0–1 range with the S-curve from the first chapter.</p>
+<div class="two"><div>
+<h3>1. Binomial (logistic) regression: is the taxon here?</h3>
+<p>Each sample along a gradient records a taxon as present (1) or absent (0). Logistic regression models the probability of presence, <i>p</i>, by fitting a straight line to its log-odds:</p>
+<div class="eq">\[\begin{gathered}\ln\frac{p}{1-p}=\beta_0+\beta_1x\\[6pt]p=\frac{1}{1+e^{-(\beta_0+\beta_1x)}}\end{gathered}\]</div><details class="dis"><summary>Dissect this equation</summary><div class="eq">\[\color{#d0583c}{\ln\frac{p}{1-p}}=\color{#3d7bd9}{\beta_0}+\color{#2f9a55}{\beta_1x}\qquad p=\frac{1}{1+e^{-(\color{#3d7bd9}{\beta_0}+\color{#2f9a55}{\beta_1x})}}\]</div><dl class="parts"><div><dt style="color:#d0583c">ln(p/(1 − p))</dt><dd>the log-odds or "logit". p/(1 − p) is the odds: 0.8 means 4 to 1 for. Logging the odds stretches the 0–1 range onto the whole number line</dd></div><div><dt style="color:#3d7bd9">β<sub>0</sub></dt><dd>the log-odds where x = 0: the starting chance</dd></div><div><dt style="color:#2f9a55">β<sub>1</sub>x</dt><dd>how much the log-odds change per unit of x; each unit multiplies the odds by e<sup>β₁</sup></dd></div><div><dt style="color:var(--ink)">1/(1 + e<sup>−…</sup>)</dt><dd>turns the log-odds back into a probability: the S-curve from the first chapter</dd></div></dl><p><b>Read it aloud.</b> The log of the odds of presence is a straight line in x; undo the log and you get an S-shaped probability.</p><p><b>Familiar relative.</b> This is ordinary linear regression, done on the log-odds scale instead of the raw scale. Odds are the betting kind ("4 to 1"), and e<sup>β₁</sup> is an <em>odds ratio</em>, the same quantity reported in medical studies ("smokers have 3 times the odds"). The link between the straight line and the probability is called the link function.</p><div class="eq">\[\text{odds}=\frac{p}{1-p}\qquad \text{odds ratio per unit } x=e^{\beta_1}\]</div><p class="num"><b>With numbers.</b> p = 0.8 gives odds 0.8/0.2 = 4 and log-odds ln 4 = 1.39. If β₁ = 2, moving one unit along x multiplies the odds by e² ≈ 7.4, so odds of 4 become 29.6, or p = 0.97.</p></details>
+<p>On the probability scale that line becomes the S-curve: the taxon gets steadily more likely along the gradient. Real taxa usually have an optimum, though, and are rare at both ends. Adding a squared term makes the log-odds a downward parabola, which turns the probability into a bell. This is the <strong>Gaussian-logit</strong> model (ter Braak & Looman 1986):</p>
+<div class="eq">\[\begin{gathered}\ln\frac{p}{1-p}=\beta_0+\beta_1x+\beta_2x^2\\[6pt]u=-\frac{\beta_1}{2\beta_2},\ \ t=\frac{1}{\sqrt{-2\beta_2}}\end{gathered}\]</div>
+<p>Two ecologically meaningful numbers fall straight out of the coefficients: the optimum <i>u</i>, where the taxon is most likely, and the tolerance <i>t</i>, its niche width. The fit works by maximum likelihood (here by iteratively reweighted least squares): it finds the coefficients that make the observed 0s and 1s most probable. The deviance (−2 × log-likelihood) measures what's left unexplained. AIC adds 2 per coefficient as a penalty, and the lower AIC wins.</p>
+<div class="try"><strong>Try this</strong><ul><li>Put the optimum mid-gradient. The S-curve can't bend back down, so the bell wins easily on AIC.</li><li>Slide the optimum to the end of the gradient. Now the taxon only rises within the sampled range, and the simpler S-curve does nearly as well. Truncated gradients make humped responses look like straight trends.</li><li>Cut the sites to 15 and press "New sample" several times. The fitted optimum and tolerance jump around from sample to sample, and now and then the bell can't be fitted at all, because yes/no data carry little information per sample.</li></ul></div>
+</div><div class="tray st"><div class="ctl"><div class="sl"><label for="b_u">True optimum</label><output id="o_b_u"></output><input type="range" id="b_u" min="0" max="1" step=".02" value=".5"></div><div class="sl"><label for="b_t">True tolerance (width)</label><output id="o_b_t"></output><input type="range" id="b_t" min=".05" max=".5" step=".01" value=".15"></div><div class="sl"><label for="b_p">Peak probability</label><output id="o_b_p"></output><input type="range" id="b_p" min=".3" max=".98" step=".02" value=".85"></div><div class="sl"><label for="b_n">Sites sampled</label><output id="o_b_n"></output><input type="range" id="b_n" min="15" max="200" step="5" value="60"></div></div>
+<div class="row"><button type="button" class="btn g" id="b_new">New sample</button></div>
+<div class="fig" id="bfig"></div><div class="legend"><span><i style="background:var(--mute)"></i>true curve (dashed)</span><span><i style="background:var(--blue)"></i>S-curve fit</span><span><i style="background:var(--moss)"></i>bell (Gaussian-logit) fit</span><span>dots: absent (bottom) / present (top)</span></div>
+<div class="tiles" id="btiles"></div><div class="work" id="bwork"></div></div></div>
+
+<div class="two" style="margin-top:26px"><div>
+<h3>2. The counting model: every pollen share is a binomial draw</h3>
+<p>Counting a slide to a fixed sum is itself a binomial (and, across all taxa, multinomial) experiment. Each of the <i>n</i> grains is a taxon-<i>j</i> grain with probability <i>p</i>. The count you get therefore scatters around <i>np</i>, and the observed share scatters around <i>p</i> with a standard error:</p>
+<div class="eq">\[\begin{gathered}X\sim\text{Binomial}(n,p)\\[6pt]\operatorname{SE}(\hat p)=\sqrt{\frac{p(1-p)}{n}}\end{gathered}\]</div><details class="dis"><summary>Dissect this equation</summary><div class="eq">\[\operatorname{SE}(\hat p)=\sqrt{\frac{\color{#3d7bd9}{p}(\color{#c08f00}{1-p})}{\color{#2f9a55}{n}}}\]</div><dl class="parts"><div><dt style="color:#3d7bd9">p</dt><dd>the true share of this taxon in the pollen rain</dd></div><div><dt style="color:#c08f00">1 − p</dt><dd>the share of everything else</dd></div><div><dt style="color:var(--ink)">p(1 − p)</dt><dd>the variance of one grain's yes/no: largest at p = 0.5, tiny near 0 or 1</dd></div><div><dt style="color:#2f9a55">n</dt><dd>grains counted; dividing by n averages the noise away</dd></div></dl><p><b>Read it aloud.</b> The typical error in an observed share is the square root of p times (1 − p), divided by the count.</p><p><b>Familiar relative.</b> This is the standard error of a mean, SD/√n, for a yes/no variable whose SD is √(p(1 − p)). It is also why poll results quote "±3 points" for about 1,000 people.</p><div class="eq">\[\operatorname{SE}(\bar x)=\frac{s}{\sqrt n}\qquad s_{\text{yes/no}}=\sqrt{p(1-p)}\]</div><p class="num"><b>With numbers.</b> A taxon at 10% in a 150-grain count: √(0.1 × 0.9 / 150) = 0.0245, so about ±2.4 percentage points. At 300 grains it is ±1.7, and at 600 it is ±1.2.</p></details>
+<p>Quadrupling the count only halves the error, because of the square root. The bars show every possible count with its probability; the shaded band is the middle 95%.</p>
+<div class="try"><strong>Try this</strong><ul><li>A taxon at 10%: compare 150 and 300 grains. The 95% range of the observed share narrows, but less than you might hope.</li><li>A taxon at 1% with 150 grains. There is about a 22% chance of not seeing it at all, which is why rare taxa need cascading counts.</li></ul></div>
+</div><div class="tray st"><div class="ctl"><div class="sl"><label for="k_p">True share p</label><output id="o_k_p"></output><input type="range" id="k_p" min=".005" max=".6" step=".005" value=".1"></div><div class="sl"><label for="k_n">Grains counted n</label><output id="o_k_n"></output><input type="range" id="k_n" min="25" max="1000" step="25" value="150"></div></div>
+<div class="fig s" id="kfig"></div><div class="tiles" id="ktiles"></div></div></div>
+
+<div class="two" style="margin-top:26px"><div>
+<h3>3. Multinomial regression: which community is this?</h3>
+<p>With more than two outcomes (here four community types, A to D) the binomial model generalizes to the <strong>multinomial</strong>, or softmax, model. Each community gets its own straight-line score η, built from the sample's position (here its first two PCoA axes on Hellinger distance). The scores are turned into probabilities that add to 1:</p>
+<div class="eq">\[\begin{gathered}\eta_k=\beta_{0k}+\beta_{1k}z_1+\beta_{2k}z_2\\[6pt]P(\text{community }k)=\frac{e^{\eta_k}}{\sum_{j}e^{\eta_j}}\end{gathered}\]</div><details class="dis"><summary>Dissect this equation</summary><div class="eq">\[\color{#c08f00}{P(\text{community }k)}=\frac{\color{#3d7bd9}{e^{\eta_k}}}{\color{#2f9a55}{\sum_j e^{\eta_j}}}\]</div><dl class="parts"><div><dt style="color:var(--ink)">η<sub>k</sub></dt><dd>community <i>k</i>'s score: a straight line in the sample's axis positions</dd></div><div><dt style="color:#3d7bd9">e<sup>η</sup></dt><dd>makes every score positive; one point higher means e ≈ 2.7 times the weight</dd></div><div><dt style="color:#2f9a55">Σ e<sup>η</sup></dt><dd>the total weight over all communities</dd></div><div><dt style="color:#c08f00">P(k)</dt><dd>each community's share of the total weight, so the probabilities add to 1</dd></div></dl><p><b>Read it aloud.</b> Score each community, exponentiate the scores, and divide each by their total.</p><p><b>Familiar relative.</b> This is a vote share, or the same proportion p<sub>ij</sub> = x<sub>ij</sub>/Σx from the first chapter, applied to exponentiated scores. With two communities it reduces exactly to logistic regression, because e<sup>η₁</sup>/(e<sup>η₁</sup> + e<sup>η₂</sup>) = 1/(1 + e<sup>−(η₁ − η₂)</sup>).</p><div class="eq">\[\frac{e^{\eta_1}}{e^{\eta_1}+e^{\eta_2}}=\frac{1}{1+e^{-(\eta_1-\eta_2)}}\]</div><p class="num"><b>With numbers.</b> Scores 2, 1, 0 and −1 become weights 7.39, 2.72, 1 and 0.37, which total 11.48. So P = 0.64, 0.24, 0.09 and 0.03.</p></details>
+<p>With two communities this is exactly the logistic regression above. Each sample now gets a probability for every community instead of a single label, which answers "how sure are we?" The column chart shows each sample's probabilities, sorted by its true community; a sample confidently and correctly placed is a single solid colour. The map shades the plot by the community the model would predict there, fainter where it's unsure. All predictions are leave-one-out: each sample is classified by a model fitted without it.</p>
+<p>Three scores summarize the fit. Accuracy is the share whose most likely community is the right one. Mean P(true) is the average probability given to the right answer. Log-loss punishes confident mistakes heavily, and lower is better.</p>
+<div class="try"><strong>Try this</strong><ul><li>Compare plants with pollen at the defaults. Pollen loses a little accuracy and rather more certainty: mean P(true) drops further than the hit rate does.</li><li>Raise regional rain to 0.8. The pollen columns turn into stripes of every colour, the honest picture of a sample that could have come from anywhere.</li><li>Cut the grains to 50. Log-loss roughly doubles while accuracy falls more gently: probability scores register the loss of confidence that a yes/no hit rate understates.</li></ul></div>
+</div><div class="tray st"><div class="ctl"><div class="sl"><label for="m_rain">Regional pollen rain</label><output id="o_m_rain"></output><input type="range" id="m_rain" min="0" max=".9" step=".05" value=".3"></div><div class="sl"><label for="m_gr">Grains counted</label><output id="o_m_gr"></output><input type="range" id="m_gr" min="50" max="1000" step="25" value="300"></div><div class="sl"><label for="m_sp">Site scatter</label><output id="o_m_sp"></output><input type="range" id="m_sp" min=".2" max="1.6" step=".05" value=".8"></div></div>
+<div class="quad"><div><h4>Plants: predicted regions</h4><div class="fig s" id="mmapv"></div></div><div><h4>Pollen: predicted regions</h4><div class="fig s" id="mmapp"></div></div><div><h4>Plants: P(each community), per sample</h4><div class="fig s" id="mbarv"></div></div><div><h4>Pollen: P(each community), per sample</h4><div class="fig s" id="mbarp"></div></div></div>
+<div class="legend" id="mleg"></div><div class="tiles" id="mtiles"></div></div></div>
+</section>
+
 <section class="ch" id="c-family"><h2>How the formulas are related</h2><div class="two"><div>
 <p>Nearly every index in this course is a familiar statistic in a new setting. The table pairs each with its relative from an introductory statistics course. The dissections under each formula go into more detail.</p>
 <p>One identity carries most of the weight, and it's worth seeing work with your own eyes: <strong>the spread of a set of numbers can be measured from their pairwise differences alone, without ever computing the mean.</strong></p>
@@ -381,6 +419,13 @@ dl.parts dd{margin:0;font-size:15px}
 <tr><td>Stress</td><td>Regression's 1 − R², residual error</td><td>Misfit sum of squares over total sum of squares, square-rooted.</td></tr>
 <tr><td>Silhouette</td><td>Effect size</td><td>A difference (separation − cohesion) over a scale, one sample at a time.</td></tr>
 <tr><td>Procrustes r</td><td>Pearson correlation r</td><td>The summed products of standardized coordinates, after the best rotation.</td></tr>
+<tr><td>Logistic coefficients β</td><td>presence data</td><td>any real number</td><td>change in log-odds per unit of x</td><td>gradient position, sample size</td><td>abundance (presence only)</td></tr>
+<tr><td>Optimum u, tolerance t</td><td>Gaussian-logit fit</td><td>within the gradient</td><td>where a taxon peaks, how wide its niche is</td><td>gradient coverage, sample size</td><td>responses that are not bell-shaped</td></tr>
+<tr><td>SE of a share</td><td>one count</td><td>0 … 0.5</td><td>counting error of a proportion</td><td>p, grains counted</td><td>ecology (it is pure sampling)</td></tr>
+<tr><td>Mean P(true), log-loss</td><td>multinomial fit</td><td>0 … 1; 0 … ∞</td><td>how confidently samples are assigned to their community</td><td>overlap, noise, regional rain</td><td>which features drive the assignment</td></tr>
+<tr><td>Logistic regression</td><td>Linear regression on log-odds; odds ratios</td><td>A straight line fitted to ln(p/(1 − p)), bent back into 0–1 by the S-curve.</td></tr>
+<tr><td>SE of a pollen share</td><td>Standard error of a mean, SD/√n</td><td>A yes/no variable has SD √(p(1 − p)); the same maths as a poll's margin of error.</td></tr>
+<tr><td>Multinomial (softmax) regression</td><td>Vote shares; proportions</td><td>Exponentiated scores divided by their total; with two groups it is logistic regression.</td></tr>
 <tr><td>envfit R²</td><td>Multiple regression R²</td><td>The share of a variable's variance explained by the plot's axes.</td></tr>
 </tbody></table></div></section>
 
@@ -937,11 +982,66 @@ function drawSamp(){const P=smPlots(),S=LAND.S,M=P.map(()=>new Array(S).fill(0))
 smN=bindSl('sm_n',v=>v,deb(drawSamp,40));smS=bindSl('sm_s',v=>v+' m²',deb(drawSamp,40));smR=bindSl('sm_r',v=>v+' : 1',deb(drawSamp,40));
 $('#sm_d').addEventListener('change',drawSamp);$('#sm_new').addEventListener('click',()=>{smSeed++;drawSamp()});
 
+
+/* ---------- binomial and multinomial regression ---------- */
+function solveLin(A,b){const n=b.length,M=A.map((r,i)=>[...r,b[i]]);for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];const d=M[c][c]||1e-12;for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c]/d;for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k]}}return M.map((r,i)=>r[n]/(r[i]||1e-12))}
+function logitFit(X,y){const p=X[0].length;let b=new Array(p).fill(0);
+  for(let it=0;it<40;it++){const A=[...Array(p)].map(()=>new Array(p).fill(0)),v=new Array(p).fill(0);
+    X.forEach((x,i)=>{const e=x.reduce((s,xi,k)=>s+xi*b[k],0),m=Math.min(1-1e-6,Math.max(1e-6,1/(1+Math.exp(-e)))),w=m*(1-m),z=e+(y[i]-m)/w;for(let r=0;r<p;r++){v[r]+=x[r]*w*z;for(let c=0;c<p;c++)A[r][c]+=x[r]*w*x[c]}});
+    for(let r=0;r<p;r++)A[r][r]+=1e-4;const nb=solveLin(A,v),ch=nb.reduce((s,v2,k)=>s+Math.abs(v2-b[k]),0);b=nb;if(ch<1e-8)break}
+  let dev=0;X.forEach((x,i)=>{const m=Math.min(1-1e-9,Math.max(1e-9,1/(1+Math.exp(-x.reduce((s,xi,k)=>s+xi*b[k],0)))));dev-=2*(y[i]?Math.log(m):Math.log(1-m))});return{b,dev,aic:dev+2*p}}
+let bU,bT,bP,bN,bSeed=1;
+function drawBin(){const u=bU(),t=bT(),pm=bP(),n=bN(),r=rng(bSeed*131+n),lg=Math.log(pm/(1-pm)),ptrue=x=>1/(1+Math.exp(-(lg-((x-u)**2)/(2*t*t))));
+  const xs=[...Array(n)].map(()=>r()),ys=xs.map(x=>r()<ptrue(x)?1:0);
+  const L=logitFit(xs.map(x=>[1,x]),ys),Q=logitFit(xs.map(x=>[1,x,x*x]),ys);
+  const g=[...Array(101)].map((_,i)=>i/100),f=(b,x)=>1/(1+Math.exp(-(b[0]+b[1]*x+(b[2]||0)*x*x)));
+  lines($('#bfig'),[{x:g,y:g.map(ptrue),col:'var(--mute)',w:2,dash:'5 4'},{x:g,y:g.map(x=>f(L.b,x)),col:'var(--blue)'},{x:g,y:g.map(x=>f(Q.b,x)),col:'var(--moss)'},{x:xs,y:ys.map(v=>v?1.02:-.02),col:'var(--ink)',dots:true,r:3,op:.45}],{x0:0,x1:1,y0:-.06,y1:1.06,yt:[0,.5,1],xt:[0,.5,1],xl:'position on gradient',yl:'P(present)',clip:true,label:'Presence along a gradient with two logistic fits'});
+  const b2=Q.b[2],hasOpt=b2<0,uh=hasOpt?-Q.b[1]/(2*b2):NaN,th=hasOpt?1/Math.sqrt(-2*b2):NaN,better=Q.aic<L.aic?'bell':'S-curve';
+  $('#btiles').innerHTML=[['Present',`${ys.filter(Boolean).length} of ${n}`],['AIC, S-curve',fx(L.aic,1)],['AIC, bell',fx(Q.aic,1)],['Preferred',better],['Fitted optimum u',hasOpt&&uh>-1&&uh<2?fx(uh,2):'none'],['Fitted tolerance t',hasOpt?fx(th,2):'none']].map(q=>card(...q)).join('');
+  const sg=v=>(v<0?'− ':'+ ')+fx(Math.abs(v),2);
+  $('#bwork').innerHTML=`<div>S-curve: logit(p) = ${fx(L.b[0],2)} ${sg(L.b[1])}x; odds multiply by e<sup>β₁</sup> = ${fx(Math.exp(L.b[1]),2)} across the gradient</div><div>Bell: logit(p) = ${fx(Q.b[0],2)} ${sg(Q.b[1])}x ${sg(Q.b[2])}x²${hasOpt?` → u = −β₁/(2β₂) = ${fx(uh,2)}, t = 1/√(−2β₂) = ${fx(th,2)}`:' (β₂ ≥ 0: no optimum)'}</div><div>True optimum ${fx(u,2)}, true tolerance ${fx(t,2)}</div>`}
+bU=bindSl('b_u',v=>v.toFixed(2),deb(drawBin,30));bT=bindSl('b_t',v=>v.toFixed(2),deb(drawBin,30));bP=bindSl('b_p',v=>v.toFixed(2),deb(drawBin,30));bN=bindSl('b_n',v=>v,deb(drawBin,30));$('#b_new').addEventListener('click',()=>{bSeed++;drawBin()});
+let kP,kN;
+function drawCount(){const p=kP(),n=kN(),lp=k=>lch(n,k)+k*Math.log(p)+(n-k)*Math.log(1-p),pr=[...Array(n+1)].map((_,k)=>Math.exp(lp(k)));
+  let c=0,lo=0,hi=n;for(let k=0;k<=n;k++){c+=pr[k];if(c<.025)lo=k+1;if(c<.975)hi=k+1}hi=Math.min(n,hi);
+  const k0=Math.max(0,Math.floor(n*p-5*Math.sqrt(n*p*(1-p))-2)),k1=Math.min(n,Math.ceil(n*p+5*Math.sqrt(n*p*(1-p))+2)),el=$('#kfig'),W=el.clientWidth,H=el.clientHeight,ml=8,mb=22,mt=8,ks=[];for(let k=k0;k<=k1;k++)ks.push(k);
+  const ym=Math.max(...ks.map(k=>pr[k])),bw=(W-2*ml)/ks.length;let h='';
+  ks.forEach((k,i)=>{const hh=pr[k]/ym*(H-mt-mb);h+=`<rect x="${ml+i*bw+.5}" y="${H-mb-hh}" width="${Math.max(1,bw-1)}" height="${hh}" fill="${k>=lo&&k<=hi?'var(--moss)':'var(--mute)'}" fill-opacity="${k>=lo&&k<=hi?.85:.4}"/>`});
+  const lab=k=>`${k} (${(k/n*100).toFixed(1)}%)`;h+=`<text x="${ml}" y="${H-5}">${lab(k0)}</text><text x="${W-ml}" y="${H-5}" text-anchor="end">${lab(k1)}</text>`;
+  el.innerHTML=`<svg role="img" aria-label="Binomial distribution of the count">${h}</svg>`;
+  const se=Math.sqrt(p*(1-p)/n);
+  $('#ktiles').innerHTML=[['Expected count',fx(n*p,1)],['SE of share',`± ${(se*100).toFixed(2)} pts`],['95% of shares',`${(lo/n*100).toFixed(1)}–${(hi/n*100).toFixed(1)}%`],['P(not seen at all)',(Math.pow(1-p,n)*100).toFixed(1)+'%']].map(q=>card(...q)).join('')}
+kP=bindSl('k_p',v=>(v*100).toFixed(1)+'%',drawCount);kN=bindSl('k_n',v=>v,drawCount);
+/* softmax regression, leave-one-out */
+function softFit(Z,g,K,skip){const p=3,B=[...Array(K)].map(()=>new Array(p).fill(0)),lr=.5,lam=.02,idx=Z.map((_,i)=>i).filter(i=>i!==skip),N=idx.length;
+  for(let it=0;it<300;it++){const G=B.map(()=>new Array(p).fill(0));
+    idx.forEach(i=>{const x=[1,Z[i][0],Z[i][1]],e=B.map(b=>b[0]+b[1]*x[1]+b[2]*x[2]),m=Math.max(...e),ex=e.map(v=>Math.exp(v-m)),s=ex.reduce((a,v)=>a+v,0);for(let k=0;k<K;k++){const d=(g[i]===k?1:0)-ex[k]/s;for(let c=0;c<p;c++)G[k][c]+=d*x[c]}});
+    for(let k=0;k<K;k++)for(let c=0;c<p;c++)B[k][c]+=lr*(G[k][c]/N-lam*(c?B[k][c]:0))}return B}
+const softP=(B,z)=>{const e=B.map(b=>b[0]+b[1]*z[0]+b[2]*z[1]),m=Math.max(...e),ex=e.map(v=>Math.exp(v-m)),s=ex.reduce((a,v)=>a+v,0);return ex.map(v=>v/s)};
+const stdz=X=>{const n=X.length,m=[0,1].map(k=>X.reduce((a,p)=>a+p[k],0)/n),s=[0,1].map(k=>Math.sqrt(X.reduce((a,p)=>a+(p[k]-m[k])**2,0)/n)||1);return X.map(p=>[(p[0]-m[0])/s[0],(p[1]-m[1])/s[1]])};
+let mRain,mGr,mSp;
+function multiPanel(M,g,K,mapId,barId){const n=M.length,Z=stdz(pcoa(distance(M,'hell'),n).X),loo=Z.map((_,i)=>softP(softFit(Z,g,K,i),Z[i])),full=softFit(Z,g,K,-1);
+  {const el=$('#'+mapId),W=el.clientWidth,H=el.clientHeight,m=14,xs=Z.map(z=>z[0]),ys=Z.map(z=>z[1]),x0=Math.min(...xs)-.4,x1=Math.max(...xs)+.4,y0=Math.min(...ys)-.4,y1=Math.max(...ys)+.4,
+    k=Math.min((W-2*m)/(x1-x0),(H-2*m)/(y1-y0)),ox=W/2-(x0+x1)/2*k,oy=H/2+(y0+y1)/2*k,cs=Math.max(6,Math.round(Math.min(W,H)/26));let h='';
+    for(let px=0;px<W;px+=cs)for(let py=0;py<H;py+=cs){const zx=(px+cs/2-ox)/k,zy=(oy-(py+cs/2))/k,pp=softP(full,[zx,zy]),mx=Math.max(...pp);h+=`<rect x="${px}" y="${py}" width="${cs}" height="${cs}" fill="${GPAL4[pp.indexOf(mx)]}" fill-opacity="${((mx-1/K)/(1-1/K)*.45).toFixed(2)}"/>`}
+    Z.forEach((z,i)=>{const hit=loo[i].indexOf(Math.max(...loo[i]))===g[i],cx=ox+z[0]*k,cy=oy-z[1]*k;h+=hit?`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4" fill="${GPAL4[g[i]]}" stroke="var(--panel)"/>`:`<path d="M${cx-4},${cy-4}l8,8m0,-8l-8,8" stroke="${GPAL4[g[i]]}" stroke-width="2.5"/>`});
+    el.innerHTML=`<svg role="img" aria-label="Predicted community regions">${h}</svg>`}
+  {const el=$('#'+barId),W=el.clientWidth,H=el.clientHeight,mb=14,o=[...Array(n).keys()].sort((a,b)=>g[a]-g[b]||loo[b][g[b]]-loo[a][g[a]]),bw=W/n;let h='';
+    o.forEach((i,j)=>{let y=H-mb;loo[i].forEach((p,k)=>{const hh=p*(H-mb);y-=hh;h+=`<rect x="${(j*bw).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw+.3).toFixed(1)}" height="${hh.toFixed(1)}" fill="${GPAL4[k]}"/>`});h+=`<rect x="${(j*bw).toFixed(1)}" y="${H-mb+2}" width="${(bw+.3).toFixed(1)}" height="8" fill="${GPAL4[g[i]]}"/>`});
+    el.innerHTML=`<svg role="img" aria-label="Predicted probabilities per sample">${h}</svg>`}
+  let acc=0,pt=0,ll=0;loo.forEach((p,i)=>{if(p.indexOf(Math.max(...p))===g[i])acc++;pt+=p[g[i]];ll-=Math.log(Math.max(1e-6,p[g[i]]))});return{acc:acc/n,pt:pt/n,ll:ll/n}}
+const GPAL4=['#2f8a52','#c9930a','#2c62b0','#c04a2f'];
+function drawMulti(){const s=simulate({comm:4,sites:12,rich:60,tol:.25,spread:mSp(),repsd:1,insect:.3,types:30,rain:mRain(),grains:mGr()},4321),K=4;
+  const V=multiPanel(s.veg,s.groups,K,'mmapv','mbarv'),P=multiPanel(s.pol,s.groups,K,'mmapp','mbarp');
+  $('#mleg').innerHTML=['A','B','C','D'].map((c,i)=>`<span><i style="background:${GPAL4[i]}"></i>Community ${c}</span>`).join('')+'<span>× = misassigned · strip under each column = true community</span>';
+  $('#mtiles').innerHTML=[['Accuracy, plants',Math.round(V.acc*100)+'%'],['Accuracy, pollen',Math.round(P.acc*100)+'%'],['Mean P(true), plants',fx(V.pt,2)],['Mean P(true), pollen',fx(P.pt,2)],['Log-loss, plants',fx(V.ll,2)],['Log-loss, pollen',fx(P.ll,2)]].map(q=>card(...q)).join('')+'<p class="notice" style="grid-column:1/-1;margin:2px 0 0">Chance: accuracy 25%, mean P(true) 0.25, log-loss 1.39.</p>'}
+mRain=bindSl('m_rain',v=>Math.round(v*100)+'%',deb(drawMulti,80));mGr=bindSl('m_gr',v=>v,deb(drawMulti,80));mSp=bindSl('m_sp',v=>v.toFixed(2),deb(drawMulti,80));
+
 /* ---------- start ---------- */
 NARROW.addEventListener('change',()=>{buildGrid();drawTable()});
 if(matchMedia('(max-width:1000px)').matches)document.querySelectorAll('section.ch').forEach(sec=>{const t=sec.querySelector('.try'),tr=sec.querySelector('.tray');if(t&&tr){tr.after(t);t.style.marginTop='14px'}});
 document.querySelectorAll('table.stack').forEach(t=>{const hd=[...t.tHead.rows[0].cells].map(c=>c.textContent);[...t.tBodies[0].rows].forEach(r=>[...r.cells].forEach((c,i)=>c.dataset.l=hd[i]))});
-famPick(0);reg(drawFam);reg(drawId);reg(drawSamp);reg(drawTable);reg(drawHill);reg(drawABG);reg(drawRare);reg(drawDist);reg(drawMatrix);reg(drawPcoa);reg(drawLens);nmInit(true);reg(drawNm);reg(drawPca);reg(drawGroups);reg(drawProc);reg(drawEnv);
+famPick(0);reg(drawFam);reg(drawId);reg(drawSamp);reg(drawTable);reg(drawHill);reg(drawABG);reg(drawRare);reg(drawDist);reg(drawMatrix);reg(drawPcoa);reg(drawLens);nmInit(true);reg(drawNm);reg(drawPca);reg(drawGroups);reg(drawProc);reg(drawEnv);reg(drawBin);reg(drawCount);reg(drawMulti);
 runStarts();ro.observe(document.body);
 const links=[...document.querySelectorAll('nav.toc a')],io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on){const nv=$('#toc');if(nv.scrollWidth>nv.clientWidth)nv.scrollTo({left:a.offsetLeft-nv.clientWidth/2+a.offsetWidth/2,behavior:'smooth'})}})}),{rootMargin:'-20% 0px -70% 0px'});
 document.querySelectorAll('section.ch').forEach(s=>io.observe(s));
