@@ -987,7 +987,7 @@ const phyXY = g => [leafX[g] ?? WW/2, 360];
 const laneW = (WW-140)/Math.max(1, leaves.length-1);   /* width of one group's column in the phylogeny view */
 const unknownPhy = [WW/2, 720];
 /* Phylogeny view, "Order by first appearance": each spore sits in its group's lane at the age of its first appearance
-   (oldest at the bottom, as in a rock column), with its stratigraphic range and the formation of its oldest record.
+   (oldest nearest the tree, younger ones hanging below), with its stratigraphic range and the formation of its oldest record.
    Data: fad_formation.json, built in R (R/fad_formations.R) from the time tree's ranges and the Paleobiology Database. */
 let FADD = null, fadPos = new Map(), fadScale = null;
 const FAD_TOP = 520, FAD_H = 640, FAD_UNK_X = () => WW + 70;   /* spores with no known parent get their own lane at the right */
@@ -999,11 +999,11 @@ function layoutFad(){
   if (!sp.length) return;
   /* the scale runs from the oldest first appearance to the end of this interval; genera that first appear later sit at the top edge */
   const ages = sp.filter(fadOf).map(n => fadOf(n).f), a1 = d3.max(ages), a0 = Math.min(a1 - 1, Math.max(d3.min(ages), (SPAN[PERIOD] || [0, 0])[1] - 5));
-  fadScale = d3.scaleLinear().domain([a0, a1]).range([FAD_TOP, FAD_TOP + FAD_H]).clamp(true);
-  const fy = n => fadOf(n) ? fadScale(fadOf(n).f) : FAD_TOP - 40;   /* no range data: a row above the scale */
+  fadScale = d3.scaleLinear().domain([a0, a1]).range([FAD_TOP + FAD_H, FAD_TOP]).clamp(true);   /* oldest at the top, next to the tree */
+  const fy = n => fadOf(n) ? fadScale(fadOf(n).f) : FAD_TOP + FAD_H + 40;   /* no range data: a row below the scale */
   d3.group(sp, laneOf).forEach((arr, grp) => {
     const cx = grp === "unknown" ? FAD_UNK_X() : leafX[grp], half = grp === "unknown" ? 80 : Math.max(6, laneW / 2 - 8), placed = [];
-    arr.sort((a, b) => (fadOf(b)?.f ?? 1e4) - (fadOf(a)?.f ?? 1e4) || (a.kind === "sp-spore") - (b.kind === "sp-spore") || String(a.id).localeCompare(String(b.id)));
+    arr.sort((a, b) => (fadOf(b)?.f ?? -1) - (fadOf(a)?.f ?? -1) || (a.kind === "sp-spore") - (b.kind === "sp-spore") || String(a.id).localeCompare(String(b.id)));
     arr.forEach(n => { const y = fy(n), r = n.kind === "sp-spore" ? 5 : 9; let x = cx;
       for (let k = 0; k < 60; k++){ const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 12; if (Math.abs(off) > half) break;
         if (!placed.some(p => Math.abs(p[0] - (cx + off)) < 11 && Math.abs(p[1] - y) < r * 1.7)) { x = cx + off; break; } }
@@ -1020,17 +1020,17 @@ function pinFad(){
 function drawFadBack(){
   if (!state.fadOrder || !fadScale) return;
   const g = gBack.append("g").attr("class", "fadback").attr("pointer-events", "none"), mu = css("--muted"), rule = css("--rule"), [a0] = fadScale.domain(), ax = 30;
-  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP - 62).attr("class", "fadax").text("First appearance, oldest at the bottom");
-  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP - 37).attr("class", "fadax").text("no range data");
+  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP - 62).attr("class", "fadax").text("First appearance, oldest nearest the tree");
+  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP + FAD_H + 43).attr("class", "fadax").text("no range data");
   g.append("text").attr("x", FAD_UNK_X()).attr("y", FAD_TOP - 62).attr("text-anchor", "middle").attr("class", "fadax").text("No parent plant known");
-  g.append("rect").attr("x", FAD_UNK_X() - 90).attr("y", FAD_TOP - 52).attr("width", 180).attr("height", FAD_H + 70).attr("fill", css("--band")).attr("opacity", .5).attr("rx", 8);
+  g.append("rect").attr("x", FAD_UNK_X() - 90).attr("y", FAD_TOP - 52).attr("width", 180).attr("height", FAD_H + 110).attr("fill", css("--band")).attr("opacity", .5).attr("rx", 8);
   fadScale.ticks(8).forEach(t => { const y = fadScale(t);
     g.append("line").attr("x1", ax).attr("x2", FAD_UNK_X() + 90).attr("y1", y).attr("y2", y).attr("stroke", rule).attr("stroke-dasharray", "2 5");
     g.append("text").attr("x", ax - 4).attr("y", y + 3).attr("text-anchor", "end").attr("class", "fadax").text(t + " Ma"); });
   fadPos.forEach(([x, y], n) => { const F = fadOf(n); if (!F || n.kind === "sp-spore") return;
-    const yl = F.l < a0 ? FAD_TOP - 10 : fadScale(F.l);
+    const yl = F.l < a0 ? FAD_TOP + FAD_H + 10 : fadScale(F.l);   /* the range runs down toward younger rocks */
     g.append("line").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", yl).attr("stroke", mu).attr("stroke-width", 2.2).attr("stroke-linecap", "round").attr("opacity", .4);
-    if (F.l < a0) g.append("path").attr("d", `M${x - 3},${yl + 4} L${x},${yl - 1} L${x + 3},${yl + 4}`).attr("fill", "none").attr("stroke", mu).attr("opacity", .6);
+    if (F.l < a0) g.append("path").attr("d", `M${x - 3},${yl - 4} L${x},${yl + 1} L${x + 3},${yl - 4}`).attr("fill", "none").attr("stroke", mu).attr("opacity", .6);
     const fm = F.first && F.first.fm;
     g.append("text").attr("x", x + 10).attr("y", y + 3).attr("class", "fadlab").text(`${F.fs}${fm ? " · " + fm : ""}`); });
 }
@@ -1898,7 +1898,7 @@ function drawBack(){
     }
     draw(CTX.phylogeny.tree, 0);
     if (!state.fadOrder && (IS_PENN || nodes.some(n => n.kind !== "hub" && (n.group === "unknown" || leafX[n.group] == null)))) g.append("text").attr("x", WW/2).attr("y", 700).attr("text-anchor","middle").text(IS_PENN ? "Spores of unknown affinity" : "Groups of uncertain placement and spores of unknown affinity");
-    g.append("text").attr("x", 16).attr("y", state.fadOrder ? FAD_TOP + FAD_H + 50 : 780).text(CTX.phylogeny.note);
+    g.append("text").attr("x", 16).attr("y", state.fadOrder ? FAD_TOP + FAD_H + 90 : 780).text(CTX.phylogeny.note);
   }
 }
 
