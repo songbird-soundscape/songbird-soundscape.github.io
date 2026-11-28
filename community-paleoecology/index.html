@@ -29,6 +29,8 @@ html,body{height:100%}
 body{background:var(--bg); color:var(--ink); font:14px/1.5 var(--body); padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); padding-block:12px}
 h1{font:700 26px/1.1 var(--display); margin:0; letter-spacing:-.01em; text-wrap:balance}
 h2{font:700 17px/1.2 var(--display); margin:0 0 6px}
+.brand{display:flex; align-items:center; gap:18px; flex:1 1 520px} .brand > div{min-width:0} .emblem{width:104px; height:104px; flex:none; border-radius:50%; filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+@media (max-width:600px){ .emblem{width:68px; height:68px} .brand{gap:12px; align-items:flex-start} }
 .top{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:10px 24px; margin-bottom:10px}
 .sub{color:var(--muted); max-width:70ch; margin:4px 0 0}
 .tabs{display:flex; gap:4px; background:var(--chip-bg); border-radius:8px; padding:3px}
@@ -150,10 +152,10 @@ td.mono{font:12px var(--mono)}
 })();
 </script>
 <div class="top">
-  <div>
+  <div class="brand"><img class="emblem" src="emblem-512.png" alt="Emblem: a tree fern, a grub feeding on a frond, coprolites in a burrow and fungal hyphae in the soil" width="104" height="104"><div>
     <h1>Community Paleoecology</h1>
     <p class="sub">Who ate, bored, infected, sheltered in, grew on or lived beside the plants of the fossilized past? Explore the network below to follow each interaction from a plant to the animals, fungi and neighbours that lived with it, period by period and from floodplain to shelf. Every line is a published record you can open.</p>
-    <p class="sub" style="margin-top:4px;font-size:12.5px">A companion to <a href="/spores/">Sporae Dispersae</a>, by <a href="/">Stephen C. Caird</a>.</p>
+    <p class="sub" style="margin-top:4px;font-size:12.5px">A companion to <a href="/spores/">Sporae Dispersae</a>, by <a href="/">Stephen C. Caird</a>.</p></div>
   </div>
   <div class="tabs" role="tablist">
     <button data-view="network" aria-pressed="true">Network</button>
