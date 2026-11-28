@@ -1962,12 +1962,12 @@ const AFF = {"inst":[["University of Western Australia","Australia"],["Birbal Sa
 /* "Source year" colouring: one scale shared by the network links and the milestones timeline */
 const SRC_Y0 = 1820, SRC_Y1 = 2026;
 const srcCol = y => (y == null || !isFinite(y)) ? css("--muted") : d3.interpolateTurbo(0.08 + 0.86 * Math.max(0, Math.min(1, (y - SRC_Y0) / (SRC_Y1 - SRC_Y0))));
-const srcYear = l => { if (l._sy !== undefined) return l._sy; const c = (typeof citesIn === "function") ? citesIn(l.ref) : []; return l._sy = c.length ? c[0].year : null; };
+const srcYear = l => { if (l._sy !== undefined) return l._sy; const c = (typeof citesIn === "function") ? citesIn(firsthandRef(l.ref)) : []; return l._sy = c.length ? c[0].year : null; };
 const linkColorKind = l => css(l.type==="insitu"||l.type==="insitu-gen"||l.type==="insitu-sp"||l.type==="compare-sp"?"--insitu":l.type==="affinity"?"--affinity":(l.type==="member"||l.type==="taxon")?"--rule":"--assembly");
-const affOf = l => { if (l._af !== undefined) return l._af; const c = (typeof citesIn === "function") ? citesIn(l.ref) : []; const a = c.length ? AFF.cites[citeKey(c[0])] : null; return l._af = a == null ? null : a; };
+const affOf = l => { if (l._af !== undefined) return l._af; const c = (typeof citesIn === "function") ? citesIn(firsthandRef(l.ref)) : []; const a = c.length ? AFF.cites[citeKey(c[0])] : null; return l._af = a == null ? null : a; };
 const affCol = i => { if (i == null) return css("--muted"); const n = AFF.inst.length; const t = n > 1 ? i / (n - 1) : 0.5;
   return d3.piecewise(d3.interpolateLab, ["#4a2e1d", "#8c5a2b", "#c08a3e", "#a3a14a", "#6f7f3a", "#5c6b5e", "#7a6a8a"])(t); };
-const papersOf = l => { if (l._pp) return l._pp; const seen = new Set(), out = []; ((typeof citesIn === "function") ? citesIn(l.ref) : []).forEach(c => { const k = citeKey(c); if (!seen.has(k)) { seen.add(k); out.push({key: k, year: c.year, who: c.who, aff: AFF.cites[k] ?? null}); } }); return l._pp = out; };
+const papersOf = l => { if (l._pp) return l._pp; const seen = new Set(), out = []; ((typeof citesIn === "function") ? citesIn(firsthandRef(l.ref)) : []).forEach(c => { const k = citeKey(c); if (!seen.has(k)) { seen.add(k); out.push({key: k, year: c.year, who: c.who, aff: AFF.cites[k] ?? null}); } }); return l._pp = out; };
 const affsOf = l => { const out = []; papersOf(l).forEach(p => { if (!out.includes(p.aff)) out.push(p.aff); }); return out; };
 const paperCol = p => state.lcol === "aff" ? affCol(p.aff) : srcCol(p.year);
 const linkColor = l => state.lcol === "aff" && !(l.type==="member"||l.type==="taxon") ? affCol(affOf(l)) : linkColorKind(l);
@@ -2428,14 +2428,19 @@ const scholarURL = q => "https://scholar.google.com/scholar?q=" + encodeURICompo
 const CITE_RE = /([A-Z][\p{L}'’.\-]+(?:(?:\s+(?:and|&|et al\.|ex|in|de|van|von|du|le))*\s+[A-Z][\p{L}'’.\-]+)*(?:\s+et al\.)?),?\s+((?:1[789]|20)\d\d)/gu;
 function citesIn(text){ const out = []; if (!text) return out; for (const m of String(text).matchAll(CITE_RE)) {
   const who = m[1].replace(/^(Year from|From|See|After|Cited by|In)\s+/i, "").trim(); if (!who || /^(Upper|Lower|Middle|Late|Early|Year|Page|Fig|Pl)\b/.test(who)) continue; out.push({who, year: +m[2]}); } return out; }
+/* firsthand only: a compiler who cited, reported or dated someone else's find (Balme 1995's "earliest in situ study cited by",
+   "as reported by", "as given by", "Year from ... p.", "not found in", or a bracketed "(Balme 1995)" after the real study) is not a source of that link, so those clauses are dropped before counting papers */
+const SECONDHAND_RE = /\b(?:(?:earliest in situ study\s+)?(?:as\s+)?(?:cited|reported|given)\s+(?:by|in)|Year from|not found in)\s+[^;|)]*/gi;
+const COMPILER_PAREN_RE = /((?:1[789]|20)\d\d[a-z]?)\s*\(\s*[A-Z][^()]*?(?:1[789]|20)\d\d[a-z]?\s*\)/g;   /* "Millay & Taylor 1974 (Balme 1995)": the bracketed compiler goes */
+function firsthandRef(text){ return text ? String(text).replace(SECONDHAND_RE, "").replace(COMPILER_PAREN_RE, "$1") : text; }
 const citeKey = c => (c.who + " " + c.year).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\band\b/g, "&").replace(/[.,]/g, "").replace(/\s+/g, " ");
 function citeFull(c){ const k = Object.keys(REF).find(r => citeKey({who: r.replace(/\s+\d{4}.*$/, ""), year: +((r.match(/\d{4}/) || [0])[0])}) === citeKey(c)); return k ? REF[k].full : null; }
 const PUBS = (() => { const M = new Map();
   const put = (c, kind, about) => { const k = citeKey(c); let p = M.get(k); if (!p) { p = {key: k, who: c.who, year: c.year, kinds: new Set(), about: new Set()}; M.set(k, p); }
     p.kinds.add(kind); if (about) p.about.add(about); };
-  nodes.forEach(n => { if (n.kind === "hub") return; citesIn(n.auth).forEach(c => put(c, "named", isSp(n) ? n.id : n.label)); });
+  nodes.forEach(n => { if (n.kind === "hub") return; citesIn(firsthandRef(n.auth)).forEach(c => put(c, "named", isSp(n) ? n.id : n.label)); });
   links.forEach(l => { if (l.type !== "insitu" && l.type !== "assembly") return; const s = l.source.id ?? l.source, t = l.target.id ?? l.target;
-    citesIn(l.ref).forEach(c => put(c, l.type === "insitu" ? "in situ" : "organ to plant", `${s} → ${t}`)); });
+    citesIn(firsthandRef(l.ref)).forEach(c => put(c, l.type === "insitu" ? "in situ" : "organ to plant", `${s} → ${t}`)); });
   return [...M.values()].filter(p => p.year >= YMIN && p.year <= YMAX).map(p => { const full = citeFull(p);
     return {...p, full, q: full || `${p.who} ${p.year} ${[...p.about][0]?.split(" → ")[0] || ""}`.trim()}; }).sort((a, b) => a.year - b.year || a.who.localeCompare(b.who)); })();
 /* the history timeline can zoom in on a stretch of years and pan along it; the year slider follows the same stretch */
@@ -2491,7 +2496,7 @@ function drawMilestones(){
   tl.attr("viewBox", `0 0 ${W} ${H}`).attr("width", W).attr("height", H).style("height", H + "px");
   marker = tl.append("line").attr("y1",TLY-14).attr("y2",TLY+14).attr("stroke",css("--ink")).attr("stroke-width",2).style("pointer-events","none");
   const leg = document.getElementById("pubLegend");
-  if (leg) leg.innerHTML = `<span><b>${PUBS.length}</b>&nbsp;publications supplied this page's names and links, one dot each; click a dot or a milestone to search Google Scholar.</span>` +
+  if (leg) leg.innerHTML = `<span><b>${PUBS.length}</b>&nbsp;firsthand publications supplied this page's names and links, one dot each (a compilation that only cites an earlier find, such as Balme 1995, is left out); click a dot or a milestone to search Google Scholar.</span>` +
     `<span><i style="background:var(--spore)"></i>named genera or species</span><span><i style="background:var(--insitu)"></i>found spores inside a plant organ</span><span><i style="background:var(--plant)"></i>joined organs into a whole plant</span>`;
   drawTimelineMarker();
 }
