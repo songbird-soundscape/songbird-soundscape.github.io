@@ -117,7 +117,7 @@ td.mono{font:12px var(--mono)}
 .nlabel{font:13px var(--body); fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:3px; pointer-events:none}
 .nlabel.plant{font-weight:600}
 .nlabel.picked{font-weight:700; fill:var(--accent)}
-path.picked{stroke:var(--ink)!important; stroke-width:2.5px!important}
+path.pinned{stroke-dasharray:3 2; stroke:var(--ink)} path.picked{stroke:var(--ink)!important; stroke-width:2.5px!important}
 .selchips{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 10px}
 .selchip{font:inherit; font-size:12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); padding:2px 4px 2px 10px; cursor:pointer; display:inline-flex; gap:6px; align-items:center}
 .selchip.on{border-color:var(--accent); color:var(--accent)} .selchip span{padding:0 5px; border-radius:50%; opacity:.6} .selchip span:hover{opacity:1; background:var(--line)}
@@ -209,6 +209,7 @@ path.picked{stroke:var(--ink)!important; stroke-width:2.5px!important}
     <label class="ctl"><input type="checkbox" id="whole"> Group plants into whole-plant groups</label>
     <label class="ctl"><input type="checkbox" id="fauna" checked> Animals found in the coal</label>
     <input type="search" id="q" placeholder="Find a plant or animal">
+    <button type="button" id="unpin" class="selchip clr" hidden title="Let every node you placed float again">Let placed nodes float</button>
   </div>
   <div class="main">
     <div id="net"><svg id="svg" aria-label="Network of plants and the organisms and conditions linked to them"></svg><div class="legend" id="legend"></div></div>
@@ -419,6 +420,8 @@ const GVAR = {lycopsid:"--g-lycopsid", sphenopsid:"--g-sphenopsid", "marattialea
 const KINDN = {insect:"Insects", mite:"Mites", myriapod:"Millipedes and kin", arachnid:"Arachnids", arthropod:"Other arthropods", unknown:"Unknown makers",
   fungus:"Fungi and microbes", tetrapod:"Tetrapods", plant:"Other plants", environment:"Conditions", mollusc:"Molluscs", marine:"Marine animals", crustacean:"Crustaceans", other:"Other animals", setting:"Where found", root:"Plant roots"};
 const cv = v => `var(${v})`;
+/* nodes dragged into place stay there (double-click one to let it go); kept while you change filters */
+const pinned = new Map();
 const st = {cats:new Set(Object.keys(CATS)), whole:false, strict:false, fauna:true, direct:false, collapse:false, sel:null, sels:new Set(), q:"", view:"network"};
 st.periods = new Set(["Pennsylvanian"]);
 st.palynEv = "any";
@@ -504,7 +507,9 @@ function rebuild(){
     .style("cursor", "pointer").on("click", (e, d) => { e.stopPropagation(); select(d); })
     .on("mouseenter", (e, d) => hoverOn(d)).on("mouseleave", () => focus())
     .call(d3.drag().on("start", (e, d) => { if (!e.active) sim.alphaTarget(0.2).restart(); d.fx = d.x; d.fy = d.y; })
-      .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; }).on("end", (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = d.fy = null; }));
+      .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; d.moved = true; }).on("end", function(e, d){ if (!e.active) sim.alphaTarget(0); if (d.moved) { pinned.set(d.id, [d.fx, d.fy]); d3.select(this).classed("pinned", true); $("unpin").hidden = false; } d.moved = false; }))
+    .on("dblclick", function(e, d){ e.stopPropagation(); pinned.delete(d.id); d.fx = d.fy = null; d3.select(this).classed("pinned", false); if (!st.sels.has(d.id)) select(d, true); $("unpin").hidden = !pinned.size; sim.alpha(0.3).restart(); })
+    .classed("pinned", d => pinned.has(d.id)).each(d => { const q = pinned.get(d.id); if (q) { d.fx = q[0]; d.fy = q[1]; } });
   gT.selectAll("text").data(G.nodes, d => d.id).join("text").attr("class", d => "nlabel" + (d.kind === "plant" ? " plant" : ""))
     .attr("text-anchor", "middle").text(d => d.label);
   labels(); legend();
@@ -589,11 +594,12 @@ document.addEventListener("click", e => { const p = e.target.closest("#panel"); 
   if (u) { st.sels.delete(u.dataset.unsel); st.sel = [...st.sels].pop() || null; focus(); const nd = st.sel && G.nodes.find(n => n.id === st.sel); if (nd) select(nd, true); else intro(); }
   else if (s) { const nd = G.nodes.find(n => n.id === s.dataset.sel); if (nd) select(nd, true); }
   else if (c) { st.sels.clear(); st.sel = null; focus(); intro(); } });
+document.getElementById("unpin").addEventListener("click", () => { pinned.clear(); G.nodes.forEach(d => { d.fx = d.fy = null; }); gN.selectAll("path").classed("pinned", false); document.getElementById("unpin").hidden = true; sim.alpha(0.4).restart(); });
 function intro(){
   const recs = DATA.records.length, full = DATA.records.filter(isFull).length;
   $("panel").innerHTML = `<div class="kicker">How to read this</div><h2>${recs} records, ${full} read in full</h2>
   <p>Plants sit in the middle, coloured by group. Around them are the things linked to them: insects and mites, fungi, other plants, tetrapods, molluscs and marine animals, and the conditions plants lived with. The outer diamonds are where animals were found in the coal when no plant link is known.</p>
-  <p>Names stay hidden until you click: click a plant or organism to name it and everything linked to it. Click more to compare several at once; click one again, or its × above the records, to drop it; click empty space to clear.</p>
+  <p>Names stay hidden until you click: click a plant or organism to name it and everything linked to it. Drag any node to place it; it stays where you leave it (double-click it to let it float again). Click more to compare several at once; click one again, or its × above the records, to drop it; click empty space to clear.</p>
   <p>Click any plant, organism or line to see the records behind it, each with its locality, age, citation and pages, and how it was checked: <span class="conf full">read in full</span> <span class="conf abs">abstract only</span> <span class="conf sec">secondary source</span>. Dashed lines have no record read in full yet.</p>
   <p class="meta">Makers of most damage are unknown, so those records sit under "Unknown maker". Form genera (Alethopteris, Neuropteris, Florinites, Nucellangium) are parts of whole plants; tick "Group plants" to merge them. Datasets loaded: ${DATA.sources_present.map(esc).join(", ")}.</p>`;
 }
