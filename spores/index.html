@@ -711,8 +711,8 @@ body.ttfull-open{overflow:hidden}
           <span><i class="sw" style="border-color:var(--assembly)"></i>Organ linked to the whole plant</span>
           <span><i class="sw" style="border-color:var(--affinity); border-top-style:dotted"></i>Assigned to a group only</span>
           <span><i class="sw" style="border-color:var(--insitu); border-top-style:dashed"></i>Dashed: year approximate or a "known by" bound</span>
-          <span id="keySrc" style="flex-basis:100%; grid-column:1/-1; display:block"><b>Hover a link</b> to colour it by the year of the paper it cites (the rainbow on the year slider) and pick out that paper's dot on the milestones timeline.</span>
-          <span id="keyAff" hidden style="flex-basis:100%; grid-column:1/-1; display:block"><b>Author affiliation</b> (Link colours): each link is coloured by the institution of the first author of the paper it cites, at the time of that paper; earth tones run by country and then institution. Most affiliations come from background knowledge and still need checking; a few are from OpenAlex (<code>data/affiliations/</code>). Grey: affiliation not yet recorded. <span id="affLeg" class="affleg"></span></span>
+          <span id="keySrc" style="flex-basis:100%; grid-column:1/-1; display:block"><b>Hover a link</b> to colour it by the year of the paper it cites (the rainbow on the year slider) and pick out that paper's dot on the milestones timeline. A link citing two or more papers splits into one strand per paper, each in the same colour as its dot.</span>
+          <span id="keyAff" hidden style="flex-basis:100%; grid-column:1/-1; display:block"><b>Author affiliation</b> (Link colours): each link is coloured by the institution of the first author of the paper it cites, at the time of that paper; earth tones run by country and then institution. A link that cites papers from more than one institution is striped in all their colours; hover it to split it into one strand per paper, each matching its paper's dot on the timeline. Most affiliations come from background knowledge and still need checking; a few are from OpenAlex (<code>data/affiliations/</code>). Grey: affiliation not yet recorded. <span id="affLeg" class="affleg"></span></span>
           <span id="keyHabitat"><i class="sw" style="border-color:var(--hull); border-top-style:dotted"></i>Habitat view: dotted outline marks a supposed habitat; click it</span>
         </div>
       </div>
@@ -1155,6 +1155,17 @@ let fitted = false;
 sim.on("end", () => { if (!fitted) { fitted = true; fitView(); } declutter(); });
 
 const linkSel = gLinks.selectAll("line").data(links).join("line").attr("stroke-linecap","round");
+const gMulti = gLinks.append("g").attr("class", "multiaff").style("pointer-events", "none");   /* Author affiliation: a link citing papers from two or more institutions is striped in all their colours */
+function drawMulti(){
+  const segs = [];
+  if (state.lcol === "aff") links.forEach(l => { if (l.type==="member"||l.type==="taxon"||!linkOn(l)) return; const a = affsOf(l); if (a.length < 2) return;
+    const on = l.source.id===state.sel || l.target.id===state.sel, n = a.length;
+    a.forEach((ai, k) => { if (k) segs.push({l, col: affCol(ai), k, n, op: on ? 1 : 0.7, w: l.type==="affinity"||SPLINK.has(l.type) ? 1.2 : 2}); }); });
+  gMulti.selectAll("line").data(segs).join("line").attr("stroke-linecap", "butt")
+    .attr("stroke", d => d.col).attr("stroke-width", d => d.w).attr("opacity", d => d.op)
+    .attr("stroke-dasharray", d => `5 ${5 * (d.n - 1)}`).attr("stroke-dashoffset", d => -5 * d.k);
+  posMulti(); }
+function posMulti(){ gMulti.selectAll("line").attr("x1", d => d.l.source.x).attr("y1", d => d.l.source.y).attr("x2", d => d.l.target.x).attr("y2", d => d.l.target.y); }
 const nodeSel = gNodes.selectAll("g").data(nodes).join("g").attr("class", d => "node" + (d.kind==="hub"?" hub":""));
 /* ---------- glyphs: spores drawn from morphology, organs as icons ---------- */
 const MG = MORPH.genera, UNCODED = new Set(MORPH.uncoded);
@@ -1874,6 +1885,7 @@ sim.on("tick", () => {
     const cx = target(n)[0], hw = (n.group === "unknown" || leafX[n.group] == null) ? WW/2 - 70 : Math.max(6, laneW/2 - (n._r || 6)/curK - 3);
     if (n.x < cx - hw) { n.x = cx - hw; n.vx = 0; } else if (n.x > cx + hw) { n.x = cx + hw; n.vx = 0; } });
   linkSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+  posMulti();
   if (window.__hitSel) window.__hitSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y).attr("display", d => linkOn(d) ? null : "none");
   placeNodes();
   drawHulls();
@@ -1955,6 +1967,9 @@ const linkColorKind = l => css(l.type==="insitu"||l.type==="insitu-gen"||l.type=
 const affOf = l => { if (l._af !== undefined) return l._af; const c = (typeof citesIn === "function") ? citesIn(l.ref) : []; const a = c.length ? AFF.cites[citeKey(c[0])] : null; return l._af = a == null ? null : a; };
 const affCol = i => { if (i == null) return css("--muted"); const n = AFF.inst.length; const t = n > 1 ? i / (n - 1) : 0.5;
   return d3.piecewise(d3.interpolateLab, ["#4a2e1d", "#8c5a2b", "#c08a3e", "#a3a14a", "#6f7f3a", "#5c6b5e", "#7a6a8a"])(t); };
+const papersOf = l => { if (l._pp) return l._pp; const seen = new Set(), out = []; ((typeof citesIn === "function") ? citesIn(l.ref) : []).forEach(c => { const k = citeKey(c); if (!seen.has(k)) { seen.add(k); out.push({key: k, year: c.year, who: c.who, aff: AFF.cites[k] ?? null}); } }); return l._pp = out; };
+const affsOf = l => { const out = []; papersOf(l).forEach(p => { if (!out.includes(p.aff)) out.push(p.aff); }); return out; };
+const paperCol = p => state.lcol === "aff" ? affCol(p.aff) : srcCol(p.year);
 const linkColor = l => state.lcol === "aff" && !(l.type==="member"||l.type==="taxon") ? affCol(affOf(l)) : linkColorKind(l);
 
 let lastPlaced = null;
@@ -1973,6 +1988,7 @@ function render(){
     .attr("stroke-width", l => l.type==="member"||l.type==="taxon"?0.8:l.type==="affinity"||SPLINK.has(l.type)?1.2:2)
     .attr("stroke-dasharray", l => l.type==="affinity"||l.type==="compare-sp"?"1.5 4":(l.yc!=="exact" && l.type!=="member" && l.type!=="taxon"?"6 4":null))
     .attr("opacity", l => !linkOn(l) ? 0 : (l.source.id===state.sel || l.target.id===state.sel) ? 1 : SPLINK.has(l.type) ? 0.45 : 0.7);
+  drawMulti();
   nodeSel.attr("display", d => d.id !== "G:unknown" && inRegion(d) && spOn(d) && ecoOn(d) && !(state.mode==="habitat" && d.kind==="hub") ? null : "none")
     .attr("opacity", d => named(d) ? (neigh.size>1 && !neigh.has(d.id) && d.kind!=="hub" ? 0.6 : 1) : (state.ghosts ? 0.13 : 0));
   nodeSel.select("circle.dot").attr("stroke", d => d.id===state.sel ? css("--ink") : "none").attr("stroke-width", 2).attr("stroke-dasharray", null);
@@ -2568,17 +2584,28 @@ document.querySelectorAll(".seg button[data-lcol]").forEach(b => b.onclick = () 
 function paintSlider(){ const yi = document.getElementById("year"); if (!yi) return; const a = +yi.min, b = +yi.max;
   yi.style.setProperty("--rainbow", `linear-gradient(90deg, ${d3.range(0, 1.0001, 0.1).map(f => srcCol(a + f * (b - a))).join(",")})`); }
 paintSlider();
-/* hovering a link: it takes its source-year colour, and its paper's dot on the timeline turns black, ringed white */
+/* hovering a link: every paper it cites gets its own strand, side by side, in that paper's colour (source year, or first author's institution
+   under Author affiliation), and each paper's dot on the timeline takes the same colour, ringed, so a link citing two papers shows both */
 (() => { const parent = d3.select(gLinks.node().parentNode);
   const gHit = parent.insert("g", () => gLinks.node().nextSibling).attr("class", "linkhits");
+  const gHov = parent.insert("g", () => gHit.node()).attr("class", "linkhover").style("pointer-events", "none");
   const hitSel = gHit.selectAll("line").data(links.filter(l => l.ref)).join("line").attr("stroke", "transparent").attr("stroke-width", 9).style("pointer-events", "stroke").style("cursor", "help");
-  hitSel.append("title").text(l => { const s = l.source.id ?? l.source, t = l.target.id ?? l.target, y = srcYear(l), a = affOf(l);
-    return `${s} → ${t}\n${l.ref}${y ? "\nSource year: " + y : ""}${a != null ? "\nFirst author's institution: " + AFF.inst[a][0] : ""}`; });
+  hitSel.append("title").text(l => { const s = l.source.id ?? l.source, t = l.target.id ?? l.target, pp = papersOf(l);
+    const lines = pp.map(p => `${p.who} ${p.year}` + (p.aff != null ? ": " + AFF.inst[p.aff][0] : ""));
+    return `${s} → ${t}\n${l.ref}` + (lines.length ? "\n" + (lines.length > 1 ? lines.length + " papers:\n  " + lines.join("\n  ") : "Source: " + lines[0]) : ""); });
   const vis = new Map(); linkSel.each(function(l){ vis.set(l, this); });
-  hitSel.on("mouseenter", function(e, l){ const v = vis.get(l); if (v) d3.select(v).attr("stroke", srcCol(srcYear(l))).attr("stroke-width", 4).attr("opacity", 1).raise();
-      const keys = new Set(citesIn(l.ref).map(citeKey));
-      pubNodes.forEach(p => { if (keys.has(p.key)) { p.a.raise(); p.a.select("circle").attr("fill", "#000").attr("stroke", "#fff").attr("stroke-width", 1.6).attr("r", 4.2); } }); })
-    .on("mouseleave", function(e, l){ render();
+  hitSel.on("mouseenter", function(e, l){ const v = vis.get(l), pp = papersOf(l), k = (typeof curK === "number" && curK > 0) ? curK : 1;
+      const x1 = l.source.x, y1 = l.source.y, x2 = l.target.x, y2 = l.target.y, len = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
+      const W = pp.length > 1 ? 3 : 4, gap = (W + 1) / k;
+      if (v) d3.select(v).attr("opacity", pp.length ? 0 : 1);
+      gMulti.attr("opacity", 0);
+      gHov.selectAll("line").data(pp.length ? pp : [null]).join("line").attr("stroke-linecap", "round")
+        .attr("stroke", p => p ? paperCol(p) : linkColor(l)).attr("stroke-width", W)
+        .attr("x1", (p, i, a) => x1 + nx * gap * (i - (a.length - 1) / 2)).attr("y1", (p, i, a) => y1 + ny * gap * (i - (a.length - 1) / 2))
+        .attr("x2", (p, i, a) => x2 + nx * gap * (i - (a.length - 1) / 2)).attr("y2", (p, i, a) => y2 + ny * gap * (i - (a.length - 1) / 2));
+      const colByKey = new Map(pp.map(p => [p.key, paperCol(p)]));
+      pubNodes.forEach(p => { if (colByKey.has(p.key)) { p.a.raise(); p.a.select("circle").attr("fill", colByKey.get(p.key)).attr("stroke", css("--ink")).attr("stroke-width", 1.6).attr("r", 4.4); } }); })
+    .on("mouseleave", function(e, l){ gHov.selectAll("line").remove(); gMulti.attr("opacity", 1); render();
       pubNodes.forEach(p => p.a.select("circle").attr("fill", p.fill).attr("stroke", css("--panel")).attr("stroke-width", 0.6).attr("r", 2.1)); });
   window.__hitSel = hitSel; })();
 document.querySelectorAll(".seg button[data-scale]").forEach(b => b.onclick = () => {
