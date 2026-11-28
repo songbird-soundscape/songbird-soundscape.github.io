@@ -983,11 +983,13 @@ const unknownPhy = [WW/2, 720];
    Data: fad_formation.json, built in R (R/fad_formations.R) from the time tree's ranges and the Paleobiology Database. */
 let FADD = null, fadPos = new Map(), fadScale = null;
 const FAD_TOP = 520, FAD_H = 640, FAD_UNK_X = () => WW + 70;   /* spores with no known parent get their own lane at the right */
-const fadOf = n => { const g = sporeGenus(n); return g && FADD && FADD[g] ? FADD[g] : null; };
+/* every form-taxon: spore and pollen genera, plant genera and organ genera (species follow their genus) */
+const formGenus = n => sporeGenus(n) || plantGenus(n);
+const fadOf = n => { const g = formGenus(n); return g && FADD && FADD[g] ? FADD[g] : null; };
 function layoutFad(){
   fadPos = new Map(); fadScale = null; if (!FADD) return;
   const laneOf = n => n.group === "unknown" || leafX[n.group] == null ? "unknown" : n.group;
-  const sp = nodes.filter(n => sporeGenus(n) && !waiting(n) && (laneOf(n) !== "unknown" || inRegion(n)));
+  const sp = nodes.filter(n => formGenus(n) && !waiting(n) && (laneOf(n) !== "unknown" || inRegion(n)));
   if (!sp.length) return;
   /* the scale runs from the oldest first appearance to the end of this interval; genera that first appear later sit at the top edge */
   const ages = sp.filter(fadOf).map(n => fadOf(n).f), a1 = d3.max(ages), a0 = Math.min(a1 - 1, Math.max(d3.min(ages), (SPAN[PERIOD] || [0, 0])[1] - 5));
@@ -996,7 +998,7 @@ function layoutFad(){
   d3.group(sp, laneOf).forEach((arr, grp) => {
     const cx = grp === "unknown" ? FAD_UNK_X() : leafX[grp], half = grp === "unknown" ? 80 : Math.max(6, laneW / 2 - 8), placed = [];
     arr.sort((a, b) => (fadOf(b)?.f ?? -1) - (fadOf(a)?.f ?? -1) || (a.kind === "sp-spore") - (b.kind === "sp-spore") || String(a.id).localeCompare(String(b.id)));
-    arr.forEach(n => { const y = fy(n), r = n.kind === "sp-spore" ? 5 : 9; let x = cx;
+    arr.forEach(n => { const y = fy(n), r = isSp(n) ? 5 : (n.kind === "plant" || n.kind === "organ") ? 11 : 9; let x = cx;
       for (let k = 0; k < 60; k++){ const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 12; if (Math.abs(off) > half) break;
         if (!placed.some(p => Math.abs(p[0] - (cx + off)) < 11 && Math.abs(p[1] - y) < r * 1.7)) { x = cx + off; break; } }
       placed.push([x, y]); fadPos.set(n, [x, y]); });
@@ -1019,12 +1021,12 @@ function drawFadBack(){
   fadScale.ticks(8).forEach(t => { const y = fadScale(t);
     g.append("line").attr("x1", ax).attr("x2", FAD_UNK_X() + 90).attr("y1", y).attr("y2", y).attr("stroke", rule).attr("stroke-dasharray", "2 5");
     g.append("text").attr("x", ax - 4).attr("y", y + 3).attr("text-anchor", "end").attr("class", "fadax").text(t + " Ma"); });
-  fadPos.forEach(([x, y], n) => { const F = fadOf(n); if (!F || n.kind === "sp-spore") return;
+  fadPos.forEach(([x, y], n) => { const F = fadOf(n); if (!F || isSp(n)) return;
     const yl = F.l < a0 ? FAD_TOP + FAD_H + 10 : fadScale(F.l);   /* the range runs down toward younger rocks */
     g.append("line").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", yl).attr("stroke", mu).attr("stroke-width", 2.2).attr("stroke-linecap", "round").attr("opacity", .4);
     if (F.l < a0) g.append("path").attr("d", `M${x - 3},${yl - 4} L${x},${yl + 1} L${x + 3},${yl - 4}`).attr("fill", "none").attr("stroke", mu).attr("opacity", .6);
     const fm = F.first && F.first.fm;
-    g.append("text").attr("x", x + 10).attr("y", y + 3).attr("class", "fadlab").text(`${F.fs}${fm ? " · " + fm : ""}`); });
+    g.append("text").attr("x", x + 10).attr("y", y + 3).attr("class", "fadlab").text(`${F.src === "range table" ? "~" + F.f + " Ma" : F.fs}${fm ? " · " + fm : ""}`); });
 }
 
 /* habitat zones */
@@ -1189,7 +1191,7 @@ zb.style.cssText = "position:absolute;right:10px;top:10px;display:flex;gap:6px";
 [["+","Zoom in",() => svg.transition().call(zoom.scaleBy,1.4)],["−","Zoom out",() => svg.transition().call(zoom.scaleBy,1/1.4)],["Fit","Fit to view",() => fitView()]]
   .forEach(([t,l,f]) => { const b=document.createElement("button"); b.type="button"; b.textContent=t; b.setAttribute("aria-label",l); b.onclick=f; zb.appendChild(b); });
 { const fb = document.createElement("button"); fb.type = "button"; fb.id = "fadBtn"; fb.textContent = "Order by first appearance"; fb.setAttribute("aria-pressed", "false");
-  fb.hidden = state.mode !== "phylo"; fb.title = "Phylogeny view: place each spore by its first appearance in the fossil record, with its range and the formation of its oldest record";
+  fb.hidden = state.mode !== "phylo"; fb.title = "Phylogeny view: place each form-taxon (spores, plants and organs) at its earliest known occurrence, with its range and formation";
   fb.onclick = () => { const go = () => { state.fadOrder = !state.fadOrder; fb.setAttribute("aria-pressed", state.fadOrder); pinFad(); fitted = false; drawBack(); render(); sim.alpha(.6).restart(); setTimeout(fitView, 500); };
     if (FADD) go(); else { fb.disabled = true; fetch("fad_formation.json").then(r => r.json()).then(j => { FADD = j; fb.disabled = false; go(); }).catch(() => { fb.disabled = false; fb.textContent = "First appearances unavailable"; }); } };
   zb.appendChild(fb); }
@@ -2366,7 +2368,7 @@ function showDetail(){
   let s = [];
   s.push(`<p><b>Name.</b> ${esc(n.auth)}${n.year > state.year ? ` (not yet named in ${state.year})` : ""}. ${statusPill(n.vs)}</p>`);
   if (isSpore(n)) s.push(sporeCard(n.id));
-  { const F = fadOf(n); if (F) { const o = F.first || {}; s.push(`<p><b>First appearance.</b> ${esc(F.fs)} (${F.f} Ma); last ${esc(F.ls)} (${F.l} Ma).${o.max != null ? ` Oldest record in the Paleobiology Database that fits that range: ${o.fm ? esc(o.fm) + ", " : ""}${esc(o.cc || "")}, ${o.max}–${o.min} Ma${o.ref ? `, <a href="${esc(o.scholar || scholarQ(o.ref))}" target="_blank" rel="noopener">${esc(o.ref)}</a>` : ""}${o.coll ? ` (<a href="https://paleobiodb.org/classic/displayCollResults?collection_no=${o.coll}" target="_blank" rel="noopener">collection ${o.coll}</a>)` : ""}.` : ""}${o.outliers ? ` ${o.outliers} older record${o.outliers > 1 ? "s" : ""} fall outside the range and need checking.` : ""}</p>`); } }
+  { const F = fadOf(n); if (F) { const o = F.first || {}; s.push(`<p><b>First appearance.</b> ${F.src === "range table" ? `about ${F.f} Ma, from the time tree's range table (${esc(F.fs)}); no dated record found in the Paleobiology Database.` : `${esc(F.fs)} (${F.f} Ma); last ${esc(F.ls)} (${F.l} Ma).`}${o.max != null ? ` ${F.src === "pbdb" ? "Earliest occurrence in the Paleobiology Database" : "Oldest record in the Paleobiology Database that fits that range"}: ${o.fm ? esc(o.fm) + ", " : ""}${esc(o.cc || "")}, ${o.max}–${o.min} Ma${o.ref ? `, <a href="${esc(o.scholar || scholarQ(o.ref))}" target="_blank" rel="noopener">${esc(o.ref)}</a>` : ""}${o.coll ? ` (<a href="https://paleobiodb.org/classic/displayCollResults?collection_no=${o.coll}" target="_blank" rel="noopener">collection ${o.coll}</a>)` : ""}.` : ""}${o.outliers ? ` ${o.outliers} older record${o.outliers > 1 ? "s" : ""} ${F.src === "pbdb" ? "are only tentatively identified (cf., aff. or ?)" : "fall outside the range"} and need checking.` : ""}</p>`); } }
   let story = "";
   if (isSpore(n)) {
     if (ins.length) story = `Spores of this kind have been found inside ${ins.length===1?"one named organ or plant":ins.length+" named organs or plants"}: ` +
