@@ -2952,10 +2952,10 @@ function draw(){
 let PT = null, ptLoading = null;
 function loadPT(){ if (PT || ptLoading) return ptLoading;
   /* Muller (1981): first fossil pollen of living families, one entry per pollen type (built in R: R/muller1981_parse.R, R/muller1981_glyphs.R) */
-  /* and Hughes (1977): SEM of the earliest columellate semi-tectate pollen of the English Wealden (R/hughes1977_glyphs.R) */
+  /* and Hughes (1977) and Hughes, McDougall & Chapman (1991): SEM of the earliest columellate pollen of the English Wealden (R/hughes1977_glyphs.R, R/hughes1991_glyphs.R) */
   const extra = f => fetch(f).then(r => r.ok ? r.json() : []).catch(() => []);
-  ptLoading = Promise.all([fetch("ptt_tree.json").then(r => r.json()), extra("muller1981_glyphs.json"), extra("hughes1977_glyphs.json")]).then(([j, m, h]) => {
-    j.GN = (j.GN || []).concat((m || []).map(g => ({...g, g: g.muller.type.replace(/ \(family record\)$/, " (family)")})), (h || []).map(g => ({...g, _point: true}))); PT = preparePT(j); }).catch(() => { PT = {err: true}; }); return ptLoading; }
+  ptLoading = Promise.all([fetch("ptt_tree.json").then(r => r.json()), extra("muller1981_glyphs.json"), extra("hughes1977_glyphs.json"), extra("hughes1991_glyphs.json")]).then(([j, m, h, h91]) => {
+    j.GN = (j.GN || []).concat((m || []).map(g => ({...g, g: g.muller.type.replace(/ \(family record\)$/, " (family)")})), [...(h || []), ...(h91 || [])].map(g => ({...g, _point: true}))); PT = preparePT(j); }).catch(() => { PT = {err: true}; }); return ptLoading; }
 function preparePT(D){
   const num = v => typeof v === "number" && isFinite(v) ? v : null, CL = D.CL, GN = D.GN, stP = {detail: "groups"};
   const C = Object.fromEntries(CL.map(c => [c.id, c]));
@@ -3181,7 +3181,7 @@ function showMuller(g){ const m = g.muller || {}; det.hidden = false; det.datase
   det.innerHTML = `<p class="kick">${esc2(m.kick || "Fossil pollen of a living family · Muller 1981")}</p><div class="ttdn">${esc2(m.type)}</div>
     <p class="dsrc">${esc2(m.fam)}${!m.kick && g.clade && g.clade !== String(m.fam).toLowerCase() ? ` (APG IV: ${esc2(g.clade[0].toUpperCase() + g.clade.slice(1))})` : ""}${m.taxon ? ` · fossil taxon <i>${esc2(m.taxon)}</i>` : ""}</p>
     <svg class="sglyph" viewBox="-15 -15 30 30" id="muGl"></svg>
-    <h3>First record</h3><p>${esc2(g.fs)} (drawn at ${g.f} Ma, the middle of the interval${m.kick ? "" : ", as Muller did"})${m.region ? `, ${esc2(m.region)}` : ""}.${m.first ? (m.kick ? " The lowest such grain in Hughes's Warlingham section." : " Oldest record of the family in Muller's review.") : ""}</p>
+    <h3>First record</h3><p>${esc2(g.fs)} (drawn at ${g.f} Ma${m.kick ? "" : ", the middle of the interval, as Muller did"})${m.region ? `, ${esc2(m.region)}` : ""}.${m.first ? (m.kick ? " The lowest such grain in Hughes's Warlingham section." : " Oldest record of the family in Muller's review.") : ""}</p>
     <h3>Primary source</h3><p>${m.url ? `<a href="${esc2(m.url)}" target="_blank" rel="noopener">${esc2(m.full || m.src || "search Google Scholar")}</a>` : esc2(m.src || "not named")}${secondhand ? "<br><span class=\"dsrc\">Muller cites this find only through his 1970 review; the original study is named there, so trace it before relying on it.</span>" : ""}</p>
     ${m.note ? `<h3>${m.kick ? "Note" : "Since 1981"}</h3><p>${esc2(m.note)}.</p>` : ""}
     <h3>Glyph</h3><p class="dsrc">${m.photo ? esc2(m.basis) : `Not yet checked against a photo: ${esc2(m.basis || "")}.`}</p>
