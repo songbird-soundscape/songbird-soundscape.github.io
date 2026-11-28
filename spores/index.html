@@ -198,7 +198,10 @@ h1{font-family:var(--display); font-weight:650; font-size:clamp(1.6rem, 3vw, 2.3
 h2{font-family:var(--display); font-weight:650; font-size:1.05rem; margin:0}
 .sub{color:var(--muted); max-width:80ch; margin:6px 0 0}
 .bar .sitelinks a, .ttnav a{color:var(--accent)}
-.bar .sitelinks{flex-basis:100%; margin:-4px 0 0; display:flex; flex-wrap:wrap; gap:4px 22px; font-size:14px}
+.fadback .fadax{font:11px var(--mono, ui-monospace); fill:var(--muted)} .fadback .fadlab{font-size:6.5px; fill:var(--muted)}
+.fadmode .glinks line{stroke-opacity:.16}
+#fadBtn[aria-pressed="true"]{background:var(--accent); color:var(--panel)}
+.bar .sitelinks{flex-basis:100%; margin:-4px 0 0; display:flex; flex-direction:column; align-items:flex-start; gap:4px; font-size:14px}
 .bar{background:var(--panel); border:1px solid var(--rule); border-radius:8px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:12px 24px; align-items:flex-end}
 .field{display:flex; flex-direction:column; gap:3px; min-width:0}
 .field > span{font-size:12px; color:var(--muted)}
@@ -975,6 +978,54 @@ const depthY = d => 40 + d*(260/maxDepth);
 const phyXY = g => [leafX[g] ?? WW/2, 360];
 const laneW = (WW-140)/Math.max(1, leaves.length-1);   /* width of one group's column in the phylogeny view */
 const unknownPhy = [WW/2, 720];
+/* Phylogeny view, "Order by first appearance": each spore sits in its group's lane at the age of its first appearance
+   (oldest at the bottom, as in a rock column), with its stratigraphic range and the formation of its oldest record.
+   Data: fad_formation.json, built in R (R/fad_formations.R) from the time tree's ranges and the Paleobiology Database. */
+let FADD = null, fadPos = new Map(), fadScale = null;
+const FAD_TOP = 520, FAD_H = 640, FAD_UNK_X = () => WW + 70;   /* spores with no known parent get their own lane at the right */
+const fadOf = n => { const g = sporeGenus(n); return g && FADD && FADD[g] ? FADD[g] : null; };
+function layoutFad(){
+  fadPos = new Map(); fadScale = null; if (!FADD) return;
+  const laneOf = n => n.group === "unknown" || leafX[n.group] == null ? "unknown" : n.group;
+  const sp = nodes.filter(n => sporeGenus(n) && !waiting(n) && (laneOf(n) !== "unknown" || inRegion(n)));
+  if (!sp.length) return;
+  /* the scale runs from the oldest first appearance to the end of this interval; genera that first appear later sit at the top edge */
+  const ages = sp.filter(fadOf).map(n => fadOf(n).f), a1 = d3.max(ages), a0 = Math.min(a1 - 1, Math.max(d3.min(ages), (SPAN[PERIOD] || [0, 0])[1] - 5));
+  fadScale = d3.scaleLinear().domain([a0, a1]).range([FAD_TOP, FAD_TOP + FAD_H]).clamp(true);
+  const fy = n => fadOf(n) ? fadScale(fadOf(n).f) : FAD_TOP - 40;   /* no range data: a row above the scale */
+  d3.group(sp, laneOf).forEach((arr, grp) => {
+    const cx = grp === "unknown" ? FAD_UNK_X() : leafX[grp], half = grp === "unknown" ? 80 : Math.max(6, laneW / 2 - 8), placed = [];
+    arr.sort((a, b) => (fadOf(b)?.f ?? 1e4) - (fadOf(a)?.f ?? 1e4) || (a.kind === "sp-spore") - (b.kind === "sp-spore") || String(a.id).localeCompare(String(b.id)));
+    arr.forEach(n => { const y = fy(n), r = n.kind === "sp-spore" ? 5 : 9; let x = cx;
+      for (let k = 0; k < 60; k++){ const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 12; if (Math.abs(off) > half) break;
+        if (!placed.some(p => Math.abs(p[0] - (cx + off)) < 11 && Math.abs(p[1] - y) < r * 1.7)) { x = cx + off; break; } }
+      placed.push([x, y]); fadPos.set(n, [x, y]); });
+  });
+}
+window.__SD = {get nodes(){ return nodes; }, get state(){ return state; }, get fadPos(){ return fadPos; }, waiting: n => waiting(n), inRegion: n => inRegion(n)};   /* for the page tests */
+function pinFad(){
+  stage.classList.toggle("fadmode", state.mode === "phylo" && !!state.fadOrder);
+  nodes.forEach(n => { if (n._fadPin) { n.fx = n.fy = null; n._fadPin = false; } });
+  if (state.mode !== "phylo" || !state.fadOrder) return;
+  layoutFad(); fadPos.forEach(([x, y], n) => { { n.fx = x; n.fy = y; n.x = x; n.y = y; n._fadPin = true; } });
+}
+function drawFadBack(){
+  if (!state.fadOrder || !fadScale) return;
+  const g = gBack.append("g").attr("class", "fadback").attr("pointer-events", "none"), mu = css("--muted"), rule = css("--rule"), [a0] = fadScale.domain(), ax = 30;
+  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP - 62).attr("class", "fadax").text("First appearance, oldest at the bottom");
+  g.append("text").attr("x", ax - 6).attr("y", FAD_TOP - 37).attr("class", "fadax").text("no range data");
+  g.append("text").attr("x", FAD_UNK_X()).attr("y", FAD_TOP - 62).attr("text-anchor", "middle").attr("class", "fadax").text("No parent plant known");
+  g.append("rect").attr("x", FAD_UNK_X() - 90).attr("y", FAD_TOP - 52).attr("width", 180).attr("height", FAD_H + 70).attr("fill", css("--band")).attr("opacity", .5).attr("rx", 8);
+  fadScale.ticks(8).forEach(t => { const y = fadScale(t);
+    g.append("line").attr("x1", ax).attr("x2", FAD_UNK_X() + 90).attr("y1", y).attr("y2", y).attr("stroke", rule).attr("stroke-dasharray", "2 5");
+    g.append("text").attr("x", ax - 4).attr("y", y + 3).attr("text-anchor", "end").attr("class", "fadax").text(t + " Ma"); });
+  fadPos.forEach(([x, y], n) => { const F = fadOf(n); if (!F || n.kind === "sp-spore") return;
+    const yl = F.l < a0 ? FAD_TOP - 10 : fadScale(F.l);
+    g.append("line").attr("x1", x).attr("x2", x).attr("y1", y).attr("y2", yl).attr("stroke", mu).attr("stroke-width", 2.2).attr("stroke-linecap", "round").attr("opacity", .4);
+    if (F.l < a0) g.append("path").attr("d", `M${x - 3},${yl + 4} L${x},${yl - 1} L${x + 3},${yl + 4}`).attr("fill", "none").attr("stroke", mu).attr("opacity", .6);
+    const fm = F.first && F.first.fm;
+    g.append("text").attr("x", x + 10).attr("y", y + 3).attr("class", "fadlab").text(`${F.fs}${fm ? " · " + fm : ""}`); });
+}
 
 /* habitat zones */
 const H = CTX.habitats.map(h => ({...h}));
@@ -1137,10 +1188,15 @@ const zb = document.createElement("div");
 zb.style.cssText = "position:absolute;right:10px;top:10px;display:flex;gap:6px";
 [["+","Zoom in",() => svg.transition().call(zoom.scaleBy,1.4)],["−","Zoom out",() => svg.transition().call(zoom.scaleBy,1/1.4)],["Fit","Fit to view",() => fitView()]]
   .forEach(([t,l,f]) => { const b=document.createElement("button"); b.type="button"; b.textContent=t; b.setAttribute("aria-label",l); b.onclick=f; zb.appendChild(b); });
+{ const fb = document.createElement("button"); fb.type = "button"; fb.id = "fadBtn"; fb.textContent = "Order by first appearance"; fb.setAttribute("aria-pressed", "false");
+  fb.hidden = state.mode !== "phylo"; fb.title = "Phylogeny view: place each spore by its first appearance in the fossil record, with its range and the formation of its oldest record";
+  fb.onclick = () => { const go = () => { state.fadOrder = !state.fadOrder; fb.setAttribute("aria-pressed", state.fadOrder); pinFad(); fitted = false; drawBack(); render(); sim.alpha(.6).restart(); setTimeout(fitView, 500); };
+    if (FADD) go(); else { fb.disabled = true; fetch("fad_formation.json").then(r => r.json()).then(j => { FADD = j; fb.disabled = false; go(); }).catch(() => { fb.disabled = false; fb.textContent = "First appearances unavailable"; }); } };
+  zb.appendChild(fb); }
 stage.appendChild(zb);
 stage.appendChild(scaleBar);
 
-const gBack = root.append("g"), gHull = root.append("g"), gLinks = root.append("g"), gGlow = root.append("g"), gNodes = svg.append("g");   /* nodes sit in screen space above the zoomed world */
+const gBack = root.append("g"), gHull = root.append("g"), gLinks = root.append("g").attr("class", "glinks"), gGlow = root.append("g"), gNodes = svg.append("g");   /* nodes sit in screen space above the zoomed world */
 nodes.forEach(n => { const [x,y] = target(n); n.x = x + (Math.random()-0.5)*60; n.y = y + (Math.random()-0.5)*60; });
 
 const sim = d3.forceSimulation(nodes)
@@ -1151,7 +1207,7 @@ const sim = d3.forceSimulation(nodes)
   .force("y", d3.forceY(d => target(d)[1]).strength(slotPull))
   .alphaDecay(0.03);
 /* in the habitat view, pen spores are pinned to their slots; elsewhere they move freely */
-function pinPens(){ nodes.forEach(n => { if (!isPen(n)) return; if (state.mode === "habitat") { if (waiting(n) || n.group === "unknown") { n.fx = n.fy = null; } else [n.fx, n.fy] = habXY(n); } else n.fx = n.fy = null; }); }
+function pinPens(){ nodes.forEach(n => { if (!isPen(n)) return; if (state.mode === "habitat") { if (waiting(n) || n.group === "unknown") { n.fx = n.fy = null; } else [n.fx, n.fy] = habXY(n); } else n.fx = n.fy = null; }); if (typeof pinFad === "function") pinFad(); }
 function slotPull(d){ if (d._slow) return 0; if (waiting(d) || d.group === "unknown") return 0.35;   /* a compact sphere you can still drag spores out of */ return d.kind==="hub" || (state.mode==="habitat" && isPen(d)) ? 0.9 : state.mode==="phylo" ? 0.5 : 0.22; }
 function linkStrength(l){ if (PLACE_TYPES.has(l.type) && ((l.year != null && l.year > state.year) || inGame(typeof l.source === "object" ? l.source : byId[l.source]))) return 0; if (sid(l.target) === "G:unknown") return 0; if (l.type === "taxon" && ((typeof l.source === "object" ? l.source : byId[l.source])?._slow || (typeof l.target === "object" ? l.target : byId[l.target])?._slow)) return 0.01; if (l.type==="taxon") return 1; if (SPLINK.has(l.type)) return 0.04;
   if (state.mode === "habitat") return l.type==="member" || (l.target.kind ?? byId[l.target]?.kind)==="hub" ? 0 : 0.25; if (state.mode === "phylo") return l.type==="member"?0.25:0.35; return l.type==="affinity"?0.15:l.type==="member"?0.35:0.7; }
@@ -1819,6 +1875,7 @@ function drawBack(){
       lt.append("tspan").attr("x",UNKXY[0]-395).attr("dy","1.25em").text(`both regions ${cnt.both}, only Gondwana ${cnt.Gondwana}, unsorted ${cnt.none}`); }
   }
   if (state.mode === "phylo") {
+    drawFadBack();
     const g = gBack.append("g").attr("class","clad");
     const pos = new Map();
     function place(t){ if (typeof t === "string") return {x:leafX[t], y:330}; }
@@ -1832,8 +1889,8 @@ function drawBack(){
       return {x, y};
     }
     draw(CTX.phylogeny.tree, 0);
-    if (IS_PENN || nodes.some(n => n.kind !== "hub" && (n.group === "unknown" || leafX[n.group] == null))) g.append("text").attr("x", WW/2).attr("y", 700).attr("text-anchor","middle").text(IS_PENN ? "Spores of unknown affinity" : "Groups of uncertain placement and spores of unknown affinity");
-    g.append("text").attr("x", 16).attr("y", 780).text(CTX.phylogeny.note);
+    if (!state.fadOrder && (IS_PENN || nodes.some(n => n.kind !== "hub" && (n.group === "unknown" || leafX[n.group] == null)))) g.append("text").attr("x", WW/2).attr("y", 700).attr("text-anchor","middle").text(IS_PENN ? "Spores of unknown affinity" : "Groups of uncertain placement and spores of unknown affinity");
+    g.append("text").attr("x", 16).attr("y", state.fadOrder ? FAD_TOP + FAD_H + 50 : 780).text(CTX.phylogeny.note);
   }
 }
 
@@ -2309,6 +2366,7 @@ function showDetail(){
   let s = [];
   s.push(`<p><b>Name.</b> ${esc(n.auth)}${n.year > state.year ? ` (not yet named in ${state.year})` : ""}. ${statusPill(n.vs)}</p>`);
   if (isSpore(n)) s.push(sporeCard(n.id));
+  { const F = fadOf(n); if (F) { const o = F.first || {}; s.push(`<p><b>First appearance.</b> ${esc(F.fs)} (${F.f} Ma); last ${esc(F.ls)} (${F.l} Ma).${o.max != null ? ` Oldest record in the Paleobiology Database that fits that range: ${o.fm ? esc(o.fm) + ", " : ""}${esc(o.cc || "")}, ${o.max}–${o.min} Ma${o.ref ? `, <a href="${esc(o.scholar || scholarQ(o.ref))}" target="_blank" rel="noopener">${esc(o.ref)}</a>` : ""}${o.coll ? ` (<a href="https://paleobiodb.org/classic/displayCollResults?collection_no=${o.coll}" target="_blank" rel="noopener">collection ${o.coll}</a>)` : ""}.` : ""}${o.outliers ? ` ${o.outliers} older record${o.outliers > 1 ? "s" : ""} fall outside the range and need checking.` : ""}</p>`); } }
   let story = "";
   if (isSpore(n)) {
     if (ins.length) story = `Spores of this kind have been found inside ${ins.length===1?"one named organ or plant":ins.length+" named organs or plants"}: ` +
@@ -2576,6 +2634,7 @@ function setMode(m){
   document.querySelectorAll(".seg button[data-mode]").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode===m));
   document.getElementById("hint").textContent = m==="habitat" ? "Click a dotted outline for the evidence behind that habitat" : "Drag to pan; Ctrl + scroll or pinch to zoom, which spreads names apart; click a circle for its sources";
   if (m !== "habitat") state.selZone = null;
+  { const fb = document.getElementById("fadBtn"); if (fb) fb.hidden = m !== "phylo"; }
   pinPens();
   sim.force("link").strength(l => linkStrength(l));
   sim.force("x").x(d => target(d)[0]); sim.force("y").y(d => target(d)[1]);
