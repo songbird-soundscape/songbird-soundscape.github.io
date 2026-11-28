@@ -29,6 +29,7 @@
 .vl-kind{font-size:12px; color:var(--muted); margin-left:4px} .vl-ref{font-size:12.5px; margin:2px 0 4px}
 .vl-act{display:flex; gap:14px; flex-wrap:wrap; font-size:13px; align-items:center} .vl-go{font-weight:700}
 .sitebtn{all:unset; cursor:pointer; color:var(--accent); font-weight:600; font-size:13.5px} .sitebtn:hover{text-decoration:underline}
+#tt .tt-mu .tt-sname{text-decoration:underline dotted; text-underline-offset:2px}
 </style>
 
 
@@ -747,6 +748,7 @@ body.ttfull-open{overflow:hidden}
       <div class="field"><span>Spores and pollen</span><div class="seg" role="group" aria-label="How to draw spores and pollen" id="ttGlyphSeg"><button type="button" data-tg="form">Form only</button><button type="button" data-tg="size">Relative size</button></div></div>
       <button type="button" id="ttArchBtn" hidden title="Living families whose pollen has been found on archaeological sites">◆ Archaeological pollen</button>
       <button type="button" id="ttExpand" aria-pressed="false" title="Fill the window with the time tree (Esc to close)">⤢ Expand</button>
+      <label class="checks" id="ttMullerBox" title="Fossil pollen of living families as compiled by Muller (1981, Botanical Review 47: 1-142): one glyph per pollen type, at its first record"><input type="checkbox" id="ttMuller" checked> Muller 1981: first fossil pollen of living families</label>
       <label class="checks" id="ttSporesBox"><input type="checkbox" id="ttSpores" checked> List spore genera where no plant is known</label>
     </div>
     <p class="meta ttglnote" id="ttGlyphNote" hidden>Drawn to relative size: a 40&nbsp;µm spore is 10 px across, a 300&nbsp;µm medullosan prepollen grain 72 px. Grains larger than 1&nbsp;mm (the biggest megaspores) are drawn at <b>1/10</b> of their size inside a dashed ring. <b>Gyrogonites are not to scale</b>: at roughly half a millimetre or more, they keep their usual size here. Faint glyphs have no size on record yet and are drawn at a typical 44&nbsp;µm.</p>
@@ -2870,6 +2872,7 @@ TT_INTERVALS.filter(i => i[4]).forEach(([k, lab]) => { const b = document.create
   b.onclick = () => { sel = sel.includes(k) ? sel.filter(x => x !== k) : [...sel, k]; save(); draw(); }; segTT.appendChild(b); });
 document.getElementById("ttAll").onclick = () => { sel = TT_INTERVALS.filter(i => i[4]).map(i => i[0]); save(); draw(); };
 document.getElementById("ttSpores").onchange = draw;
+document.getElementById("ttMuller").onchange = draw;
 document.querySelectorAll("#ttModeSeg button").forEach(b => b.onclick = () => { mode = b.dataset.tm; save(); draw(); });
 /* zoom: the tree keeps its coordinates; only its displayed size changes. Ctrl + scroll over the tree also zooms. */
 let ttK = null;
@@ -2947,7 +2950,10 @@ function draw(){
 
 /* ---------- Branching as on Plants Through Time (vertical): its own chronogram code on its lineage and genus data ---------- */
 let PT = null, ptLoading = null;
-function loadPT(){ if (PT || ptLoading) return ptLoading; ptLoading = fetch("ptt_tree.json").then(r => r.json()).then(j => { PT = preparePT(j); }).catch(() => { PT = {err: true}; }); return ptLoading; }
+function loadPT(){ if (PT || ptLoading) return ptLoading;
+  /* Muller (1981): first fossil pollen of living families, one entry per pollen type (built in R: R/muller1981_parse.R, R/muller1981_glyphs.R) */
+  const mu = fetch("muller1981_glyphs.json").then(r => r.ok ? r.json() : []).catch(() => []);
+  ptLoading = Promise.all([fetch("ptt_tree.json").then(r => r.json()), mu]).then(([j, m]) => { j.GN = (j.GN || []).concat((m || []).map(g => ({...g, g: g.muller.type.replace(/ \(family record\)$/, " (family)")}))); PT = preparePT(j); }).catch(() => { PT = {err: true}; }); return ptLoading; }
 function preparePT(D){
   const num = v => typeof v === "number" && isFinite(v) ? v : null, CL = D.CL, GN = D.GN, stP = {detail: "groups"};
   const C = Object.fromEntries(CL.map(c => [c.id, c]));
@@ -3166,6 +3172,18 @@ function showArchAll(){ det.hidden = false; det.dataset.has = 1;
     det.innerHTML = `<p class="kick">Living family</p><div class="ttdn">${f}</div>${archHTML(f)}<p><button type="button" class="archback">← All families</button> · ${famLinks(f)}</p>`;
     det.querySelector(".archback").onclick = showArchAll; det.querySelector(".archbox details")?.setAttribute("open", ""); }); }
 document.getElementById("ttArchBtn")?.addEventListener("click", () => { showArchAll(); document.getElementById("ttDetail")?.scrollIntoView({behavior: "smooth", block: "nearest"}); });
+/* a Muller (1981) glyph: open the primary source he cites in a new tab, and show his record beside the tree */
+function openMuller(g){ const m = g.muller || {}; if (m.url) window.open(m.url, "_blank", "noopener"); showMuller(g); }
+function showMuller(g){ const m = g.muller || {}; det.hidden = false; det.dataset.has = 1;
+  const secondhand = /^Muller 1970/.test(m.src || "");
+  det.innerHTML = `<p class="kick">Fossil pollen of a living family · Muller 1981</p><div class="ttdn">${esc2(m.type)}</div>
+    <p class="dsrc">${esc2(m.fam)}${g.clade && g.clade !== String(m.fam).toLowerCase() ? ` (APG IV: ${esc2(g.clade[0].toUpperCase() + g.clade.slice(1))})` : ""}${m.taxon ? ` · fossil taxon <i>${esc2(m.taxon)}</i>` : ""}</p>
+    <svg class="sglyph" viewBox="-15 -15 30 30" id="muGl"></svg>
+    <h3>First record</h3><p>${esc2(g.fs)} (drawn at ${g.f} Ma, the middle of the interval, as Muller did)${m.region ? `, ${esc2(m.region)}` : ""}.${m.first ? " Oldest record of the family in Muller's review." : ""}</p>
+    <h3>Primary source</h3><p>${m.url ? `<a href="${esc2(m.url)}" target="_blank" rel="noopener">${esc2(m.full || m.src || "search Google Scholar")}</a>` : esc2(m.src || "not named")}${secondhand ? "<br><span class=\"dsrc\">Muller cites this find only through his 1970 review; the original study is named there, so trace it before relying on it.</span>" : ""}</p>
+    ${m.note ? `<h3>Since 1981</h3><p>${esc2(m.note)}.</p>` : ""}
+    <p class="dsrc">Muller, J. 1981. Fossil pollen records of extant angiosperms. Botanical Review 47: 1–142, p. ${esc2(m.page)}. Glyph: ${esc2(m.basis || "")}.</p>`;
+  try { drawSpore(d3.select("#muGl"), g.morph || null, 12, true); } catch (e) {} }
 function showLivingFamily(r){ det.hidden = false; det.dataset.has = 1;
   det.innerHTML = `<p class="kick">Living family</p><div class="ttdn">${esc2(r.f)}</div>
     <p class="dsrc">${r.order ? `Order ${esc2(r.order)}. ` : ""}${r.basis === "none" ? "No published crown or stem age on Plants Through Time; drawn short." : `${r.basis === "crown" ? "Crown" : "Stem"} age about ${Math.round(r.age)} Ma (molecular dating on Plants Through Time)${r.clamped ? `; drawn from ${Math.round(r.drawn)} Ma so that it starts inside its parent clade on this tree` : ""}.`}</p>
@@ -3283,7 +3301,8 @@ function drawGenus(){
   /* place every spore genus: beside its parent plant; beside its living family's genus; on the charophyte tree; or in a cluster at the right */
   const attached = {}, clusters = {}, chFam = {}, bryoSp = [], clusterClade = {};   /* bryophyte-like spores and cryptospores sit beside the bryophyte branch */
   const toCluster = (k, g) => (clusters[k] ||= []).push(g);
-  PT.GN.filter(g => inSel(g.f, g.l)).forEach(g => {
+  const muOn = document.getElementById("ttMuller")?.checked !== false;
+  PT.GN.filter(g => inSel(g.f, g.l) && (muOn || !g.muller)).forEach(g => {
     const names = chainNames(g), ids = chainIds(g), leaf = PT.C[g.clade];
     if (ids.some(i => /^(charophyceae|zygnematophyceae|coleochaetophyceae)$/.test(i)) || g.morph?.gyro) {
       const fam = (g.fam ? g.fam.replace(/ \(.*\)$/, "") : null) || names.find(n => /aceae|ales/.test(n) && !/phyceae/.test(n)) || (ids.includes("charophyceae") || g.morph?.gyro ? "Charophytes, family unplaced" : "Other streptophyte algae");
@@ -3402,12 +3421,13 @@ function drawGenus(){
     return xm; })(tree);
   const gS = g.append("g");
   function spore(sg, xx, extra){ const y0 = yc(sg.f), y1 = Math.min(sg.l > 0.5 ? yc(sg.l) : yc(0) - 2, y0 - 3);   /* a living lineage runs to the top of the chart */
-    const c = gS.append("g").attr("class", "tt-sp").attr("tabindex", 0).attr("role", "button").style("cursor", "pointer").attr("aria-label", `${sg.g}: open in the Habitat view`)
-      .on("click", () => goHabitat(sg.g)).on("keydown", e => { if (e.key === "Enter") goHabitat(sg.g); });
+    const go = () => sg.muller ? openMuller(sg) : goHabitat(sg.g);
+    const c = gS.append("g").attr("class", "tt-sp" + (sg.muller ? " tt-mu" : "")).attr("tabindex", 0).attr("role", "button").style("cursor", "pointer").attr("aria-label", sg.muller ? `${sg.g}: open the primary source` : `${sg.g}: open in the Habitat view`)
+      .on("click", go).on("keydown", e => { if (e.key === "Enter") go(); });
     c.append("line").attr("class", "tt-sbar").attr("x1", xx).attr("x2", xx).attr("y1", y0).attr("y2", y1);
     const gl = c.append("g").attr("transform", `translate(${xx},${y0})`); try { drawSpore(gl, sg.morph || null, glyphR(sg.morph, sg.morph?.gyro ? 6 : 5, sg.g), false); if (ttGlyph === "size" && !(sg.morph && sg.morph.gyro)) { const z = glyphSize(sg.morph, sg.g); if (z == null) gl.attr("opacity", .4).append("title").text(sg.g + ": size not recorded, drawn at a typical size"); else if (z > 1000) gl.append("circle").attr("class", "tt-tenth").attr("r", glyphR(sg.morph, 5, sg.g) + 3); } } catch (e) { gl.append("circle").attr("r", 3.5).attr("fill", css("--muted")); }
     c.append("text").attr("class", "tt-sname grp-" + (sg._grp || "other")).attr("transform", `translate(${xx + 2},${y1 - 3}) rotate(-60)`).text((sg.l > 0.5 ? "† " : "") + sg.g);
-    c.append("title").text(`${sg.g} (${sg.kind || "spore"}): ${Math.round(sg.f)}–${sg.l > 0.5 ? Math.round(sg.l) : 0} Ma${sg.aff ? " · " + sg.aff : ""}${sg._why ? " · " + sg._why : ""}${extra || ""} · click to open in the Habitat view`); }
+    c.append("title").text(`${sg.g} (${sg.kind || "spore"}): ${Math.round(sg.f)}–${sg.l > 0.5 ? Math.round(sg.l) : 0} Ma${sg.aff ? " · " + sg.aff : ""}${sg._why ? " · " + sg._why : ""}${extra || ""}${sg.muller ? ` · Muller 1981 p. ${sg.muller.page} · first described by ${sg.muller.src || "?"} · click to open that paper (Google Scholar)` : " · click to open in the Habitat view"}`); }
   tips.forEach(id => {
     if (id.startsWith("CG|")) { spore(GG[id], X[id]); return; }
     if (id.startsWith("CL|")) { const k = id.slice(3), m = VIEWS.clades[k] || {}, n = bryoFams.length, y0 = PY.get(id), y1 = yc(0) - 2;
