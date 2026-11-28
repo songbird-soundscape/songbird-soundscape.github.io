@@ -114,8 +114,14 @@ td.mono{font:12px var(--mono)}
 .tl.cast{fill:var(--muted); font-style:italic}
 .tl.on{font-weight:700; fill:var(--accent)}
 .pos{border-top:1px solid var(--line); padding-top:6px; display:grid; gap:2px}
-.nlabel{font:11px var(--body); fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:3px; pointer-events:none}
-.nlabel.plant{font-weight:600; font-size:11.5px}
+.nlabel{font:13px var(--body); fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:3px; pointer-events:none}
+.nlabel.plant{font-weight:600}
+.nlabel.picked{font-weight:700; fill:var(--accent)}
+path.picked{stroke:var(--ink)!important; stroke-width:2.5px!important}
+.selchips{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 10px}
+.selchip{font:inherit; font-size:12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); padding:2px 4px 2px 10px; cursor:pointer; display:inline-flex; gap:6px; align-items:center}
+.selchip.on{border-color:var(--accent); color:var(--accent)} .selchip span{padding:0 5px; border-radius:50%; opacity:.6} .selchip span:hover{opacity:1; background:var(--line)}
+.selchip.clr{padding:2px 10px; color:var(--muted)}
 .dim{opacity:.12}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
@@ -413,7 +419,7 @@ const GVAR = {lycopsid:"--g-lycopsid", sphenopsid:"--g-sphenopsid", "marattialea
 const KINDN = {insect:"Insects", mite:"Mites", myriapod:"Millipedes and kin", arachnid:"Arachnids", arthropod:"Other arthropods", unknown:"Unknown makers",
   fungus:"Fungi and microbes", tetrapod:"Tetrapods", plant:"Other plants", environment:"Conditions", mollusc:"Molluscs", marine:"Marine animals", crustacean:"Crustaceans", other:"Other animals", setting:"Where found", root:"Plant roots"};
 const cv = v => `var(${v})`;
-const st = {cats:new Set(Object.keys(CATS)), whole:false, strict:false, fauna:true, direct:false, collapse:false, sel:null, q:"", view:"network"};
+const st = {cats:new Set(Object.keys(CATS)), whole:false, strict:false, fauna:true, direct:false, collapse:false, sel:null, sels:new Set(), q:"", view:"network"};
 st.periods = new Set(["Pennsylvanian"]);
 st.palynEv = "any";
 const realmOK = r => (r.realm || ["unknown"]).some(x => st.realms.has(x));
@@ -496,14 +502,15 @@ function rebuild(){
   gN.selectAll("path").data(G.nodes, d => d.id).join("path")
     .attr("d", shape).attr("fill", fill).attr("stroke", d => d.kind === "setting" ? "var(--muted)" : "var(--surface)").attr("stroke-width", 1.5)
     .style("cursor", "pointer").on("click", (e, d) => { e.stopPropagation(); select(d); })
-    .on("mouseenter", (e, d) => focus(d)).on("mouseleave", () => focus(st.sel ? G.nodes.find(n => n.id === st.sel) : null))
+    .on("mouseenter", (e, d) => hoverOn(d)).on("mouseleave", () => focus())
     .call(d3.drag().on("start", (e, d) => { if (!e.active) sim.alphaTarget(0.2).restart(); d.fx = d.x; d.fy = d.y; })
       .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; }).on("end", (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = d.fy = null; }));
   gT.selectAll("text").data(G.nodes, d => d.id).join("text").attr("class", d => "nlabel" + (d.kind === "plant" ? " plant" : ""))
     .attr("text-anchor", "middle").text(d => d.label);
   labels(); legend();
-  if (st.sel && !G.nodes.find(n => n.id === st.sel)) st.sel = null;
-  if (!st.sel) intro();
+  [...st.sels].forEach(id => { if (!G.nodes.find(n => n.id === id)) st.sels.delete(id); });
+  if (st.sel && !st.sels.has(st.sel)) st.sel = [...st.sels].pop() || null;
+  focus(); if (!st.sel) intro();
 }
 function tick(){
   gL.selectAll("path").attr("d", d => { const dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, dr = Math.hypot(dx, dy) * 1.6;
@@ -518,23 +525,29 @@ function fit(){
   const k = Math.min(2, W / (x1 - x0), (H - 30) / (y1 - y0));
   svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(W/2 - k*(x0+x1)/2, (H-30)/2 - k*(y0+y1)/2).scale(k));
 }
-function labels(){ gT.selectAll("text").attr("display", d => d.kind === "plant" || d.kind === "setting" || d.kind === "environment" || d.deg >= 4 || zk > 1.7 ? null : "none")
-  .style("font-size", d => (d.kind === "plant" ? 11.5 : 11) / Math.sqrt(Math.max(1, zk)) + "px"); }
+/* names appear only for clicked nodes and the nodes linked to them (several can be clicked at once); hovering shows just the hovered name */
+const LBL = d => (d.kind === "plant" ? 15 : 13.5) / Math.sqrt(Math.max(1, zk)) + "px";
+function selNeigh(){ const s = new Set(); st.sels.forEach(id => { const d = G.nodes.find(n => n.id === id); if (d) neighbours(d).forEach(x => s.add(x)); }); return s; }
+function labels(){ const on = selNeigh(); gT.selectAll("text").attr("display", d => on.has(d.id) ? null : "none").style("font-size", LBL)
+  .classed("picked", d => st.sels.has(d.id)); }
 function neighbours(d){ const s = new Set([d.id]); G.links.forEach(l => { if (l.source.id === d.id) s.add(l.target.id); if (l.target.id === d.id) s.add(l.source.id); }); return s; }
-function focus(d){
-  if (!d) { highlight(); return; }
-  const nb = neighbours(d);
-  gN.selectAll("path").classed("dim", n => !nb.has(n.id)); gT.selectAll("text").classed("dim", n => !nb.has(n.id)).attr("display", n => nb.has(n.id) ? null : "none");
-  gL.selectAll("path").classed("dim", l => l.source.id !== d.id && l.target.id !== d.id);
+function focus(){
+  if (!st.sels.size) { highlight(); return; }
+  const nb = selNeigh();
+  gN.selectAll("path").classed("dim", n => !nb.has(n.id)).classed("picked", n => st.sels.has(n.id));
+  gT.selectAll("text").classed("dim", false); labels();
+  gL.selectAll("path").classed("dim", l => !(st.sels.has(l.source.id) || st.sels.has(l.target.id)));
 }
+function hoverOn(d){ gT.selectAll("text").filter(n => n.id === d.id).attr("display", null).style("font-size", LBL); }
 function highlight(){
+  gN.selectAll("path").classed("picked", false);
   if (!st.q) { gN.selectAll("path").classed("dim", false); gT.selectAll("text").classed("dim", false); gL.selectAll("path").classed("dim", false); labels(); return; }
   const hit = n => n.label.toLowerCase().includes(st.q) || [...(n.members||[])].some(m => m.toLowerCase().includes(st.q));
   const on = new Set(); G.nodes.filter(hit).forEach(n => neighbours(n).forEach(x => on.add(x)));
-  gN.selectAll("path").classed("dim", n => !on.has(n.id)); gT.selectAll("text").classed("dim", n => !on.has(n.id));
+  gN.selectAll("path").classed("dim", n => !on.has(n.id)); gT.selectAll("text").classed("dim", n => !on.has(n.id)).attr("display", n => hit(n) || selNeigh().has(n.id) ? null : "none").style("font-size", LBL);
   gL.selectAll("path").classed("dim", l => !(on.has(l.source.id) && on.has(l.target.id)));
 }
-svg.on("click", () => { st.sel = null; focus(null); intro(); });
+svg.on("click", () => { st.sel = null; st.sels.clear(); focus(); intro(); });
 new ResizeObserver(() => { const r = $("net").getBoundingClientRect(); if (Math.abs(r.width - W) > 4 || Math.abs(r.height - H) > 4) rebuild(); }).observe($("net"));
 
 function legend(){
@@ -556,22 +569,31 @@ function recCard(i, cat){
     <div class="cite">${esc(r.citation)}${r.pages_figs ? " — " + esc(r.pages_figs) : ""}${doi}</div>
     ${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ""}${photo ? `<div>${photo}</div>` : ""}</div>`;
 }
-function select(d){
-  st.sel = d.id; focus(d);
+function select(d, keep){
+  if (!keep && st.sels.has(d.id) && st.sel === d.id) { st.sels.delete(d.id); st.sel = [...st.sels].pop() || null; focus();
+    const nd = st.sel && G.nodes.find(n => n.id === st.sel); if (nd) select(nd, true); else intro(); return; }
+  st.sels.add(d.id); st.sel = d.id; focus();
   const ls = G.links.filter(l => l.source.id === d.id || l.target.id === d.id);
   const n = ls.reduce((a, l) => a + l.r.length, 0);
   const kindTxt = d.kind === "plant" ? (GROUPN[d.group] || "") + (d.part ? " · " + d.part : "") + (d.members && d.members.size ? " · includes " + [...d.members].join(", ") : "") : KINDN[d.kind] || d.kind;
-  $("panel").innerHTML = `<div class="kicker">${esc(kindTxt)}</div><h2>${esc(d.label)}</h2><div class="meta">${n} record${n === 1 ? "" : "s"} across ${ls.length} link${ls.length === 1 ? "" : "s"}</div>` +
+  const chips = st.sels.size > 1 ? `<div class="selchips"><span class="meta">Selected:</span>${[...st.sels].map(id => { const x = G.nodes.find(n => n.id === id); return x ? `<button type="button" class="selchip${id === d.id ? " on" : ""}" data-sel="${esc(id)}">${esc(x.label)}<span data-unsel="${esc(id)}" aria-label="Remove">×</span></button>` : ""; }).join("")}<button type="button" class="selchip clr" data-clear="1">Clear all</button></div>` : "";
+  $("panel").innerHTML = chips + `<div class="kicker">${esc(kindTxt)}</div><h2>${esc(d.label)}</h2><div class="meta">${n} record${n === 1 ? "" : "s"} across ${ls.length} link${ls.length === 1 ? "" : "s"}</div>` +
     ls.sort((a, b) => b.r.length - a.r.length).map(l => { const o = l.source.id === d.id ? l.target : l.source;
       return `<h2 style="margin-top:14px;font-size:14px">${esc(o.label)} <span class="meta" style="font-weight:400">· ${CATS[l.cat]}</span></h2>` + l.r.map(i => recCard(i, l.cat)).join(""); }).join("");
 }
 function showLink(l){
   $("panel").innerHTML = `<div class="kicker">${CATS[l.cat]}</div><h2>${esc(l.source.label)} ↔ ${esc(l.target.label)}</h2>` + l.r.map(i => recCard(i, l.cat)).join("");
 }
+document.addEventListener("click", e => { const p = e.target.closest("#panel"); if (!p) return;
+  const u = e.target.closest("[data-unsel]"), s = e.target.closest("[data-sel]"), c = e.target.closest("[data-clear]");
+  if (u) { st.sels.delete(u.dataset.unsel); st.sel = [...st.sels].pop() || null; focus(); const nd = st.sel && G.nodes.find(n => n.id === st.sel); if (nd) select(nd, true); else intro(); }
+  else if (s) { const nd = G.nodes.find(n => n.id === s.dataset.sel); if (nd) select(nd, true); }
+  else if (c) { st.sels.clear(); st.sel = null; focus(); intro(); } });
 function intro(){
   const recs = DATA.records.length, full = DATA.records.filter(isFull).length;
   $("panel").innerHTML = `<div class="kicker">How to read this</div><h2>${recs} records, ${full} read in full</h2>
   <p>Plants sit in the middle, coloured by group. Around them are the things linked to them: insects and mites, fungi, other plants, tetrapods, molluscs and marine animals, and the conditions plants lived with. The outer diamonds are where animals were found in the coal when no plant link is known.</p>
+  <p>Names stay hidden until you click: click a plant or organism to name it and everything linked to it. Click more to compare several at once; click one again, or its × above the records, to drop it; click empty space to clear.</p>
   <p>Click any plant, organism or line to see the records behind it, each with its locality, age, citation and pages, and how it was checked: <span class="conf full">read in full</span> <span class="conf abs">abstract only</span> <span class="conf sec">secondary source</span>. Dashed lines have no record read in full yet.</p>
   <p class="meta">Makers of most damage are unknown, so those records sit under "Unknown maker". Form genera (Alethopteris, Neuropteris, Florinites, Nucellangium) are parts of whole plants; tick "Group plants" to merge them. Datasets loaded: ${DATA.sources_present.map(esc).join(", ")}.</p>`;
 }
