@@ -197,6 +197,8 @@ body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:
 h1{font-family:var(--display); font-weight:650; font-size:clamp(1.6rem, 3vw, 2.3rem); line-height:1.1; margin:0; letter-spacing:-0.01em; text-wrap:balance}
 h2{font-family:var(--display); font-weight:650; font-size:1.05rem; margin:0}
 .sub{color:var(--muted); max-width:80ch; margin:6px 0 0}
+.bar .sitelinks a, .ttnav a{color:var(--accent)}
+.bar .sitelinks{flex-basis:100%; margin:-4px 0 0; display:flex; flex-wrap:wrap; gap:4px 22px; font-size:14px}
 .bar{background:var(--panel); border:1px solid var(--rule); border-radius:8px; padding:12px 16px; display:flex; flex-wrap:wrap; gap:12px 24px; align-items:flex-end}
 .field{display:flex; flex-direction:column; gap:3px; min-width:0}
 .field > span{font-size:12px; color:var(--muted)}
@@ -613,6 +615,7 @@ body.ttfull-open{overflow:hidden}
   <div class="bar" role="group" aria-label="Geological interval">
     <div class="field"><span>Interval</span>
       <div class="seg" role="group" aria-label="Geological interval" id="periodSeg"></div></div>
+    <p class="sitelinks"><a href="timetree.html">Time tree: every lineage through geologic time</a><a href="/community-paleoecology/">Community Paleoecology: who lived with these plants</a></p>
   </div>
 
   <div class="bar" role="group" aria-label="View settings">
@@ -621,7 +624,6 @@ body.ttfull-open{overflow:hidden}
         <button type="button" data-mode="discovery" aria-pressed="true">Discovery</button>
         <button type="button" data-mode="phylo" aria-pressed="false">Phylogeny</button>
         <button type="button" data-mode="habitat" aria-pressed="false">Habitat</button>
-        <button type="button" data-mode="timetree" aria-pressed="false">Time tree</button>
         <button type="button" data-mode="diversity" aria-pressed="false">Diversity</button>
       </div></div>
     <label class="field" for="hypSel"><span>Seed-plant tree</span>
@@ -2162,8 +2164,10 @@ function bindChooser(el, root){ const sel = el.querySelector(".gsel"); if (!sel)
 let LIT = null, litLoading = null;
 function loadLit(){ if (LIT || litLoading) return litLoading; litLoading = fetch("literature_penn.json").then(r => r.ok ? r.json() : {sources:{}, genera:{}, plants:{}}).then(j => { LIT = j; drawLits(); if (typeof wmeRender === "function") wmeRender(); else setTimeout(() => { if (typeof wmeRender === "function") wmeRender(); }, 0); }).catch(() => { if (!LIT) LIT = {sources:{}, genera:{}, plants:{}}; }); return litLoading; }
 const ACC_TXT = {"open-pdf":"open PDF","open-html":"open online","catalog-only":"catalogue entry only","paywalled":"paywalled","print-only":"print only","refused":"site refused automated reading"};
+/* "clickly": every citation should reach the primary literature in one click; with no DOI or URL, a Google Scholar search */
+function scholarQ(t){ return "https://scholar.google.com/scholar?q=" + encodeURIComponent(String(t || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim().slice(0, 250)); }
 const litSrc = (u, n) => { const S = LIT.sources[u] || {}; const t = S.title ? `<i>${esc(String(S.title).slice(0, 110))}</i>` : "";
-  return `<li>${S.url ? `<a href="${esc(S.url)}" target="_blank" rel="noopener">${esc(S.cite || u)}</a>` : esc(S.cite || u)}${t ? ", " + t : ""}${S.series ? ` (${esc(S.series)})` : ""}${S.country ? ` · ${esc(S.country)}` : ""}${S.language && S.language !== "English" ? ` · in ${esc(S.language)}` : ""}${n ? ` · <b>${n}</b> record${n === 1 ? "" : "s"}` : ""} <span class="acc">${esc(ACC_TXT[S.access] || S.access || "")}</span></li>`; };
+  return `<li><a href="${esc(S.url || scholarQ((S.cite || u) + " " + (S.title || "")))}" target="_blank" rel="noopener">${esc(S.cite || u)}</a>${t ? ", " + t : ""}${S.series ? ` (${esc(S.series)})` : ""}${S.country ? ` · ${esc(S.country)}` : ""}${S.language && S.language !== "English" ? ` · in ${esc(S.language)}` : ""}${n ? ` · <b>${n}</b> record${n === 1 ? "" : "s"}` : ""} <span class="acc">${esc(ACC_TXT[S.access] || S.access || "")}</span></li>`; };
 function drawLits(){ if (!LIT) { if (document.querySelector("#dBody .lit[data-lit]")) loadLit(); return; }
   document.querySelectorAll("#dBody .lit[data-lit]").forEach(el => { if (el.dataset.done) return; el.dataset.done = 1;
     const g = el.dataset.lit, rec = (el.dataset.kind === "plant" ? LIT.plants : LIT.genera)[g];
@@ -2390,7 +2394,7 @@ document.addEventListener("keydown", e => {
 /* ---------- reference list ---------- */
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 document.getElementById("refList").innerHTML = Object.entries(REF).sort((a,b) => a[0].localeCompare(b[0])).map(([k,r]) =>
-  `<li id="ref-${slug(k)}">${esc(r.full)}${r.url ? ` <a href="${esc(r.url)}" target="_blank" rel="noopener">link</a>` : ""}<span class="role">${esc(r.role)}</span></li>`).join("") +
+  `<li id="ref-${slug(k)}">${esc(r.full)} <a href="${esc(r.url || scholarQ(r.full))}" target="_blank" rel="noopener">${r.url && !/scholar\.google/.test(r.url) ? "link" : "Google Scholar"}</a><span class="role">${esc(r.role)}</span></li>`).join("") +
   `<li>Earliest in situ studies (Carruthers 1867, Williamson 1871 and 1888, Renault 1879 and 1896, Zalessky 1908, Mamay 1950 and others) are cited as Balme (1995) cites them; their full references are in Balme's bibliography.<span class="role">Each link's text names the study and notes that Balme is the source.</span></li>`;
 
 /* ---------- timeline ---------- */
@@ -3129,7 +3133,7 @@ function goHabitat(id){
   const g = PT && PT.GN ? PT.GN.find(x => x.g === id) : null, mid = g ? (g.f + g.l) / 2 : null;
   const pers = NETPERIODS.filter(p => DATASETS[p].nodes.some(n => n[0] === id));
   const per = pers.find(p => SPAN[p] && mid != null && mid <= SPAN[p][0] && mid >= SPAN[p][1]) || pers[0];
-  if (per) { try { sessionStorage.setItem("mode", "habitat"); sessionStorage.setItem("selAfter", id); sessionStorage.setItem("ttOpen", "0"); } catch (e) {} location.hash = "period-" + per; location.reload(); return; }
+  if (per) { try { sessionStorage.setItem("mode", "habitat"); sessionStorage.setItem("selAfter", id); sessionStorage.setItem("ttOpen", "0"); } catch (e) {} if (TT_ONLY) location.href = "index.html#period-" + per; else { location.hash = "period-" + per; location.reload(); } return; }
   if (g) { det.hidden = false; det.innerHTML = `<p class="kick">${esc2(g.kind || "spore")}</p><div class="ttdn"><i>${esc2(g.g)}</i></div><svg class="sglyph" viewBox="-15 -15 30 30" id="ttGl"></svg>
     <p class="dsrc">${Math.round(g.f)} to ${g.l > 0.5 ? Math.round(g.l) + " Ma" : "the present"}${g.aff ? " · " + esc2(g.aff) : ""}.</p><p>Not yet on any interval's network here.</p>`;
     try { drawSpore(d3.select("#ttGl"), g.morph || null, 12, true); } catch (e) {} }
@@ -3182,7 +3186,7 @@ function showMuller(g){ const m = g.muller || {}; det.hidden = false; det.datase
     <p class="dsrc">${esc2(m.fam)}${!m.kick && g.clade && g.clade !== String(m.fam).toLowerCase() ? ` (APG IV: ${esc2(g.clade[0].toUpperCase() + g.clade.slice(1))})` : ""}${m.taxon ? ` · fossil taxon <i>${esc2(m.taxon)}</i>` : ""}</p>
     <svg class="sglyph" viewBox="-15 -15 30 30" id="muGl"></svg>
     <h3>First record</h3><p>${esc2(g.fs)} (drawn at ${g.f} Ma${m.kick ? "" : ", the middle of the interval, as Muller did"})${m.region ? `, ${esc2(m.region)}` : ""}.${m.first ? (m.kick ? " The lowest such grain in Hughes's Warlingham section." : " Oldest record of the family in Muller's review.") : ""}</p>
-    <h3>Primary source</h3><p>${m.url ? `<a href="${esc2(m.url)}" target="_blank" rel="noopener">${esc2(m.full || m.src || "search Google Scholar")}</a>` : esc2(m.src || "not named")}${secondhand ? "<br><span class=\"dsrc\">Muller cites this find only through his 1970 review; the original study is named there, so trace it before relying on it.</span>" : ""}</p>
+    <h3>Primary source</h3><p>${m.url || m.full || m.src ? `<a href="${esc2(m.url || scholarQ(m.full || m.src))}" target="_blank" rel="noopener">${esc2(m.full || m.src || "search Google Scholar")}</a>` : "not named"}${secondhand ? "<br><span class=\"dsrc\">Muller cites this find only through his 1970 review; the original study is named there, so trace it before relying on it.</span>" : ""}</p>
     ${m.note ? `<h3>${m.kick ? "Note" : "Since 1981"}</h3><p>${esc2(m.note)}.</p>` : ""}
     <h3>Glyph</h3><p class="dsrc">${m.photo ? esc2(m.basis) : `Not yet checked against a photo: ${esc2(m.basis || "")}.`}</p>
     <p class="dsrc">${m.cite ? esc2(m.cite) : `Muller, J. 1981. Fossil pollen records of extant angiosperms. Botanical Review 47: 1–142, p. ${esc2(m.page)}.`}</p>`;
@@ -3543,7 +3547,9 @@ function showGenus(id){
   det.querySelectorAll("[data-cl]").forEach(a => a.onclick = e => { e.preventDefault(); showClade(a.dataset.cl); });
   det.querySelectorAll("[data-open]").forEach(b => b.onclick = () => openInterval(b.dataset.open));
 }
+const TT_ONLY = document.documentElement.classList.contains("tt-only");   /* timetree.html is built from this file (build_timetree.py) */
 function openInterval(per){ if (per === "modern") per = "cenozoic"; try { sessionStorage.setItem("ttOpen", "0"); } catch(e) {}
+  if (TT_ONLY) { try { sessionStorage.setItem("mode", "phylo"); } catch(e) {} location.href = "index.html#period-" + per; return; }
   if (per === PERIOD) { setTT(false); setMode("phylo"); } else { try { sessionStorage.setItem("mode", "phylo"); } catch(e) {} location.hash = "period-" + per; location.reload(); } }
 function setTT(on){
   wrap.hidden = !on; document.querySelector(".main").hidden = on; document.querySelector(".sizes").hidden = on;
@@ -3555,9 +3561,9 @@ document.querySelectorAll(".seg button[data-mode]").forEach(b => b.onclick = () 
   if (b.dataset.mode === "diversity") { setTT(false); window.__dvSet?.(true); return; }
   window.__dvSet?.(false);
   if (b.dataset.mode === "timetree") setTT(true); else { setTT(false); setMode(b.dataset.mode); try { sessionStorage.setItem("mode", b.dataset.mode); } catch(e) {} } });
-let reopen = false, m0 = null; try { reopen = sessionStorage.getItem("ttOpen") === "1"; m0 = sessionStorage.getItem("mode"); } catch(e) {}
-if (location.hash === "#timetree") reopen = true;   /* the companion history pages link back here */
-if (reopen) setTT(true); else if (m0 && m0 !== "discovery" && m0 !== state.mode && document.querySelector(`.seg button[data-mode="${m0}"]`)?.offsetParent !== null) setMode(m0);
+let m0 = null; try { m0 = sessionStorage.getItem("mode"); sessionStorage.setItem("ttOpen", "0"); } catch(e) {}
+if (!TT_ONLY && location.hash === "#timetree") location.replace("timetree.html");   /* old links to the tree */
+if (TT_ONLY) setTT(true); else if (m0 && m0 !== "discovery" && m0 !== state.mode && document.querySelector(`.seg button[data-mode="${m0}"]`)?.offsetParent !== null) setMode(m0);
 
 /* ---------- The story in brief: a guided walk up the time tree, stop by stop ---------- */
 (function ttStory(){
@@ -3806,7 +3812,7 @@ if (re) setDV(true);
   const $ = id => document.getElementById(id), form = $("contribForm"), st = $("contribStatus");
   const esc2 = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   const safeUrl = u => /^https:\/\//i.test(u || "") ? u : null;
-  const item = it => `<li><b>${esc2(it.citation)}</b>${safeUrl(it.url) ? ` · <a href="${esc2(it.url)}" target="_blank" rel="noopener">link</a>` : ""}${it.file ? ` · <a href="/_blob/${encodeURIComponent(it.file)}" target="_blank" rel="noopener">file</a>` : ""}<br><span class="status">${esc2(it.kind)} · ${esc2(it.holds)}${it.where ? " · " + esc2(it.where) : ""} · sent ${esc2((it.at || "").slice(0, 10))}</span>${it.notes ? `<br><span class="status">${esc2(it.notes)}</span>` : ""}</li>`;
+  const item = it => `<li><b>${esc2(it.citation)}</b> · <a href="${esc2(safeUrl(it.url) || scholarQ(it.citation))}" target="_blank" rel="noopener">${safeUrl(it.url) && !/scholar\.google/.test(it.url) ? "link" : "Google Scholar"}</a>${it.file ? ` · <a href="/_blob/${encodeURIComponent(it.file)}" target="_blank" rel="noopener">file</a>` : ""}<br><span class="status">${esc2(it.kind)} · ${esc2(it.holds)}${it.where ? " · " + esc2(it.where) : ""} · sent ${esc2((it.at || "").slice(0, 10))}</span>${it.notes ? `<br><span class="status">${esc2(it.notes)}</span>` : ""}</li>`;
   (async () => {
     if (!window.claude || !window.claude.use) {
       const alt = $("contribAlt"), h = location.hostname;
@@ -3865,7 +3871,7 @@ function wmeRender(){
   const rows = all.filter(ok), by = {}; rows.forEach(r => (by[r[1].search || "Other"] = by[r[1].search || "Other"] || []).push(r));
   const nS = all.reduce((a, [, S]) => a + (S.n_spore || 0), 0), nP = all.reduce((a, [, S]) => a + (S.n_plant || 0), 0);
   document.getElementById("wmeStats").innerHTML = `<span><b>${all.length}</b> sources</span><span><b>${all.filter(([, S]) => /^open/.test(S.access)).length}</b> readable online</span><span><b>${all.filter(([, S]) => S.extracted).length}</b> with records extracted</span><span><b>${nS.toLocaleString()}</b> spore and <b>${nP.toLocaleString()}</b> plant records</span><span><b>${all.filter(([, S]) => NEED.has(S.access)).length}</b> needing a copy</span><span><b>${new Set(all.map(([, S]) => S.language)).size}</b> languages</span>`;
-  const item = ([u, S]) => `<li>${S.url ? `<a href="${esc(S.url)}" target="_blank" rel="noopener">${esc(S.cite)}</a>` : `<b>${esc(S.cite)}</b>`}. ${S.title_original ? `<i>${esc(S.title_original)}</i> [${esc(S.title || "")}]` : `<i>${esc(S.title || "")}</i>`}${S.series ? `. ${esc(S.series)}` : ""}${S.publisher ? `. ${esc(S.publisher)}` : ""}.
+  const item = ([u, S]) => `<li><a href="${esc(S.url || scholarQ(S.cite + " " + (S.title_original || S.title || "")))}" target="_blank" rel="noopener">${esc(S.cite)}</a>. ${S.title_original ? `<i>${esc(S.title_original)}</i> [${esc(S.title || "")}]` : `<i>${esc(S.title || "")}</i>`}${S.series ? `. ${esc(S.series)}` : ""}${S.publisher ? `. ${esc(S.publisher)}` : ""}.
     <span class="acc ${/^open/.test(S.access) ? "open" : NEED.has(S.access) ? "need" : ""}">${esc(ACC_TXT[S.access] || S.access || "")}</span>${S.language && S.language !== "English" ? ` <span class="acc">${esc(S.language)}</span>` : ""}
     <br><span class="meta">${[S.country, S.basin, S.strat].filter(Boolean).map(esc).join(" · ")}${S.n_spore || S.n_plant ? ` · extracted: ${S.n_spore} spore, ${S.n_plant} plant records` : ""}</span>${S.adds ? `<br><span style="font-size:12.5px">${esc(S.adds)}</span>` : ""}</li>`;
   box.innerHTML = Object.entries(by).map(([k, rs]) => `<details${Object.keys(by).length === 1 || q ? " open" : ""}><summary>${esc(k)} (${rs.length})</summary><ol>${rs.sort((a, b) => String(a[1].cite).localeCompare(String(b[1].cite))).map(item).join("")}</ol></details>`).join("") || `<p class="meta">Nothing matches.</p>`;
@@ -3909,8 +3915,8 @@ try { const want = sessionStorage.getItem("selAfter"); if (want) { sessionStorag
   const STEPS = [
     {sel: "#periodSeg", title: "Pick a slice of time",
      text: "Each interval, from the Silurian–Devonian to the Cenozoic, has its own network of dispersed spores and pollen, the plant organs they were found in, and the whole plants those organs make up."},
-    {sel: '.seg[aria-label="Layout"]', up: true, title: "Five ways to look",
-     text: "<b>Discovery</b> replays when each name and link was made. <b>Phylogeny</b> arranges the same network by relationship, <b>Habitat</b> by where the plants grew, <b>Time tree</b> through geologic time, and <b>Diversity</b> counts genera through time."},
+    {sel: '.seg[aria-label="Layout"]', up: true, title: "Four ways to look",
+     text: "<b>Discovery</b> replays when each name and link was made. <b>Phylogeny</b> arranges the same network by relationship, <b>Habitat</b> by where the plants grew, and <b>Diversity</b> counts genera through time. The time tree has its own page, linked under the intervals."},
     {sel: "#discBar .dbtime", before: () => goView("discovery"), title: "Move through the history of the science",
      text: "Drag the slider or press <b>Play</b> to watch names appear and links form, year by year, from Sternberg in 1820 to now."},
     {sel: "#tl", title: "Milestones and the papers behind them",
@@ -4258,12 +4264,6 @@ body.gaming #periodSeg button[aria-pressed="true"]{background:var(--accent); col
   <p>From the network you can follow its links to <i>Drifting Through Deep Time</i>, to paleoecology and ecology, and on to other hubs.</p>
   <div class="hub-row"><button type="button" class="hub-ok">Explore Sporae Dispersae</button><a class="hub-go" href="/open-commons/" target="_blank" rel="noopener">Open the network in a new tab ↗</a></div>
 </div>
-<div id="cpPop" class="cppop" role="dialog" aria-labelledby="cpPopT" hidden>
-  <button type="button" class="cp-x" aria-label="Close">✕</button>
-  <p id="cpPopT"><b>Who lived with these plants?</b></p>
-  <p>Insects that ate them, fungi that rotted them, animals that sheltered in them: <b>Community Paleoecology</b> maps the published interactions around the plants of the coal swamps.</p>
-  <p><a href="/community-paleoecology/">Open Community Paleoecology →</a> <button type="button" class="cp-never">Don't show again</button></p>
-</div>
 <script>
 /* Cook a spore: heat and time darken sporopollenin from pale yellow to black */
 (function(){
@@ -4316,15 +4316,6 @@ body.gaming #periodSeg button[aria-pressed="true"]{background:var(--accent); col
   try { if (sessionStorage.getItem("sd-ainote") === "hid") n.hidden = true; } catch(e) {}
   n.querySelector(".ainote-x").onclick = () => { n.hidden = true; try { sessionStorage.setItem("sd-ainote", "hid"); } catch(e) {} };
   n.querySelector('a[href="#contribute"]').addEventListener("click", e => { const s = document.getElementById("contribute"); if (s) { e.preventDefault(); s.scrollIntoView({behavior: "smooth", block: "start"}); } });
-})();
-/* Habitat view: point to Community Paleoecology */
-(function(){
-  const pop = document.getElementById("cpPop"), hb = document.querySelector('.seg button[data-mode="habitat"]'); if (!pop || !hb) return;
-  const never = () => { try { return localStorage.getItem("sd-cp-never") === "1"; } catch(e) { return false; } };
-  hb.addEventListener("click", () => { if (!never()) setTimeout(() => { pop.hidden = false; }, 300); });
-  document.querySelectorAll('.seg button[data-mode]:not([data-mode="habitat"])').forEach(b => b.addEventListener("click", () => { pop.hidden = true; }));
-  pop.querySelector(".cp-x").onclick = () => { pop.hidden = true; };
-  pop.querySelector(".cp-never").onclick = () => { try { localStorage.setItem("sd-cp-never", "1"); } catch(e) {} pop.hidden = true; };
 })();
 </script>
 <!-- visit counts (GoatCounter: no cookies, no personal data) -->
