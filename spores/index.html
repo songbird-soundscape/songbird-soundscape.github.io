@@ -3182,7 +3182,8 @@ function showMuller(g){ const m = g.muller || {}; det.hidden = false; det.datase
     <h3>First record</h3><p>${esc2(g.fs)} (drawn at ${g.f} Ma, the middle of the interval, as Muller did)${m.region ? `, ${esc2(m.region)}` : ""}.${m.first ? " Oldest record of the family in Muller's review." : ""}</p>
     <h3>Primary source</h3><p>${m.url ? `<a href="${esc2(m.url)}" target="_blank" rel="noopener">${esc2(m.full || m.src || "search Google Scholar")}</a>` : esc2(m.src || "not named")}${secondhand ? "<br><span class=\"dsrc\">Muller cites this find only through his 1970 review; the original study is named there, so trace it before relying on it.</span>" : ""}</p>
     ${m.note ? `<h3>Since 1981</h3><p>${esc2(m.note)}.</p>` : ""}
-    <p class="dsrc">Muller, J. 1981. Fossil pollen records of extant angiosperms. Botanical Review 47: 1–142, p. ${esc2(m.page)}. Glyph: ${esc2(m.basis || "")}.</p>`;
+    <h3>Glyph</h3><p class="dsrc">${m.photo ? esc2(m.basis) : `Not yet checked against a photo: ${esc2(m.basis || "")}.`}</p>
+    <p class="dsrc">Muller, J. 1981. Fossil pollen records of extant angiosperms. Botanical Review 47: 1–142, p. ${esc2(m.page)}.</p>`;
   try { drawSpore(d3.select("#muGl"), g.morph || null, 12, true); } catch (e) {} }
 function showLivingFamily(r){ det.hidden = false; det.dataset.has = 1;
   det.innerHTML = `<p class="kick">Living family</p><div class="ttdn">${esc2(r.f)}</div>
