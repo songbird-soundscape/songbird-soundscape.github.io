@@ -723,6 +723,7 @@ body.ttfull-open{overflow:hidden}
   <section id="ttWrap" class="box" hidden aria-labelledby="ttTitle">
     <div class="tthead"><div class="tthead-main">
     <h2 id="ttTitle">Time tree: plants through time</h2>
+    <p class="sub ttshort">Companion series, the history of ideas behind the tree: <a href="history/angiosperms.html">How we came to know the flowering plants</a>.</p>
     <p class="sub ttshort">Every lineage on the cited, dated tree, with the spores, pollen and gyrogonites placed where they first appear. Time runs upward, oldest at the bottom, drawn to true scale. Click a clade for its sources.</p>
     <details class="ttmore"><summary>How the tree is built, and the key</summary>
     <p class="sub" style="font-size:13.5px">Time runs upward, oldest at the bottom as in a rock column. Built from the R project's cited trees: every clade carries its status and sources (click a clade), and branch points sit at the clade's dated age (median over 20 random resolutions of the polytomies, dated with paleotree, minimum branch length 1 Myr). <b>Lineages</b> shows each lineage as a stem with the genera of each opened interval on it; <b>Genera</b> shows every whole-plant genus as a range bar on the dated synthesis tree, so alleged ancestors (grades, marked * or "grade") sit below the groups thought to descend from them. By default the bands are not to scale: opened intervals get equal height. Choose <b>True scale</b> to draw geologic time in proportion. Genus ranges and lineage origins are approximate and listed for hand-checking in the R project.</p>
@@ -3556,6 +3557,7 @@ document.querySelectorAll(".seg button[data-mode]").forEach(b => b.onclick = () 
   window.__dvSet?.(false);
   if (b.dataset.mode === "timetree") setTT(true); else { setTT(false); setMode(b.dataset.mode); try { sessionStorage.setItem("mode", b.dataset.mode); } catch(e) {} } });
 let reopen = false, m0 = null; try { reopen = sessionStorage.getItem("ttOpen") === "1"; m0 = sessionStorage.getItem("mode"); } catch(e) {}
+if (location.hash === "#timetree") reopen = true;   /* the companion history pages link back here */
 if (reopen) setTT(true); else if (m0 && m0 !== "discovery" && m0 !== state.mode && document.querySelector(`.seg button[data-mode="${m0}"]`)?.offsetParent !== null) setMode(m0);
 
 /* ---------- The story in brief: a guided walk up the time tree, stop by stop ---------- */
